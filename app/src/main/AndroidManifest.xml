@@ -10,7 +10,8 @@
         android:theme="@style/AppTheme">
         <activity android:name=".DownFallActivity"
             android:label="@string/title_activity_down_fall"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

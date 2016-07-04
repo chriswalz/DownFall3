@@ -33,7 +33,7 @@ public class Invader {
 
     boolean isVisible;
 
-    public Invader(Context context, int row, int column, int screenX, int screenY) {
+    public Invader(Context context, int screenX, int screenY) {
 
         // Initialize a blank RectF
         rect = new RectF();
@@ -45,8 +45,8 @@ public class Invader {
 
         int padding = screenX / 25;
 
-        x = column * (length + padding);
-        y = row * (length + padding/4);
+        x = (float) (Math.random() * screenX); //column * (length + padding);
+        y = (float) -(Math.random() * screenY);//row * (length + padding/4);
 
         // Initialize the bitmap
         bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.invader1);
@@ -61,7 +61,7 @@ public class Invader {
 
 
         // How fast is the invader in pixels per second
-        shipSpeed = 40;
+        shipSpeed = 800;
     }
     public void update(long fps){
         y += shipSpeed / fps;
