@@ -1,6 +1,7 @@
 package com.walz.joltimate.downfall2;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -10,6 +11,10 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.walz.joltimate.downfall2.Invaders.InvaderAbstract;
+
+// create level object ?
+// what customization options do i want for a level & invader
 // attach attributes to an invader
 // create level structure.
 // create homescreen
@@ -54,13 +59,14 @@ public class DownFallView extends SurfaceView implements Runnable{
     private PlayerShip playerShip; // Player
 
     // Up to 60 invaders
-    private Invader[] invaders = new Invader[60];
+    private InvaderAbstract[] invaders = new InvaderAbstract[60];
 
     // The score
     private int score = 0;
 
     private final String scoreText = "Score: ";
 
+    private Paint invaderPaint;
 
     // When the we initialize (call new()) on gameView
     // This special constructor method runs
@@ -81,6 +87,9 @@ public class DownFallView extends SurfaceView implements Runnable{
         screenX = x;
         screenY = y;
 
+        invaderPaint = new Paint();
+        invaderPaint.setColor(Color.WHITE);
+
         prepareCurrentLevel();
     }
 
@@ -94,7 +103,7 @@ public class DownFallView extends SurfaceView implements Runnable{
 
         switch (currentLevel) {
             case 0:
-                Levels.easy(invaders, context, screenX, screenY);
+                Levels.oneBlock(invaders, context, screenX, screenY);
                 break;
             case 1:
                 Levels.tenInvaders(invaders, context, screenX, screenY);
@@ -149,10 +158,14 @@ public class DownFallView extends SurfaceView implements Runnable{
             if (invaders[i] == null) {
                 continue;
             }
-            if (invaders[i].isVisible && RectF.intersects(invaders[i].getRect(), playerShip.getRect())) {
+            if (invaders[i].getVisibility() == true && RectF.intersects(invaders[i].getRect(), playerShip.getRect())) {
                 paused = true;
                 score = 0;
                 prepareCurrentLevel();
+
+                // player died -> go to homescreen
+                Intent intent = new Intent(context, RetryScreenActivity.class);
+                context.startActivity(intent);
             }
         }
 
@@ -198,7 +211,8 @@ public class DownFallView extends SurfaceView implements Runnable{
             // Draw the invaders
             for(int i = 0; i < Levels.numInvaders; i++){
                 if(invaders[i].getVisibility()) {
-                    canvas.drawBitmap(invaders[i].getBitmap(), invaders[i].getX(), invaders[i].getY(), paint);
+                    canvas.drawRect(invaders[i].getRect(), invaderPaint);
+                    //canvas.drawBitmap(invaders[i].getBitmap(), invaders[i].getX(), invaders[i].getY(), paint);
                 }
             }
 
