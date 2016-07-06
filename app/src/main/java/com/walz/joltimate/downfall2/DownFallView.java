@@ -47,6 +47,7 @@ public class DownFallView extends SurfaceView implements Runnable{
 
     // This is used to help calculate the fps
     private long timeThisFrame;
+    private long numFrames;
 
     // The size of the screen in pixels
     private int screenX;
@@ -99,7 +100,7 @@ public class DownFallView extends SurfaceView implements Runnable{
 
         // Make a new player space ship
         playerShip = new PlayerShip(context, screenX, screenY);
-
+        numFrames = 0;
 
         switch (currentLevel) {
             case 0:
@@ -143,7 +144,18 @@ public class DownFallView extends SurfaceView implements Runnable{
 
     private void update(){
 
+        // Beat level
+        if (numFrames > Levels.levelTimeLimit) {
+            paused = true;
+            score = 0;
+            prepareCurrentLevel();
 
+            // player won -> go to win screen
+            Intent intent = new Intent(context, WinScreenActivity.class);
+            context.startActivity(intent);
+
+        }
+        numFrames++;
 
         // Update all the invaders if visible
         for(int i = 0; i < Levels.numInvaders; i++){
@@ -158,7 +170,8 @@ public class DownFallView extends SurfaceView implements Runnable{
             if (invaders[i] == null) {
                 continue;
             }
-            if (invaders[i].getVisibility() == true && RectF.intersects(invaders[i].getRect(), playerShip.getRect())) {
+            // Lost level
+            if (invaders[i].getVisibility() && RectF.intersects(invaders[i].getRect(), playerShip.getRect())) {
                 paused = true;
                 score = 0;
                 prepareCurrentLevel();
@@ -168,26 +181,6 @@ public class DownFallView extends SurfaceView implements Runnable{
                 context.startActivity(intent);
             }
         }
-
-        // Has an invader bullet hit the player ship
-/*        for(int i = 0; i < invadersBullets.length; i++){
-            if(invadersBullets[i].getStatus()){
-                if(RectF.intersects(playerShip.getRect(), invadersBullets[i].getRect())){
-                    invadersBullets[i].setInactive();
-                    lives --;
-                    soundPool.play(playerExplodeID, 1, 1, 0, 0, 1);
-
-                    // Is it game over?
-                    if(lives == 0){
-                        paused = true;
-                        lives = 3;
-                        score = 0;
-                        prepareCurrentLevel();
-
-                    }
-                }
-            }
-        }  */
 
 
     }

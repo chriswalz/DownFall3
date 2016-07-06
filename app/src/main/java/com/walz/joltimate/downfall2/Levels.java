@@ -14,7 +14,7 @@ public class Levels {
     public static void oneBlock(InvaderAbstract[] invaders, Context context, int screenX, int screenY) {
         // Build an army of invaders
         numInvaders = 1;
-        levelTimeLimit = 1.5; // convert to number of frames
+        levelTimeLimit = 100; // convert to number of frames
         for(int i = 0; i < numInvaders; i++){
             invaders[i] = new Basic(context, screenX, screenY);
         }
