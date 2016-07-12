@@ -27,17 +27,17 @@ public class PlayerShip {
     // This the the constructor method
     // When we create an object from this class we will pass
     // in the screen width and height
-    public PlayerShip(Context context, int screenX, int screenY){
+    public PlayerShip(Context context){
 
         // Initialize a blank RectF
         rect = new RectF();
 
-        length = screenY/8;
-        height = screenY/8;
+        length = Levels.screenWidth/6;
+        height = Levels.screenHeight/6;
 
         // Start ship in roughly the screen centre
-        x = screenX / 2;
-        y = screenY - 20;
+        x = Levels.screenWidth / 2;
+        y = Levels.screenHeight - 20;
 
         // Initialize the bitmap
         bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.playership);

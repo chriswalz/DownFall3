@@ -11,6 +11,7 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.walz.joltimate.downfall2.Invaders.BackgroundBlock;
 import com.walz.joltimate.downfall2.Invaders.InvaderAbstract;
 
 // create level object ?
@@ -20,6 +21,24 @@ import com.walz.joltimate.downfall2.Invaders.InvaderAbstract;
 // create homescreen
 // saved data
 // create give on edge of screen, create give on rect
+
+
+// --- General Principles --- //
+// Keep interface slick and simple (few buttons)
+// Make it clear when a user loses or wins.
+// More levels, make the progression slower..
+
+// marketing
+// email wilson w later
+// use Firebase for: cloud notifications, IAP,
+// firebase app indexing
+// firebase share with friends
+
+// Describing the game to a player:
+// A series of 50 mini levels
+// The goal is to avoid the white blocks
+// You can drag your finger to move around, the kicker is that you teleport as well!
+
 
 public class DownFallView extends SurfaceView implements Runnable{
 
@@ -43,18 +62,11 @@ public class DownFallView extends SurfaceView implements Runnable{
     private Paint paint;
 
     // This variable tracks the game frame rate
-    private long fps;
+    private int fps;
 
     // This is used to help calculate the fps
     private long timeThisFrame;
     private long numFrames;
-
-    // The size of the screen in pixels
-    private int screenX;
-    private int screenY;
-
-    // Current Level
-    private int currentLevel = 0;
 
     // The players ship
     private PlayerShip playerShip; // Player
@@ -62,16 +74,21 @@ public class DownFallView extends SurfaceView implements Runnable{
     // Up to 60 invaders
     private InvaderAbstract[] invaders = new InvaderAbstract[60];
 
+    // Background parellax
+    private InvaderAbstract[] backgroundBlocks = new InvaderAbstract[20];
+
     // The score
     private int score = 0;
 
     private final String scoreText = "Score: ";
 
     private Paint invaderPaint;
+    private Paint backgroundBlockPaint;
+    private Paint textPaint;
 
     // When the we initialize (call new()) on gameView
     // This special constructor method runs
-    public DownFallView(Context context, int x, int y) {
+    public DownFallView(Context context) {
 
         // The next line of code asks the
         // SurfaceView class to set up our object.
@@ -85,11 +102,27 @@ public class DownFallView extends SurfaceView implements Runnable{
         ourHolder = getHolder();
         paint = new Paint();
 
-        screenX = x;
-        screenY = y;
-
         invaderPaint = new Paint();
-        invaderPaint.setColor(Color.WHITE);
+        invaderPaint.setColor(Color.argb(255, 203, 232, 107));
+
+        backgroundBlockPaint = new Paint();
+        backgroundBlockPaint.setColor(Color.argb(255, 24, 24, 24));
+
+        textPaint = new Paint();
+        textPaint.setAntiAlias(true);
+        textPaint.setFakeBoldText(true);               // if you like bold
+        textPaint.setShadowLayer(5, 5, 5, Color.GRAY); // add shadow
+        textPaint.setTextAlign(Paint.Align.CENTER);
+        textPaint.setTextSize(120);
+
+        textPaint.setColor(Color.argb(255, 255, 255, 255));
+
+        int size = Levels.screenHeight/11;
+        int distX = Levels.screenWidth - size;
+        int distY = Levels.screenHeight - size;
+        for(int i = 0; i < backgroundBlocks.length; i++){
+            backgroundBlocks[i] = new BackgroundBlock(context, (int) (distX* Math.random()), (int) (-distY* Math.random()), size, size);
+        }
 
         prepareCurrentLevel();
     }
@@ -99,17 +132,10 @@ public class DownFallView extends SurfaceView implements Runnable{
         // Here we will initialize all the game objects
 
         // Make a new player space ship
-        playerShip = new PlayerShip(context, screenX, screenY);
+        playerShip = new PlayerShip(context);
         numFrames = 0;
 
-        switch (currentLevel) {
-            case 0:
-                Levels.oneBlock(invaders, context, screenX, screenY);
-                break;
-            case 1:
-                Levels.tenInvaders(invaders, context, screenX, screenY);
-        }
-
+        Levels.prepareLevel(invaders, context);
 
     }
 
@@ -120,20 +146,23 @@ public class DownFallView extends SurfaceView implements Runnable{
             // Capture the current time in milliseconds in startFrameTime
             long startFrameTime = System.currentTimeMillis();
 
+            // Draw the frame
+            drawForeground();
             // Update the frame
+            updateBackground();
             if(!paused){
-                update();
+                updateForeground();
             }
 
-            // Draw the frame
-            draw();
+
+
 
             // Calculate the fps this frame
             // We can then use the result to
             // time animations and more.
             timeThisFrame = System.currentTimeMillis() - startFrameTime;
             if (timeThisFrame >= 1) {
-                fps = 1000 / timeThisFrame;
+                fps = (int) (1000 / timeThisFrame);
             }
 
         }
@@ -141,25 +170,36 @@ public class DownFallView extends SurfaceView implements Runnable{
 
 
     }
+    private void updateBackground() {
+        // Update all of the background
+        for(int i = 0; i < backgroundBlocks.length; i++){
+            backgroundBlocks[i].update(fps);
+        }
 
-    private void update(){
+    }
+    private void updateForeground() {
 
         // Beat level
         if (numFrames > Levels.levelTimeLimit) {
             paused = true;
             score = 0;
-            prepareCurrentLevel();
+            //prepareCurrentLevel();
+            Levels.currentLevel++;
 
             // player won -> go to win screen
+
             Intent intent = new Intent(context, WinScreenActivity.class);
             context.startActivity(intent);
 
         }
         numFrames++;
 
-        // Update all the invaders if visible
+        // Update all the invaders
         for(int i = 0; i < Levels.numInvaders; i++){
             // Move the next invader
+            if (invaders[i] == null) {
+                continue;
+            }
             invaders[i].update(fps);
 
         }
@@ -174,7 +214,7 @@ public class DownFallView extends SurfaceView implements Runnable{
             if (invaders[i].getVisibility() && RectF.intersects(invaders[i].getRect(), playerShip.getRect())) {
                 paused = true;
                 score = 0;
-                prepareCurrentLevel();
+                //prepareCurrentLevel();
 
                 // player died -> go to homescreen
                 Intent intent = new Intent(context, RetryScreenActivity.class);
@@ -185,25 +225,32 @@ public class DownFallView extends SurfaceView implements Runnable{
 
     }
 
-
-    private void draw(){
+    private void drawForeground(){
         // Make sure our drawing surface is valid or we crash
         if (ourHolder.getSurface().isValid()) {
             // Lock the canvas ready to draw
             canvas = ourHolder.lockCanvas();
 
             // Draw the background color
-            canvas.drawColor(Color.argb(255, 26, 128, 182));
+            //canvas.drawColor(Color.argb(255, 26, 128, 182));
+            canvas.drawColor(Color.argb(255, 20, 20, 20));
 
             // Choose the brush color for drawing
-            paint.setColor(Color.argb(255,  255, 255, 255));
+            paint.setColor(Color.argb(255, 203, 232, 107));
+
+            // Draw the background blocks
+            for(int i = 0; i < Levels.numInvaders; i++){
+                if(backgroundBlocks[i].getVisibility()) {
+                    canvas.drawRect(backgroundBlocks[i].getRect(), backgroundBlockPaint);
+                }
+            }
 
             // Now draw the player spaceship
             canvas.drawBitmap(playerShip.getBitmap(), playerShip.getX(), playerShip.getY(), paint);
 
             // Draw the invaders
             for(int i = 0; i < Levels.numInvaders; i++){
-                if(invaders[i].getVisibility()) {
+                if(invaders[i] != null && invaders[i].getVisibility()) {
                     canvas.drawRect(invaders[i].getRect(), invaderPaint);
                     //canvas.drawBitmap(invaders[i].getBitmap(), invaders[i].getX(), invaders[i].getY(), paint);
                 }
@@ -213,8 +260,11 @@ public class DownFallView extends SurfaceView implements Runnable{
             // Change the brush color
             paint.setColor(Color.argb(255,  249, 129, 0));
             paint.setTextSize(40);
-            canvas.drawText(scoreText + score, 10,50, paint);
+            canvas.drawText(scoreText + score + " Invaders: " + Levels.numInvaders + " Levels: " + Levels.currentLevel + " FPS: " + fps, 10,50, paint);
 
+            if (paused) {
+                canvas.drawText(Levels.startText, Levels.screenWidth/2, Levels.screenHeight/2, textPaint);
+            }
             // Draw everything to the screen
             ourHolder.unlockCanvasAndPost(canvas);
         }

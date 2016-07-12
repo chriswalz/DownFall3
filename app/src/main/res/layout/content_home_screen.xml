@@ -12,10 +12,5 @@
     tools:context="com.walz.joltimate.downfall2.HomeScreenActivity"
     tools:showIn="@layout/activity_home_screen">
 
-    <android.support.v7.widget.AppCompatButton
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Start"
-        android:id="@+id/start_button"/>
 
 </RelativeLayout>

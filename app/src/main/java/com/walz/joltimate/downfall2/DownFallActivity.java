@@ -4,6 +4,9 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Display;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 public class DownFallActivity extends AppCompatActivity {
 
@@ -21,10 +24,18 @@ public class DownFallActivity extends AppCompatActivity {
         // Load the resolution into a Point object
         Point size = new Point();
         display.getSize(size);
+        Levels.init(size.x, size.y);
+
+
 
         // Initialize gameView and set it as the view
-        downFallView = new DownFallView(this, size.x, size.y);
+        downFallView = new DownFallView(this);
         setContentView(downFallView);
+
+        // Use this to put a view over the surfaceview
+        /* ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        View secondLayerView = LayoutInflater.from(this).inflate(R.layout.activity_home_screen, null, false);
+        addContentView(secondLayerView, lp); */
 
     }
 

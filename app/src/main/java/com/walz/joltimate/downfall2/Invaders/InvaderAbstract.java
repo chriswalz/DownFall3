@@ -1,8 +1,6 @@
 package com.walz.joltimate.downfall2.Invaders;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.RectF;
 
 import java.util.Random;
@@ -15,10 +13,11 @@ public abstract class InvaderAbstract {
     // The player ship will be represented by a Bitmap
     RectF rect;
 
-    Random generator = new Random();
+    private static Random generator = new Random();
+
 
     // size
-    float length;
+    float width;
     float height;
 
     // X is the far left of the rectangle which forms our paddle
@@ -28,7 +27,9 @@ public abstract class InvaderAbstract {
     float y;
 
     // This will hold the pixels per second speedthat the paddle will move
-    float shipSpeed;
+    public static int baseSpeed;
+
+    protected int currentSpeed;
 
     boolean isVisible;
 
@@ -38,13 +39,13 @@ public abstract class InvaderAbstract {
         rect = new RectF();
         isVisible = true;
 
-//        x = (float) (Math.random() * screenX); //column * (length + padding);
- //       y = (float) -(Math.random() * screenY);//row * (length + padding/4);
+//        x = (float) (Math.random() * screenWidth); //column * (width + padding);
+ //       y = (float) -(Math.random() * screenHeight);//row * (width + padding/4);
+        currentSpeed = baseSpeed;
 
-        // How fast is the invader in pixels per second
-        shipSpeed = 800;
+
     }
-    public abstract void update(long fps);
+    public abstract void update(int fps);
 
     public void setInvisible(){
         isVisible = false;

@@ -12,6 +12,7 @@
             android:name=".DownFallActivity"
             android:label="@string/title_activity_down_fall"
             android:screenOrientation="portrait"
+            android:hardwareAccelerated="true"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,9 +23,14 @@
         <activity
             android:name=".HomeScreenActivity"
             android:label="@string/title_activity_home_screen"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".RetryScreenActivity"></activity>
-        <activity android:name=".WinScreenActivity"></activity>
+        <activity
+            android:name=".RetryScreenActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".WinScreenActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>
