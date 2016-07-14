@@ -3,6 +3,9 @@ package com.walz.joltimate.downfall2;
 import android.content.Context;
 
 import com.walz.joltimate.downfall2.Invaders.Basic;
+import com.walz.joltimate.downfall2.Invaders.BouncySprite;
+import com.walz.joltimate.downfall2.Invaders.ClamperSprite;
+import com.walz.joltimate.downfall2.Invaders.FireworkSprite;
 import com.walz.joltimate.downfall2.Invaders.InvaderAbstract;
 
 /**
@@ -10,7 +13,7 @@ import com.walz.joltimate.downfall2.Invaders.InvaderAbstract;
  */
 public class Levels {
     // Current Level
-    public static int currentLevel = 0;
+    public static int currentLevel = 8;
     public static String startText = "";
 
     public static int numInvaders;
@@ -19,7 +22,7 @@ public class Levels {
     public static int screenWidth, screenHeight;
 
     public static void init(int screenX, int screenY) {
-        InvaderAbstract.baseSpeed = 1*screenY/100;
+        InvaderAbstract.baseSpeed = 1*screenY/120;
         screenWidth = screenX;
         screenHeight = screenY;
     }
@@ -37,11 +40,21 @@ public class Levels {
                 break;
             case 3:
                 Levels.threeInvadersClose(invaders, context);
+                break;
             case 4:
                 Levels.squareSquadBig(invaders, context);
+                break;
             case 5:
                 Levels.squareSquadMedium(invaders, context);
+                break;
             case 6:
+                Levels.oneClamper(invaders, context);
+                break;
+            case 7:
+                Levels.oneBouncy(invaders, context);
+                break;
+            case 8:
+                Levels.oneFirework(invaders, context);
 
         }
     }
@@ -105,7 +118,7 @@ public class Levels {
     public static void squareSquadMedium(InvaderAbstract[] invaders, Context context) {
         // Build an army of invaders
         numInvaders = 10;
-        levelTimeLimit = 850;
+        levelTimeLimit = 750;
         startText = "Tap & Drag in one motion!";
         double ratio = 2.1;
 
@@ -115,6 +128,34 @@ public class Levels {
         }
         for(int i = numInvaders/2; i < numInvaders; i++){
             invaders[i] = new Basic(context, screenWidth/2, (int) (-(diff * (i-numInvaders/2))-diff/2), (int) (screenWidth/2), (int) (screenHeight/ratio));
+        }
+    }
+    public static void oneClamper(InvaderAbstract[] invaders, Context context) {
+        // Build an army of invaders
+        numInvaders = 1;
+        levelTimeLimit = 450;
+        startText = "Crusher";
+
+        invaders[0] = new ClamperSprite(context, 0, 0, 2 * Levels.screenHeight);
+    }
+    public static void oneBouncy(InvaderAbstract[] invaders, Context context) {
+        // Build an army of invaders
+        numInvaders = 1;
+        levelTimeLimit = 375;
+        startText = "Bouncy.";
+
+        for(int i = 0; i < numInvaders; i++){
+            invaders[i] = new BouncySprite(context, 0, 0, Levels.screenWidth);
+        }
+    }
+    public static void oneFirework(InvaderAbstract[] invaders, Context context) {
+        // Build an army of invaders
+        numInvaders = 1;
+        levelTimeLimit = 375;
+        startText = "Bouncy.";
+
+        for(int i = 0; i < numInvaders; i++){
+            invaders[i] = new FireworkSprite(context);
         }
     }
 }

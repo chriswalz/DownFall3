@@ -21,12 +21,17 @@ import com.walz.joltimate.downfall2.Invaders.InvaderAbstract;
 // create homescreen
 // saved data
 // create give on edge of screen, create give on rect
+// randomness
 
+// Test out GLSurfaceView??
+// Use the NDK??
 
 // --- General Principles --- //
 // Keep interface slick and simple (few buttons)
 // Make it clear when a user loses or wins.
-// More levels, make the progression slower..
+// More levels, make the progression slower.
+// test on amazon cloud
+
 
 // marketing
 // email wilson w later
@@ -75,15 +80,15 @@ public class DownFallView extends SurfaceView implements Runnable{
     private InvaderAbstract[] invaders = new InvaderAbstract[60];
 
     // Background parellax
-    private InvaderAbstract[] backgroundBlocks = new InvaderAbstract[20];
+    private InvaderAbstract[] backgroundBlocks = new InvaderAbstract[10];
 
     // The score
     private int score = 0;
 
     private final String scoreText = "Score: ";
 
-    private Paint invaderPaint;
-    private Paint backgroundBlockPaint;
+
+
     private Paint textPaint;
 
     // When the we initialize (call new()) on gameView
@@ -102,11 +107,6 @@ public class DownFallView extends SurfaceView implements Runnable{
         ourHolder = getHolder();
         paint = new Paint();
 
-        invaderPaint = new Paint();
-        invaderPaint.setColor(Color.argb(255, 203, 232, 107));
-
-        backgroundBlockPaint = new Paint();
-        backgroundBlockPaint.setColor(Color.argb(255, 24, 24, 24));
 
         textPaint = new Paint();
         textPaint.setAntiAlias(true);
@@ -117,7 +117,7 @@ public class DownFallView extends SurfaceView implements Runnable{
 
         textPaint.setColor(Color.argb(255, 255, 255, 255));
 
-        int size = Levels.screenHeight/11;
+        int size = Levels.screenHeight/7;
         int distX = Levels.screenWidth - size;
         int distY = Levels.screenHeight - size;
         for(int i = 0; i < backgroundBlocks.length; i++){
@@ -146,16 +146,12 @@ public class DownFallView extends SurfaceView implements Runnable{
             // Capture the current time in milliseconds in startFrameTime
             long startFrameTime = System.currentTimeMillis();
 
-            // Draw the frame
-            drawForeground();
-            // Update the frame
+            draw();
+
             updateBackground();
             if(!paused){
                 updateForeground();
             }
-
-
-
 
             // Calculate the fps this frame
             // We can then use the result to
@@ -166,9 +162,20 @@ public class DownFallView extends SurfaceView implements Runnable{
             }
 
         }
+    }
+    private void draw() {
+        // Make sure our drawing surface is valid or we crash
+        if (ourHolder.getSurface().isValid()) {
+            // Lock the canvas ready to draw
+            canvas = ourHolder.lockCanvas();
 
+            drawBackground();
+            drawForeground();
+            drawHUD();
 
-
+            // Draw everything to the screen
+            ourHolder.unlockCanvasAndPost(canvas);
+        }
     }
     private void updateBackground() {
         // Update all of the background
@@ -180,7 +187,7 @@ public class DownFallView extends SurfaceView implements Runnable{
     private void updateForeground() {
 
         // Beat level
-        if (numFrames > Levels.levelTimeLimit) {
+        if (numFrames >= Levels.levelTimeLimit) {
             paused = true;
             score = 0;
             //prepareCurrentLevel();
@@ -211,7 +218,7 @@ public class DownFallView extends SurfaceView implements Runnable{
                 continue;
             }
             // Lost level
-            if (invaders[i].getVisibility() && RectF.intersects(invaders[i].getRect(), playerShip.getRect())) {
+            if (invaders[i].isVisible && RectF.intersects(invaders[i].rect, playerShip.rect)) {
                 paused = true;
                 score = 0;
                 //prepareCurrentLevel();
@@ -224,50 +231,51 @@ public class DownFallView extends SurfaceView implements Runnable{
 
 
     }
+    private void drawBackground() {
+        // Draw the background color
+        //canvas.drawColor(Color.argb(255, 26, 128, 182));
+        canvas.drawColor(Color.argb(255, 20, 20, 20));
+
+        // Draw the background blocks
+        for(int i = 0; i < Levels.numInvaders; i++){
+            if(backgroundBlocks[i].isVisible) {
+                backgroundBlocks[i].draw(canvas);
+            }
+        }
+
+    }
 
     private void drawForeground(){
-        // Make sure our drawing surface is valid or we crash
-        if (ourHolder.getSurface().isValid()) {
-            // Lock the canvas ready to draw
-            canvas = ourHolder.lockCanvas();
-
-            // Draw the background color
-            //canvas.drawColor(Color.argb(255, 26, 128, 182));
-            canvas.drawColor(Color.argb(255, 20, 20, 20));
 
             // Choose the brush color for drawing
             paint.setColor(Color.argb(255, 203, 232, 107));
 
-            // Draw the background blocks
-            for(int i = 0; i < Levels.numInvaders; i++){
-                if(backgroundBlocks[i].getVisibility()) {
-                    canvas.drawRect(backgroundBlocks[i].getRect(), backgroundBlockPaint);
-                }
-            }
-
             // Now draw the player spaceship
-            canvas.drawBitmap(playerShip.getBitmap(), playerShip.getX(), playerShip.getY(), paint);
+            //canvas.drawBitmap(playerShip.bitmap, playerShip.x, playerShip.y, paint);
+            playerShip.draw(canvas);
+
 
             // Draw the invaders
             for(int i = 0; i < Levels.numInvaders; i++){
-                if(invaders[i] != null && invaders[i].getVisibility()) {
-                    canvas.drawRect(invaders[i].getRect(), invaderPaint);
+                if(invaders[i] != null && invaders[i].isVisible) {
+                    invaders[i].draw(canvas);
                     //canvas.drawBitmap(invaders[i].getBitmap(), invaders[i].getX(), invaders[i].getY(), paint);
                 }
             }
 
-            // Draw the score and remaining lives
-            // Change the brush color
-            paint.setColor(Color.argb(255,  249, 129, 0));
-            paint.setTextSize(40);
-            canvas.drawText(scoreText + score + " Invaders: " + Levels.numInvaders + " Levels: " + Levels.currentLevel + " FPS: " + fps, 10,50, paint);
+    }
+    private void drawHUD() {
+        // Draw the score and remaining lives
+        // Change the brush color
+        paint.setColor(Color.argb(255,  249, 129, 0));
+        paint.setTextSize(40);
+        canvas.drawText(scoreText + score + " Invaders: " + Levels.numInvaders + " Levels: " + Levels.currentLevel + " FPS: " + fps, 10,50, paint);
+        canvas.drawText(" Timer: " + (Levels.levelTimeLimit - numFrames), 10, Levels.screenHeight - 20, paint);
 
-            if (paused) {
-                canvas.drawText(Levels.startText, Levels.screenWidth/2, Levels.screenHeight/2, textPaint);
-            }
-            // Draw everything to the screen
-            ourHolder.unlockCanvasAndPost(canvas);
+        if (paused) {
+            canvas.drawText(Levels.startText, Levels.screenWidth/2, Levels.screenHeight/2, textPaint);
         }
+
     }
 
     // If DownFallActivity is paused/stopped
