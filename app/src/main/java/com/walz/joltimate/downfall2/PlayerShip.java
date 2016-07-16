@@ -12,7 +12,7 @@ import android.graphics.RectF;
  * Created by chris on 7/2/16.
  */
 public class PlayerShip {
-    RectF rect;
+    public RectF rect;
 
     // The player ship will be represented by a Bitmap
     //public Bitmap bitmap;
@@ -28,10 +28,14 @@ public class PlayerShip {
     public float y;
 
     public static Paint paint;
+    public static Paint paint2;
 
     static {
         paint = new Paint();
         paint.setColor(Color.WHITE);
+
+        paint2 = new Paint();
+        paint2.setColor(Color.BLUE);
     }
     // This the the constructor method
     // When we create an object from this class we will pass
@@ -48,6 +52,11 @@ public class PlayerShip {
         x = (Levels.screenWidth / 2) - width/2;
         y = 6*Levels.screenHeight / 9 ;
 
+        rect.top = this.y;
+        rect.bottom = this.y + height;
+        rect.left = this.x;
+        rect.right = this.x + width;
+
         // Initialize the bitmap
         /*bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.playership);
 
@@ -59,7 +68,9 @@ public class PlayerShip {
 
     }
     public void draw(Canvas c) {
-        c.drawRect(rect, paint);
+        //c.drawRect(rect, paint);
+        c.drawRoundRect(rect, 20, 40, paint);
+        c.drawCircle(x + width/2, y + width/2, width/4, paint2);
     }
     public void setLocation(float x, float y) {
         this.x = x - width / 2;

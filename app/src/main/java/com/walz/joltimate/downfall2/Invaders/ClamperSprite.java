@@ -5,8 +5,9 @@ import android.graphics.Canvas;
 import android.graphics.RectF;
 
 import com.walz.joltimate.downfall2.Levels;
+import com.walz.joltimate.downfall2.PlayerShip;
 
-public class ClamperSprite extends InvaderAbstract{
+public class ClamperSprite extends OneRectAbstract{
     private RectF rect2;
     private float x2;
 
@@ -50,5 +51,9 @@ public class ClamperSprite extends InvaderAbstract{
     public void draw(Canvas c) {
         c.drawRect(rect, invaderPaint);
         c.drawRect(rect2, invaderPaint);
+    }
+    @Override
+    public boolean isColliding(PlayerShip playerShip) {
+        return RectF.intersects(rect, playerShip.rect) || RectF.intersects(rect2, playerShip.rect);
     }
 }

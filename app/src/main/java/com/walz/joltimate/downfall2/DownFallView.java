@@ -31,6 +31,7 @@ import com.walz.joltimate.downfall2.Invaders.InvaderAbstract;
 // Make it clear when a user loses or wins.
 // More levels, make the progression slower.
 // test on amazon cloud
+// level selector
 
 
 // marketing
@@ -80,7 +81,7 @@ public class DownFallView extends SurfaceView implements Runnable{
     private InvaderAbstract[] invaders = new InvaderAbstract[60];
 
     // Background parellax
-    private InvaderAbstract[] backgroundBlocks = new InvaderAbstract[10];
+    private BackgroundBlock[] backgroundBlocks = new BackgroundBlock[10];
 
     // The score
     private int score = 0;
@@ -117,11 +118,15 @@ public class DownFallView extends SurfaceView implements Runnable{
 
         textPaint.setColor(Color.argb(255, 255, 255, 255));
 
-        int size = Levels.screenHeight/7;
+        int size = Levels.screenHeight/15;
         int distX = Levels.screenWidth - size;
         int distY = Levels.screenHeight - size;
+        int sizeX;
+        int sizeY;
         for(int i = 0; i < backgroundBlocks.length; i++){
-            backgroundBlocks[i] = new BackgroundBlock(context, (int) (distX* Math.random()), (int) (-distY* Math.random()), size, size);
+            sizeX = (int) (Math.random() * Levels.screenWidth/8 + size);
+            sizeY = (int) (Math.random() * Levels.screenWidth/8 + size);
+            backgroundBlocks[i] = new BackgroundBlock(context, (int)(Math.random()*Levels.screenWidth), (int)(Math.random()*Levels.screenHeight), sizeX, sizeY);
         }
 
         prepareCurrentLevel();
@@ -131,7 +136,11 @@ public class DownFallView extends SurfaceView implements Runnable{
 
         // Here we will initialize all the game objects
 
+
+
         // Make a new player space ship
+
+
         playerShip = new PlayerShip(context);
         numFrames = 0;
 
@@ -146,13 +155,13 @@ public class DownFallView extends SurfaceView implements Runnable{
             // Capture the current time in milliseconds in startFrameTime
             long startFrameTime = System.currentTimeMillis();
 
-            draw();
 
             updateBackground();
             if(!paused){
                 updateForeground();
             }
 
+            draw();
             // Calculate the fps this frame
             // We can then use the result to
             // time animations and more.
@@ -218,7 +227,7 @@ public class DownFallView extends SurfaceView implements Runnable{
                 continue;
             }
             // Lost level
-            if (invaders[i].isVisible && RectF.intersects(invaders[i].rect, playerShip.rect)) {
+            if (invaders[i].isColliding(playerShip)) { //invaders[i].isVisible && RectF.intersects(invaders[i].rect, playerShip.rect
                 paused = true;
                 score = 0;
                 //prepareCurrentLevel();
@@ -237,9 +246,9 @@ public class DownFallView extends SurfaceView implements Runnable{
         canvas.drawColor(Color.argb(255, 20, 20, 20));
 
         // Draw the background blocks
-        for(int i = 0; i < Levels.numInvaders; i++){
+        for(int i = 0; i < backgroundBlocks.length; i++){
+            backgroundBlocks[i].draw(canvas);
             if(backgroundBlocks[i].isVisible) {
-                backgroundBlocks[i].draw(canvas);
             }
         }
 

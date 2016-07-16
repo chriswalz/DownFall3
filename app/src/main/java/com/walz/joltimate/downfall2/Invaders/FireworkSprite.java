@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.RectF;
 
 import com.walz.joltimate.downfall2.Levels;
+import com.walz.joltimate.downfall2.PlayerShip;
 
 public class FireworkSprite extends InvaderAbstract{
 
@@ -52,7 +53,7 @@ public class FireworkSprite extends InvaderAbstract{
         widthR = Levels.screenWidth / length;
         heightR = Levels.screenWidth / length;
         for ( int i = 0; i < equalRects.length; i++) {
-            xRand[i] = (int) (width / 2 - widthR / 2);
+            xRand[i] = (int) (0 - widthR / 2);
             yRand[i] = 0;
             int xI = (int) this.x + xRand[i];
             int yI = (int) this.y + yRand[i];
@@ -65,7 +66,7 @@ public class FireworkSprite extends InvaderAbstract{
             equalRects[i].right = xI + widthR;
         }
     }
-
+    @Override
     public void update(int fps) {
         y += yVelocity;
 
@@ -89,9 +90,19 @@ public class FireworkSprite extends InvaderAbstract{
         }
 
     }
+    @Override
     public void draw(Canvas c) {
         for(RectF r: equalRects){
             c.drawRect(r, invaderPaint);
         }
+    }
+    @Override
+    public boolean isColliding(PlayerShip playerShip) {
+        for (RectF r: equalRects) {
+            if (RectF.intersects(r, playerShip.rect)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -2,8 +2,11 @@ package com.walz.joltimate.downfall2.Invaders;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.RectF;
 
-public class Basic extends InvaderAbstract{
+import com.walz.joltimate.downfall2.PlayerShip;
+
+public class Basic extends OneRectAbstract{
 
     public Basic(Context context, float xVal, float yVal, int width, int height) {
 
@@ -14,6 +17,7 @@ public class Basic extends InvaderAbstract{
         this.y = yVal - height;
     }
 
+    @Override
     public void update(int fps) {
         y += yVelocity;
 
@@ -23,7 +27,13 @@ public class Basic extends InvaderAbstract{
         rect.left = x;
         rect.right = x + width;
     }
+    @Override
     public void draw(Canvas c) {
         c.drawRect(rect, invaderPaint);
+    }
+
+    @Override
+    public boolean isColliding(PlayerShip playerShip) {
+        return RectF.intersects(rect, playerShip.rect);
     }
 }

@@ -7,6 +7,7 @@ import com.walz.joltimate.downfall2.Invaders.BouncySprite;
 import com.walz.joltimate.downfall2.Invaders.ClamperSprite;
 import com.walz.joltimate.downfall2.Invaders.FireworkSprite;
 import com.walz.joltimate.downfall2.Invaders.InvaderAbstract;
+import com.walz.joltimate.downfall2.Invaders.RainSprite;
 
 /**
  * Created by chris on 7/4/16.
@@ -55,6 +56,16 @@ public class Levels {
                 break;
             case 8:
                 Levels.oneFirework(invaders, context);
+                break;
+            case 9:
+                Levels.oneRain(invaders, context);
+                break;
+            case 10:
+                Levels.twoRain(invaders, context);
+                break;
+            default:
+                Levels.twoRain(invaders, context);
+                break;
 
         }
     }
@@ -157,5 +168,24 @@ public class Levels {
         for(int i = 0; i < numInvaders; i++){
             invaders[i] = new FireworkSprite(context);
         }
+    }
+    public static void oneRain(InvaderAbstract[] invaders, Context context) {
+        // Build an army of invaders
+        numInvaders = 1;
+        levelTimeLimit = 675;
+        startText = "Let it rain!";
+
+        for(int i = 0; i < numInvaders; i++){
+            invaders[i] = new RainSprite(context, 40, 0);
+        }
+    }
+    public static void twoRain(InvaderAbstract[] invaders, Context context) {
+        // Build an army of invaders
+        numInvaders = 2;
+        levelTimeLimit = 875;
+        startText = "Let it rain!";
+
+        invaders[0] = new RainSprite(context, 40, 0);
+        invaders[1] = new RainSprite(context, 40, (int) levelTimeLimit/2);
     }
 }

@@ -2,10 +2,12 @@ package com.walz.joltimate.downfall2.Invaders;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.RectF;
 
 import com.walz.joltimate.downfall2.Levels;
+import com.walz.joltimate.downfall2.PlayerShip;
 
-public class BackgroundBlock extends InvaderAbstract{
+public class BackgroundBlock extends OneRectAbstract{
     int xSpeed;
 
     public BackgroundBlock(Context context, float xVal, float yVal, int width, int height) {
@@ -16,8 +18,8 @@ public class BackgroundBlock extends InvaderAbstract{
         this.x = xVal;
         this.y = yVal - height;
 
-        this.yVelocity = 2 + (int) (3 *Math.random());
-        this.xSpeed = -2 + (int) (5 * Math.random());
+        this.yVelocity = 1; //+ (int) (2 *Math.random());
+        this.xSpeed = -1 + (int) (3 * Math.random());
     }
 
     public void update(int fps) {
@@ -41,5 +43,10 @@ public class BackgroundBlock extends InvaderAbstract{
     }
     public void draw(Canvas c) {
         c.drawRect(rect, backgroundBlockPaint);
+    }
+
+    @Override
+    public boolean isColliding(PlayerShip playerShip) {
+        return false;
     }
 }

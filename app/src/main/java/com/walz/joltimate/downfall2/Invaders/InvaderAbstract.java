@@ -5,17 +5,12 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 
+import com.walz.joltimate.downfall2.PlayerShip;
+
 /**
  * Created by chris on 7/2/16.
  */
 public abstract class InvaderAbstract {
-
-    // The player ship will be represented by a RectF
-    public RectF rect;
-
-    // size
-    public float width;
-    public float height;
 
     // X is the far left of the rectangle which forms our paddle
     public float x;
@@ -44,7 +39,7 @@ public abstract class InvaderAbstract {
     public InvaderAbstract() {
 
         // Initialize a blank RectF
-        rect = new RectF();
+
         isVisible = true;
 
 //        x = (float) (Math.random() * screenWidth); //column * (width + padding);
@@ -55,5 +50,6 @@ public abstract class InvaderAbstract {
     }
     public abstract void update(int fps);
     public abstract void draw(Canvas c);
+    public abstract boolean isColliding(PlayerShip playerShip);
 
 }

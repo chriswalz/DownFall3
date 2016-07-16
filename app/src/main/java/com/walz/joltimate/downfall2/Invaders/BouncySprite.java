@@ -3,10 +3,12 @@ package com.walz.joltimate.downfall2.Invaders;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.RectF;
 
 import com.walz.joltimate.downfall2.Levels;
+import com.walz.joltimate.downfall2.PlayerShip;
 
-public class BouncySprite extends InvaderAbstract{
+public class BouncySprite extends OneRectAbstract {
     private boolean goDown = true;
 
     public BouncySprite(Context context, float xVal, float yVal, int width) {
@@ -36,5 +38,10 @@ public class BouncySprite extends InvaderAbstract{
     }
     public void draw(Canvas c) {
         c.drawRect(rect, invaderPaint);
+    }
+
+    @Override
+    public boolean isColliding(PlayerShip playerShip) {
+        return RectF.intersects(rect, playerShip.rect);
     }
 }
