@@ -72,7 +72,7 @@ public class DownFallView extends SurfaceView implements Runnable{
 
     // This is used to help calculate the fps
     private long timeThisFrame;
-    private long numFrames;
+    public static long numFrames;
 
     // The players ship
     private PlayerShip playerShip; // Player
@@ -108,6 +108,7 @@ public class DownFallView extends SurfaceView implements Runnable{
         ourHolder = getHolder();
         paint = new Paint();
 
+        numFrames = 0;
 
         textPaint = new Paint();
         textPaint.setAntiAlias(true);
@@ -144,7 +145,7 @@ public class DownFallView extends SurfaceView implements Runnable{
         playerShip = new PlayerShip(context);
         numFrames = 0;
 
-        Levels.prepareLevel(invaders, context);
+        Levels.prepareLevel(playerShip, invaders, context);
 
     }
 
@@ -197,13 +198,11 @@ public class DownFallView extends SurfaceView implements Runnable{
 
         // Beat level
         if (numFrames >= Levels.levelTimeLimit) {
-            paused = true;
             score = 0;
             //prepareCurrentLevel();
-            Levels.currentLevel++;
-
+            Levels.updateCurrentLevel(); ;
             // player won -> go to win screen
-
+            paused = true;
             Intent intent = new Intent(context, WinScreenActivity.class);
             context.startActivity(intent);
 
@@ -243,7 +242,7 @@ public class DownFallView extends SurfaceView implements Runnable{
     private void drawBackground() {
         // Draw the background color
         //canvas.drawColor(Color.argb(255, 26, 128, 182));
-        canvas.drawColor(Color.argb(255, 20, 20, 20));
+        canvas.drawColor(Color.argb(255, 253, 234, 175));// rgb(253, 234, 175) Color.argb(255, 20, 20, 20));
 
         // Draw the background blocks
         for(int i = 0; i < backgroundBlocks.length; i++){
@@ -278,7 +277,7 @@ public class DownFallView extends SurfaceView implements Runnable{
         // Change the brush color
         paint.setColor(Color.argb(255,  249, 129, 0));
         paint.setTextSize(40);
-        canvas.drawText(scoreText + score + " Invaders: " + Levels.numInvaders + " Levels: " + Levels.currentLevel + " FPS: " + fps, 10,50, paint);
+        canvas.drawText(scoreText + score + " Invaders: " + Levels.numInvaders + " Part: " + Levels.currentSection + " Levels: " + Levels.currentLevel + " FPS: " + fps, 10,50, paint);
         canvas.drawText(" Timer: " + (Levels.levelTimeLimit - numFrames), 10, Levels.screenHeight - 20, paint);
 
         if (paused) {

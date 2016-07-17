@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.RectF;
 
 /**
@@ -21,6 +22,9 @@ public class PlayerShip {
     private float width;
     private float height;
 
+    private int curve = 100;
+    private boolean increase = false;
+
     // X is the far left of the rectangle which forms our paddle
     public float x;
 
@@ -30,12 +34,22 @@ public class PlayerShip {
     public static Paint paint;
     public static Paint paint2;
 
+    private final static int frameLen = 5;
+    public static Paint[] framePaints = new Paint[frameLen];
+    private static RectF[] previousFrames = new RectF[frameLen];
+
     static {
         paint = new Paint();
-        paint.setColor(Color.WHITE);
+        paint.setColor(Color.argb(255,23, 144, 245 )); //rgb(23, 144, 244)
 
         paint2 = new Paint();
         paint2.setColor(Color.BLUE);
+
+        int diff = 50;
+        for (int i = 0; i < frameLen; i++) {
+            framePaints[i] = new Paint();
+            framePaints[i].setColor(Color.argb(255, (frameLen-1-i)*diff, (frameLen-1-i)*diff, 245));
+        }
     }
     // This the the constructor method
     // When we create an object from this class we will pass
@@ -57,6 +71,10 @@ public class PlayerShip {
         rect.left = this.x;
         rect.right = this.x + width;
 
+        for (int i = 0; i < previousFrames.length; i++) {
+            previousFrames[i] = new RectF();
+        }
+
         // Initialize the bitmap
         /*bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.playership);
 
@@ -69,10 +87,41 @@ public class PlayerShip {
     }
     public void draw(Canvas c) {
         //c.drawRect(rect, paint);
-        c.drawRoundRect(rect, 20, 40, paint);
-        c.drawCircle(x + width/2, y + width/2, width/4, paint2);
+        for (int i = 0; i < previousFrames.length-1; i++) {
+            RectF next = previousFrames[i+1];
+            previousFrames[i].top = next.top;
+            previousFrames[i].bottom = next.bottom;
+            previousFrames[i].left = next.left;
+            previousFrames[i].right = next.right;
+        }
+        RectF newestDelayFrame = previousFrames[previousFrames.length-1];
+        newestDelayFrame.top = this.y;
+        newestDelayFrame.bottom = this.y + height;
+        newestDelayFrame.left = this.x;
+        newestDelayFrame.right = this.x + width;
+
+        if (curve > 70) {
+            increase = false;
+        }
+        if (curve <= 10 ) {
+            increase = true;
+        }
+        if (increase) {
+            curve += 2;
+        } else {
+            curve -= 2;
+        }
+        int i = 0;
+        for (RectF r: previousFrames) {
+            c.drawRoundRect(r, curve/2, curve, framePaints[i]);
+            i++;
+        }
+        c.drawRoundRect(rect, curve/2, curve, paint);
+        //c.drawCircle(x + width/2, y + width/2, width/4, paint2);
     }
     public void setLocation(float x, float y) {
+
+
         this.x = x - width / 2;
         this.y = y - height / 2;
 
@@ -81,6 +130,13 @@ public class PlayerShip {
         rect.left = this.x;
         rect.right = this.x + width;
     }
+    public float getCenterX() {
+        return x + width/2;
+    }
+    public float getCenterY() {
+        return y + height/2;
+    }
+
 
 
 }
