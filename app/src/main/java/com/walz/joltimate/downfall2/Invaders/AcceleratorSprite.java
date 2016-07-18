@@ -11,28 +11,37 @@ import com.walz.joltimate.downfall2.PlayerShip;
 
 public class AcceleratorSprite extends OneRectAbstract {
     private boolean goDown = true;
-    private int acceleration = 2;
+    private int acceleration;
+    private boolean bounce;
 
-    public AcceleratorSprite(Context context, float xVal, float yVal, int width) {
+    public AcceleratorSprite(Context context, float xVal, float yVal, int width, boolean bounce) {
 
         this.width = width;
         this.height = Levels.screenHeight/40;
 
+        this.acceleration = 1;
+
         this.x = xVal;
         this.y = yVal - height;
+
+        this.bounce = bounce;
     }
 
     public void update(int fps) {
         if (goDown){
             y += yVelocity;
-            if ( y > 0 && DownFallView.numFrames % 3 == 0) {
+            if ( y > Levels.screenHeight/12 && DownFallView.numFrames % 2 == 0) {
                 yVelocity += acceleration;
             }
             if(y > (Levels.screenHeight) ){
                 goDown = false;
             }
         } else {
-            y -= yVelocity;
+            if (bounce) {
+                y -= yVelocity;
+            } else {
+                y += yVelocity;
+            }
         }
 
 

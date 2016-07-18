@@ -21,6 +21,7 @@ public class BouncySprite extends OneRectAbstract {
     }
 
     public void update(int fps) {
+        super.update(fps);
         if (goDown){
             y += yVelocity;
             if(y > (Levels.screenHeight) ){
@@ -37,6 +38,7 @@ public class BouncySprite extends OneRectAbstract {
         rect.right = x + width;
     }
     public void draw(Canvas c) {
+        super.draw(c);
         c.drawRect(rect, invaderPaint);
     }
 

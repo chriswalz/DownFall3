@@ -10,7 +10,14 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.walz.joltimate.downfall2.WinScreenActivity">
 
-
+    <android.support.v7.widget.AppCompatTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="SUCCESS!"
+        android:textSize="36sp"
+        android:textAlignment="center"
+        android:textColor="#a2ff9f"
+        android:layout_above="@id/retry_button"/>
 
     <android.support.v7.widget.AppCompatButton
         android:layout_width="match_parent"

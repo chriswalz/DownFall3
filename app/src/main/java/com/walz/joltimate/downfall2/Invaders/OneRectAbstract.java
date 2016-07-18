@@ -1,6 +1,8 @@
 package com.walz.joltimate.downfall2.Invaders;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.RectF;
 
 import com.walz.joltimate.downfall2.PlayerShip;
@@ -11,18 +13,33 @@ import com.walz.joltimate.downfall2.PlayerShip;
 public abstract class OneRectAbstract extends InvaderAbstract {
     // The player ship will be represented by a RectF
     public RectF rect;
+    public RectF backgroundRect;
 
     // size
     public float width;
     public float height;
 
-    public OneRectAbstract() {
-        super();
-        rect = new RectF();
+    protected static Paint invaderPreviousPaint;
+
+    static {
+        invaderPreviousPaint = new Paint();
+        invaderPreviousPaint.setColor(Color.argb(255, 200, 10, 20) );//Color.argb(255, 203, 232, 107)); // rgb(255, 41, 83)
     }
 
-    public abstract void update(int fps);
-    public abstract void draw(Canvas c);
+    public OneRectAbstract() {
+        rect = new RectF();
+        backgroundRect = new RectF();
+    }
+
+    public void update(int fps) {
+        backgroundRect.top = y;
+        backgroundRect.bottom = y + height;
+        backgroundRect.left = x;
+        backgroundRect.right = x + width;
+    }
+    public void draw(Canvas c) {
+        c.drawRect(backgroundRect, invaderPreviousPaint);
+    }
     public abstract boolean isColliding(PlayerShip playerShip);
 
 }

@@ -28,12 +28,15 @@ public abstract class InvaderAbstract {
     protected static Paint backgroundBlockPaint;
     protected static Paint invaderPaint;
 
+
     static {
         backgroundBlockPaint = new Paint();
         backgroundBlockPaint.setColor(Color.argb(255, 253, 244, 201)); //Color.argb(255, 24, 24, 24));
 
         invaderPaint = new Paint();
         invaderPaint.setColor(Color.argb(255, 255, 41, 83) );//Color.argb(255, 203, 232, 107)); // rgb(255, 41, 83)
+
+
     }
 
     public InvaderAbstract() {

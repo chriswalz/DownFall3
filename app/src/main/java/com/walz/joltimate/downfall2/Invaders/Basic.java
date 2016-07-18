@@ -19,6 +19,8 @@ public class Basic extends OneRectAbstract{
 
     @Override
     public void update(int fps) {
+        super.update(fps);
+
         y += yVelocity;
 
         // Update rect which is used to detect hits
@@ -29,6 +31,7 @@ public class Basic extends OneRectAbstract{
     }
     @Override
     public void draw(Canvas c) {
+        super.draw(c);
         c.drawRect(rect, invaderPaint);
     }
 

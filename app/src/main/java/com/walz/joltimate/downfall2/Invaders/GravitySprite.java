@@ -35,6 +35,8 @@ public class GravitySprite extends OneRectAbstract{
 
     @Override
     public void update(int fps) {
+        super.update(fps);
+
         centerX = (int) (x + width/2);
         centerY = (int) (y + height/2);
 
@@ -70,6 +72,7 @@ public class GravitySprite extends OneRectAbstract{
     }
     @Override
     public void draw(Canvas c) {
+        super.draw(c);
         c.drawRect(rect, invaderPaint);
     }
 

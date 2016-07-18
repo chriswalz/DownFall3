@@ -2,24 +2,21 @@ package com.walz.joltimate.downfall2.Invaders;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.RectF;
 
 import com.walz.joltimate.downfall2.Levels;
 import com.walz.joltimate.downfall2.PlayerShip;
 
-public class FireworkSprite extends InvaderAbstract{
+public class FireworkSprite extends MultRectAbstract{
 
-    private int length = 40; // number must be a multiple of FOUR!!
-    private RectF[] equalRects = new RectF[length];
 
-    private int lenSep = length/4;
+    private int lenSep;
 
-    private int[] xRand = new int[length];
-    private int[] yRand = new int[length];
+    private int[] xRand;
+    private int[] yRand;
 
-    private int[] xRandIncrement = new int[length];
-    private int[] yRandIncrement = new int[length];
+    private int[] xRandIncrement;
+    private int[] yRandIncrement;
 
 
     private int widthR;
@@ -27,13 +24,23 @@ public class FireworkSprite extends InvaderAbstract{
 
     private int explosionHeight = 0;
 
-    public FireworkSprite(Context context) {
+    public FireworkSprite(Context context, int length, float x) {
+        super(length);
 
+        this.lenSep = length/4;
 
-        this.x = Levels.screenWidth/2;
+        this.x = x;
         this.y = 0;
 
+        xRand = new int[length];
+        yRand = new int[length];
+
+        xRandIncrement = new int[length];
+        yRandIncrement = new int[length];
+
         this.explosionHeight = (int) (Math.random() *(Levels.screenHeight/4 + (3 *Levels.screenHeight/ 4)) );
+
+
 
         for ( int i = 0; i < length/4; i++){
             xRandIncrement[i] = i;
@@ -50,39 +57,31 @@ public class FireworkSprite extends InvaderAbstract{
 
         }
 
-        widthR = Levels.screenWidth / length;
-        heightR = Levels.screenWidth / length;
-        for ( int i = 0; i < equalRects.length; i++) {
+        widthR = Levels.screenWidth / 40;
+        heightR = Levels.screenWidth / 40;
+        for (int i = 0; i < rects.length; i++) {
             xRand[i] = (int) (0 - widthR / 2);
             yRand[i] = 0;
             int xI = (int) this.x + xRand[i];
             int yI = (int) this.y + yRand[i];
 
-            equalRects[i] = new RectF();
-
-            equalRects[i].top = yI;
-            equalRects[i].bottom = yI + heightR;
-            equalRects[i].left = xI;
-            equalRects[i].right = xI + widthR;
+            updateRectF(rects[i], xI, yI, widthR, heightR);
         }
     }
     @Override
     public void update(int fps) {
         y += yVelocity;
 
-        for ( int i = 0; i < equalRects.length; i++){
+        for (int i = 0; i < rects.length; i++){
             int xI = (int) x + xRand[i];
             int yI = (int) y + yRand[i];
-            equalRects[i].top = yI;
-            equalRects[i].bottom = yI + heightR;
-            equalRects[i].left = xI;
-            equalRects[i].right = xI + widthR ;
+            updateRectF(rects[i], xI, yI, widthR, heightR);
         }
 
         if ( y > explosionHeight){
             // possibly add color
 
-            for ( int i = 0; i < equalRects.length; i++){
+            for (int i = 0; i < rects.length; i++){
                 xRand[i] += xRandIncrement[i];
                 yRand[i] += yRandIncrement[i];
                 yVelocity = 0;
@@ -92,13 +91,13 @@ public class FireworkSprite extends InvaderAbstract{
     }
     @Override
     public void draw(Canvas c) {
-        for(RectF r: equalRects){
+        for(RectF r: rects){
             c.drawRect(r, invaderPaint);
         }
     }
     @Override
     public boolean isColliding(PlayerShip playerShip) {
-        for (RectF r: equalRects) {
+        for (RectF r: rects) {
             if (RectF.intersects(r, playerShip.rect)) {
                 return true;
             }

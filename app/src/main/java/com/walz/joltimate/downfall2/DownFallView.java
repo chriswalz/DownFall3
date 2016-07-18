@@ -22,6 +22,8 @@ import com.walz.joltimate.downfall2.Invaders.InvaderAbstract;
 // saved data
 // create give on edge of screen, create give on rect
 // randomness
+// review button, share button
+// teleport animation
 
 // Test out GLSurfaceView??
 // Use the NDK??
@@ -67,6 +69,10 @@ public class DownFallView extends SurfaceView implements Runnable{
     private Canvas canvas;
     private Paint paint;
 
+    private Paint winCirclePaint;
+
+    private boolean triggerWinAnimation = false;
+
     // This variable tracks the game frame rate
     private int fps;
 
@@ -89,8 +95,11 @@ public class DownFallView extends SurfaceView implements Runnable{
     private final String scoreText = "Score: ";
 
 
+    private int winCircleRadius = 0;
 
     private Paint textPaint;
+    private int alpha = 255;
+    private boolean increase = false;
 
     // When the we initialize (call new()) on gameView
     // This special constructor method runs
@@ -115,9 +124,10 @@ public class DownFallView extends SurfaceView implements Runnable{
         textPaint.setFakeBoldText(true);               // if you like bold
         textPaint.setShadowLayer(5, 5, 5, Color.GRAY); // add shadow
         textPaint.setTextAlign(Paint.Align.CENTER);
-        textPaint.setTextSize(120);
 
-        textPaint.setColor(Color.argb(255, 255, 255, 255));
+        winCirclePaint = new Paint();
+        winCirclePaint.setColor(Color.argb(255, 162, 255, 159));
+
 
         int size = Levels.screenHeight/15;
         int distX = Levels.screenWidth - size;
@@ -181,10 +191,27 @@ public class DownFallView extends SurfaceView implements Runnable{
 
             drawBackground();
             drawForeground();
+            if (triggerWinAnimation) {
+                drawWinAnimation();
+            }
             drawHUD();
 
             // Draw everything to the screen
             ourHolder.unlockCanvasAndPost(canvas);
+        }
+    }
+    private void drawWinAnimation() {
+        if (winCircleRadius < 3*Levels.screenHeight/4) {
+
+            canvas.drawCircle((float) Levels.screenWidth/2, (float) Levels.screenHeight/2, winCircleRadius, winCirclePaint);
+            winCircleRadius += Levels.screenHeight/100;
+
+        } else {
+            winCircleRadius = 0;
+            paused = true;
+            triggerWinAnimation = false;
+            Intent intent = new Intent(context, WinScreenActivity.class);
+            context.startActivity(intent);
         }
     }
     private void updateBackground() {
@@ -202,9 +229,7 @@ public class DownFallView extends SurfaceView implements Runnable{
             //prepareCurrentLevel();
             Levels.updateCurrentLevel(); ;
             // player won -> go to win screen
-            paused = true;
-            Intent intent = new Intent(context, WinScreenActivity.class);
-            context.startActivity(intent);
+            triggerWinAnimation = true;
 
         }
         numFrames++;
@@ -280,8 +305,25 @@ public class DownFallView extends SurfaceView implements Runnable{
         canvas.drawText(scoreText + score + " Invaders: " + Levels.numInvaders + " Part: " + Levels.currentSection + " Levels: " + Levels.currentLevel + " FPS: " + fps, 10,50, paint);
         canvas.drawText(" Timer: " + (Levels.levelTimeLimit - numFrames), 10, Levels.screenHeight - 20, paint);
 
+
+        if (alpha >= 255) {
+            increase = false;
+        }
+        if (alpha < 150) {
+            increase = true;
+        }
+        if (increase) {
+            alpha += 2;
+        } else {
+            alpha -= 2;
+        }
         if (paused) {
+            textPaint.setColor(Color.argb(255, 255, 255, 255));
+            textPaint.setTextSize(120);
             canvas.drawText(Levels.startText, Levels.screenWidth/2, Levels.screenHeight/2, textPaint);
+            textPaint.setColor(Color.argb(alpha, 255, 255, 255));
+            textPaint.setTextSize(60);
+            canvas.drawText("Tap to Start", Levels.screenWidth/2, 3*Levels.screenHeight/5, textPaint);
         }
 
     }

@@ -32,7 +32,6 @@ public class PlayerShip {
     public float y;
 
     public static Paint paint;
-    public static Paint paint2;
 
     private final static int frameLen = 5;
     public static Paint[] framePaints = new Paint[frameLen];
@@ -42,13 +41,11 @@ public class PlayerShip {
         paint = new Paint();
         paint.setColor(Color.argb(255,23, 144, 245 )); //rgb(23, 144, 244)
 
-        paint2 = new Paint();
-        paint2.setColor(Color.BLUE);
 
         int diff = 50;
         for (int i = 0; i < frameLen; i++) {
             framePaints[i] = new Paint();
-            framePaints[i].setColor(Color.argb(255, (frameLen-1-i)*diff, (frameLen-1-i)*diff, 245));
+            framePaints[i].setColor(Color.argb((frameLen-1-i)*diff, (frameLen-1-i)*diff, (frameLen-1-i)*diff, 245));
         }
     }
     // This the the constructor method
@@ -100,23 +97,24 @@ public class PlayerShip {
         newestDelayFrame.left = this.x;
         newestDelayFrame.right = this.x + width;
 
-        if (curve > 70) {
+        if (curve > 1*width/3) {
             increase = false;
         }
-        if (curve <= 10 ) {
+        if (curve <= width/10 ) {
             increase = true;
         }
         if (increase) {
-            curve += 2;
+            curve += 1;
         } else {
-            curve -= 2;
+            curve -= 1;
         }
+        int ratio = 4;
         int i = 0;
         for (RectF r: previousFrames) {
-            c.drawRoundRect(r, curve/2, curve, framePaints[i]);
+            c.drawRoundRect(r, curve/ratio, curve, framePaints[i]);
             i++;
         }
-        c.drawRoundRect(rect, curve/2, curve, paint);
+        c.drawRoundRect(rect, curve/ratio, curve, paint);
         //c.drawCircle(x + width/2, y + width/2, width/4, paint2);
     }
     public void setLocation(float x, float y) {
