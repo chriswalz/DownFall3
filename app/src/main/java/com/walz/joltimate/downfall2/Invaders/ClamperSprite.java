@@ -13,11 +13,16 @@ public class ClamperSprite extends OneRectAbstract{
 
     private int xVelocity;
 
+    public static int width;
+
+    static {
+        width = Levels.screenHeight/20;
+    }
+
     public ClamperSprite(Context context, float xVal, float yVal, int height) {
 
         //this.rect2 = new RectF();
 
-        this.width = Levels.screenHeight/20;
         this.height = height;
 
         this.x = xVal;

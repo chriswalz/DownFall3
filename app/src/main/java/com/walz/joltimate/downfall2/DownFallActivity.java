@@ -24,7 +24,7 @@ public class DownFallActivity extends AppCompatActivity {
         // Load the resolution into a Point object
         Point size = new Point();
         display.getSize(size);
-        Levels.init(size.x, size.y);
+        Levels.init(getApplicationContext(), size.x, size.y);
 
 
 

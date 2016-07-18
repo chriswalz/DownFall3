@@ -4,9 +4,15 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.RectF;
 
+import com.walz.joltimate.downfall2.Levels;
 import com.walz.joltimate.downfall2.PlayerShip;
 
 public class Basic extends OneRectAbstract{
+
+    public static int basicHeight;
+    static {
+        basicHeight = Levels.screenHeight / 10;
+    }
 
     public Basic(Context context, float xVal, float yVal, int width, int height) {
 

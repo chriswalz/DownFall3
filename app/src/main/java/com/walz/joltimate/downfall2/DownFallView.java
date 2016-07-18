@@ -171,8 +171,8 @@ public class DownFallView extends SurfaceView implements Runnable{
             if(!paused){
                 updateForeground();
             }
-
             draw();
+
             // Calculate the fps this frame
             // We can then use the result to
             // time animations and more.
@@ -210,6 +210,8 @@ public class DownFallView extends SurfaceView implements Runnable{
             winCircleRadius = 0;
             paused = true;
             triggerWinAnimation = false;
+            score = 0;
+            Levels.updateCurrentLevel(); ;
             Intent intent = new Intent(context, WinScreenActivity.class);
             context.startActivity(intent);
         }
@@ -225,9 +227,6 @@ public class DownFallView extends SurfaceView implements Runnable{
 
         // Beat level
         if (numFrames >= Levels.levelTimeLimit) {
-            score = 0;
-            //prepareCurrentLevel();
-            Levels.updateCurrentLevel(); ;
             // player won -> go to win screen
             triggerWinAnimation = true;
 
@@ -252,6 +251,9 @@ public class DownFallView extends SurfaceView implements Runnable{
             }
             // Lost level
             if (invaders[i].isColliding(playerShip)) { //invaders[i].isVisible && RectF.intersects(invaders[i].rect, playerShip.rect
+                if (triggerWinAnimation) {
+                    break;
+                }
                 paused = true;
                 score = 0;
                 //prepareCurrentLevel();
