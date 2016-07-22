@@ -35,6 +35,8 @@ import com.walz.joltimate.downfall2.Invaders.InvaderAbstract;
 // test on amazon cloud
 // level selector
 
+// PSYCHOLOGY - Show difficulty rating, Progress Part 2 (Level 3/100) ,
+// make levels longer
 
 // marketing
 // email wilson w later
@@ -46,6 +48,12 @@ import com.walz.joltimate.downfall2.Invaders.InvaderAbstract;
 // A series of 50 mini levels
 // The goal is to avoid the white blocks
 // You can drag your finger to move around, the kicker is that you teleport as well!
+
+// Notes from people observations:
+// Game didnt get hard quick enough
+// win animation is confusing.
+// trail animation is a bit long. Go back to original
+// VectorDrawable
 
 
 public class DownFallView extends SurfaceView implements Runnable{
@@ -204,7 +212,7 @@ public class DownFallView extends SurfaceView implements Runnable{
         if (winCircleRadius < 3*Levels.screenHeight/4) {
 
             canvas.drawCircle((float) Levels.screenWidth/2, (float) Levels.screenHeight/2, winCircleRadius, winCirclePaint);
-            winCircleRadius += Levels.screenHeight/100;
+            winCircleRadius += Levels.screenHeight/60;
 
         } else {
             winCircleRadius = 0;
@@ -303,9 +311,9 @@ public class DownFallView extends SurfaceView implements Runnable{
         // Draw the score and remaining lives
         // Change the brush color
         paint.setColor(Color.argb(255,  249, 129, 0));
-        paint.setTextSize(40);
+        paint.setTextSize(20);
         canvas.drawText(scoreText + score + " Invaders: " + Levels.numInvaders + " Part: " + Levels.currentSection + " Levels: " + Levels.currentLevel + " FPS: " + fps, 10,50, paint);
-        canvas.drawText(" Timer: " + (Levels.levelTimeLimit - numFrames), 10, Levels.screenHeight - 20, paint);
+        canvas.drawText(" Timer: " + (Levels.levelTimeLimit - numFrames) + " Difficulty Rating: " + Levels.difficultyRating, 10, Levels.screenHeight - 20, paint);
 
 
         if (alpha >= 255) {

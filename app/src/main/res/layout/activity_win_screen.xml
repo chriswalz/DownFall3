@@ -17,7 +17,17 @@
         android:textSize="36sp"
         android:textAlignment="center"
         android:textColor="#a2ff9f"
+        android:id="@+id/success"
         android:layout_above="@id/retry_button"/>
+    <android.support.v7.widget.AppCompatTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="16sp"
+        android:textAlignment="center"
+        android:id="@+id/level_textview"
+        android:layout_above="@id/success"/>
+
 
     <android.support.v7.widget.AppCompatButton
         android:layout_width="match_parent"

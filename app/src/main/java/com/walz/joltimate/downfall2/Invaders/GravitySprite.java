@@ -31,6 +31,10 @@ public class GravitySprite extends OneRectAbstract{
         maxSpeed = Levels.screenHeight/80;
 
         xVelocity = baseSpeed;
+        rect.top = y;
+        rect.bottom = y + height;
+        rect.left = x;
+        rect.right = x + width;
     }
 
     @Override

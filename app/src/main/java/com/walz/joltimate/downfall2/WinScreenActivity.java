@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.AppCompatTextView;
 import android.view.View;
 
 public class WinScreenActivity extends AppCompatActivity {
@@ -29,5 +30,7 @@ public class WinScreenActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        AppCompatTextView textView = (AppCompatTextView) findViewById(R.id.level_textview);
+        textView.setText("Chapter: " + (Levels.currentSection + 1) + ", Level: " + (Levels.currentLevel));
     }
 }

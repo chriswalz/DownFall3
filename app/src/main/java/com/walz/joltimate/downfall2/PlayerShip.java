@@ -33,7 +33,7 @@ public class PlayerShip {
 
     public static Paint paint;
 
-    private final static int frameLen = 5;
+    private final static int frameLen = 3;
     public static Paint[] framePaints = new Paint[frameLen];
     private static RectF[] previousFrames = new RectF[frameLen];
 
@@ -45,7 +45,7 @@ public class PlayerShip {
         int diff = 50;
         for (int i = 0; i < frameLen; i++) {
             framePaints[i] = new Paint();
-            framePaints[i].setColor(Color.argb((frameLen-1-i)*diff, (frameLen-1-i)*diff, (frameLen-1-i)*diff, 245));
+            framePaints[i].setColor(Color.argb(255, (frameLen-1-i)*diff, (frameLen-1-i)*diff, 245));
         }
     }
     // This the the constructor method

@@ -22,6 +22,14 @@ public class Basic extends OneRectAbstract{
         this.x = xVal;
         this.y = yVal - height;
     }
+    public Basic(Context context, float xVal, float yVal, int width) {
+
+        this.width = width;
+        this.height = basicHeight;
+
+        this.x = xVal;
+        this.y = yVal - height;
+    }
 
     @Override
     public void update(int fps) {
