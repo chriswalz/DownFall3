@@ -9,6 +9,7 @@ import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 public class DownFallActivity extends AppCompatActivity {
 
@@ -18,6 +19,9 @@ public class DownFallActivity extends AppCompatActivity {
     DownFallView downFallView;
     View secondLayerView;
     AppCompatButton retryButton;
+    RelativeLayout retryLayer;
+    RelativeLayout winLayer;
+    AppCompatButton winButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,30 +45,44 @@ public class DownFallActivity extends AppCompatActivity {
         secondLayerView = LayoutInflater.from(this).inflate(R.layout.activity_game_screen_overlay, null, false);
         addContentView(secondLayerView, lp);
 
+        retryLayer = (RelativeLayout) secondLayerView.findViewById(R.id.retryLayer);
+
         retryButton = (AppCompatButton) secondLayerView.findViewById(R.id.retry_button);
         retryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                retryButton.setVisibility(View.GONE);
+                retryLayer.setVisibility(View.GONE);
                 downFallView.prepareCurrentLevel();
             }
         });
 
+        winLayer = (RelativeLayout) secondLayerView.findViewById(R.id.winLayer);
+        winButton = (AppCompatButton) secondLayerView.findViewById(R.id.next_button);
+        winButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                winLayer.setVisibility(View.GONE);
+                downFallView.prepareCurrentLevel();
+            }
+        });
+
+
     }
     public void setToRetryScreen() {
-
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-
-                retryButton.setVisibility(View.VISIBLE);
-//stuff that updates ui
-
+                retryLayer.setVisibility(View.VISIBLE);
             }
         });
     }
     public void setToWinScreen() {
-
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                winLayer.setVisibility(View.VISIBLE);
+            }
+        });
     }
     public void setOverlayInvisible() {
 

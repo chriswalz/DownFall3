@@ -220,8 +220,10 @@ public class DownFallView extends SurfaceView implements Runnable{
             triggerWinAnimation = false;
             score = 0;
             Levels.updateCurrentLevel(); ;
-            Intent intent = new Intent(context, WinScreenActivity.class);
-            context.startActivity(intent);
+            DownFallActivity downFallActivity = (DownFallActivity) context;
+            downFallActivity.setToWinScreen();
+            //Intent intent = new Intent(context, WinScreenActivity.class);
+            //context.startActivity(intent);
         }
     }
     private void updateBackground() {
