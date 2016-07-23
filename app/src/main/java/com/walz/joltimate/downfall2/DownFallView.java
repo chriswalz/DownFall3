@@ -151,7 +151,7 @@ public class DownFallView extends SurfaceView implements Runnable{
         prepareCurrentLevel();
     }
 
-    private void prepareCurrentLevel(){
+    public void prepareCurrentLevel(){
 
         // Here we will initialize all the game objects
 
@@ -267,13 +267,16 @@ public class DownFallView extends SurfaceView implements Runnable{
                 //prepareCurrentLevel();
 
                 // player died -> go to homescreen
-                Intent intent = new Intent(context, RetryScreenActivity.class);
-                context.startActivity(intent);
+                DownFallActivity downFallActivity = (DownFallActivity) context;
+                downFallActivity.setToRetryScreen();
+                //Intent intent = new Intent(context, RetryScreenActivity.class);
+                //context.startActivity(intent);
             }
         }
 
 
     }
+
     private void drawBackground() {
         // Draw the background color
         //canvas.drawColor(Color.argb(255, 26, 128, 182));

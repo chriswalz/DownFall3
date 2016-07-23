@@ -3,6 +3,8 @@ package com.walz.joltimate.downfall2;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.AppCompatTextView;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +16,8 @@ public class DownFallActivity extends AppCompatActivity {
     // It will also hold the logic of the game
     // and respond to screen touches as well
     DownFallView downFallView;
+    View secondLayerView;
+    AppCompatButton retryButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,9 +37,36 @@ public class DownFallActivity extends AppCompatActivity {
         setContentView(downFallView);
 
         // Use this to put a view over the surfaceview
-        /* ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        View secondLayerView = LayoutInflater.from(this).inflate(R.layout.activity_home_screen, null, false);
-        addContentView(secondLayerView, lp); */
+        ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        secondLayerView = LayoutInflater.from(this).inflate(R.layout.activity_game_screen_overlay, null, false);
+        addContentView(secondLayerView, lp);
+
+        retryButton = (AppCompatButton) secondLayerView.findViewById(R.id.retry_button);
+        retryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                retryButton.setVisibility(View.GONE);
+                downFallView.prepareCurrentLevel();
+            }
+        });
+
+    }
+    public void setToRetryScreen() {
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+                retryButton.setVisibility(View.VISIBLE);
+//stuff that updates ui
+
+            }
+        });
+    }
+    public void setToWinScreen() {
+
+    }
+    public void setOverlayInvisible() {
 
     }
 
