@@ -113,6 +113,8 @@ public class DownFallView extends SurfaceView implements Runnable{
     private final int RETRYSCREEN = 2;
     private final int WINSCREEN = 3;
 
+    private float distanceFromEdge;
+
     // When the we initialize (call new()) on gameView
     // This special constructor method runs
     public DownFallView(Context context) {
@@ -154,12 +156,18 @@ public class DownFallView extends SurfaceView implements Runnable{
             backgroundBlocks[i] = new BackgroundBlock(context, (int)(Math.random()*Levels.screenWidth), (int)(Math.random()*Levels.screenHeight), sizeX, sizeY);
         }
 
+        distanceFromEdge = 2;
+
         prepareCurrentLevel();
     }
 
     public void prepareCurrentLevel(){
         // reset game
-        playerShip = new PlayerShip(context);
+        if (playerShip == null) {
+            playerShip = new PlayerShip(context);
+        } else {
+            playerShip.reset();
+        }
         numFrames = 0;
         gameState = STARTSCREEN;
         Levels.prepareLevel(playerShip, invaders, context);
@@ -371,10 +379,19 @@ public class DownFallView extends SurfaceView implements Runnable{
 
     // The SurfaceView class implements onTouchListener
     // So we can override this method and detect screen touches.
+
+    private float pX;
+    private float pY;
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent) {
+        pX = motionEvent.getX();
+        pY = motionEvent.getY();
 
-        playerShip.setLocation(motionEvent.getX(), motionEvent.getY(), gameState);
+        if (pX < distanceFromEdge || pY < distanceFromEdge || pX > Levels.screenWidth - distanceFromEdge || pY > Levels.screenHeight - distanceFromEdge) {
+        } else {
+            playerShip.setLocation(motionEvent.getX(), motionEvent.getY(), gameState);
+        }
+
 
 
         switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {

@@ -8,8 +8,7 @@ import com.walz.joltimate.downfall2.Levels;
 import com.walz.joltimate.downfall2.PlayerShip;
 
 public class ClamperSprite extends OneRectAbstract{
-    //private RectF rect2;
-    private float x2;
+
 
     private int xVelocity;
 
@@ -27,8 +26,6 @@ public class ClamperSprite extends OneRectAbstract{
 
         this.x = xVal;
         this.y = yVal - height;
-
-        this.x2 = xVal + Levels.screenWidth - width;
 
         this.xVelocity = Levels.screenWidth/130;
 

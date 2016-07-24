@@ -16,8 +16,8 @@ import com.walz.joltimate.downfall2.Invaders.RainSprite;
 public class Levels {
     // Current Level
     private static boolean lastLevelOfSection = false;
-    public static int currentSection = 0;
-    public static int currentLevel = 0;
+    public static int currentSection = 2;
+    public static int currentLevel = 5;
     private static int highestLevel;
     private static int highestSection;
     public static int difficultyRating;
@@ -30,7 +30,7 @@ public class Levels {
 
     public static int screenWidth, screenHeight;
 
-    private static boolean debug = false;
+    private static boolean debug = true;
 
     private static SharedPreferences mPrefs;
 
@@ -38,6 +38,8 @@ public class Levels {
         InvaderAbstract.baseSpeed = 1 * screenY / 110;
         screenWidth = screenX;
         screenHeight = screenY;
+
+        levelTimeLimit = 500; // arbitrary # to fix divide by 0 error
 
         if (!debug) {
             mPrefs = context.getSharedPreferences("com.google.downfall2", 0);
@@ -55,7 +57,7 @@ public class Levels {
             case 0:
                 switch (currentLevel) {
                     case 0:
-                        Levels.avoidThreeBlocks(invaders, context);
+                        Levels.trainDrag(invaders, context);
                         break;
                     case 1:
                         Levels.twoBlocks(invaders, context);
@@ -108,6 +110,8 @@ public class Levels {
                         Levels.fourBouncyTwoClamper(invaders, context);
                         lastLevelOfSection = true;
                         break;
+                    case 5:
+                        Levels.bouncyRiver(invaders, context);
                     default:
                         break;
                 }
@@ -194,30 +198,19 @@ public class Levels {
     }
 
     // Part 0
-    /*public static void avoidTheBlock(InvaderAbstract[] invaders, Context context) {
+    public static void trainDrag(InvaderAbstract[] invaders, Context context) {
         // Build an army of invaders
-        numInvaders = 2;
-        levelTimeLimit = 250 + timeOffSet; // convert to number of frames
-        startText = "Drag to move!";
-
-        int width = screenWidth / 4;
-        for (int i = 0; i < numInvaders; i++) {
-            invaders[i] = new Basic(context, (screenWidth / 2) - (width / 2), 0, width, screenHeight / 4);
-        }
-    } */
-    public static void avoidThreeBlocks(InvaderAbstract[] invaders, Context context) {
-        // Build an army of invaders
-        numInvaders = 4;
+        numInvaders = 5;
         levelTimeLimit = 300 + timeOffSet; // convert to number of frames
         startText = "Drag to move!";
         difficultyRating = 1;
 
         int blockWidth = screenWidth / 3;
-        invaders[0] = new Basic(context, 0, 0, blockWidth, Basic.basicHeight);
-        invaders[1] = new Basic(context, 2*blockWidth, 0, blockWidth, screenHeight / 10);
+        invaders[0] = new Basic(context, 0, 0, blockWidth);
+        invaders[1] = new Basic(context, 2*blockWidth, 0, blockWidth);
         invaders[2] = new Basic(context, (screenWidth / 2) - (screenWidth / 8), -3*screenHeight/4, screenWidth/4, screenHeight / 4);
-        invaders[4] = new Basic(context, 0, -3*screenHeight/4, blockWidth, Basic.basicHeight);
-
+        invaders[3] = new Basic(context, 0, -6*Levels.screenHeight/5, blockWidth);
+        invaders[4] = new Basic(context, 2*blockWidth, -6*Levels.screenHeight/5, blockWidth);
     }
 
     public static void twoBlocks(InvaderAbstract[] invaders, Context context) {
@@ -245,16 +238,18 @@ public class Levels {
 
     public static void threeInvaders(InvaderAbstract[] invaders, Context context) {
         // Build an army of invaders
-        numInvaders = 5;
+        numInvaders = 7;
         levelTimeLimit = 450 + timeOffSet;
         difficultyRating = 3;
 
-        int diff = 2 * screenHeight / 3;
+        int diff = 3 * screenHeight / 6;
         for (int i = 0; i < numInvaders; i++) {
             invaders[i] = new Basic(context, 0, -(diff * i ), screenWidth, screenHeight / 10);
         }
         invaders[3] = new Basic(context, 0, -(diff * 3), screenWidth/3, screenHeight/2);
         invaders[4] = new Basic(context, 2*screenWidth/3, -(diff * 3), screenWidth/3, screenHeight/2);
+        invaders[5] = new Basic(context, 0, -(diff*3), screenWidth);
+        invaders[6] = new Basic(context, 0, -(diff*3 + screenHeight/2), screenWidth);
     }
     /*public static void threeInvadersClosest(InvaderAbstract[] invaders, Context context) {
         // Build an army of invaders
@@ -416,7 +411,6 @@ public class Levels {
 
 
     public static void fourBouncyTwoClamper(InvaderAbstract[] invaders, Context context) {
-        // Build an army of invaders
         numInvaders = 6;
         levelTimeLimit = 575 + timeOffSet;
         startText = "Bouncy.";
@@ -429,9 +423,20 @@ public class Levels {
         invaders[4] = new ClamperSprite(context, 0, 0, 2*Levels.screenHeight);
         invaders[5] = new ClamperSprite(context, Levels.screenWidth-ClamperSprite.width, 0, 2*Levels.screenHeight);
     }
+    public static void bouncyRiver(InvaderAbstract[] invaders, Context context) {
+        numInvaders = 48;
+        levelTimeLimit = 575 + timeOffSet;
+        startText = "River";
+        difficultyRating = 9;
+
+        int ratio = 2;
+        for (int i = 0; i < numInvaders; i++) {
+            invaders[i] = new BouncySprite(context, i * Levels.screenWidth/(numInvaders/ratio), -i * Levels.screenHeight/(numInvaders/ratio), 1*Levels.screenWidth/4, Levels.screenHeight/(numInvaders/ratio));
+        }
+
+    }
 
     public static void oneFirework(InvaderAbstract[] invaders, Context context) {
-        // Build an army of invaders
         numInvaders = 1;
         levelTimeLimit = 375 + timeOffSet;
         startText = "It explodes";
@@ -442,7 +447,6 @@ public class Levels {
         }
     }
     public static void threeFireworks(InvaderAbstract[] invaders, Context context) {
-        // Build an army of invaders
         numInvaders = 3;
         levelTimeLimit = 375 + timeOffSet;
         startText = "Fireworks!";
@@ -452,7 +456,6 @@ public class Levels {
         }
     }
     public static void fourFireworks(InvaderAbstract[] invaders, Context context) {
-        // Build an army of invaders
         numInvaders = 4;
         levelTimeLimit = 375 + timeOffSet;
         startText = "Fireworks!";
@@ -463,7 +466,6 @@ public class Levels {
     }
 
     public static void oneRain(InvaderAbstract[] invaders, Context context) {
-        // Build an army of invaders
         numInvaders = 1;
         levelTimeLimit = 675 + timeOffSet;
         startText = "Let it rain!";
@@ -474,7 +476,6 @@ public class Levels {
     }
 
     public static void twoRain(InvaderAbstract[] invaders, Context context) {
-        // Build an army of invaders
         numInvaders = 2;
         levelTimeLimit = 1025 + timeOffSet;
         startText = "More rain";
@@ -484,7 +485,6 @@ public class Levels {
     }
 
     public static void oneAccelerator(InvaderAbstract[] invaders, Context context) {
-        // Build an army of invaders
         numInvaders = 1;
         levelTimeLimit = 150 + timeOffSet;
         startText = "It accelerates.";
@@ -492,7 +492,6 @@ public class Levels {
         invaders[0] = new AcceleratorSprite(context, 0, 0, Levels.screenWidth, false);
     }
     public static void twoBasicTwoAccelerator(InvaderAbstract[] invaders, Context context) {
-        // Build an army of invaders
         numInvaders = 5;
         levelTimeLimit = 450 + timeOffSet;
         startText = "Slow & Fast";
@@ -523,7 +522,6 @@ public class Levels {
         invaders[0] = new GravitySprite(context, ship, 0, 0);
     }
     public static void oneGravityTwoBouncy(PlayerShip ship, InvaderAbstract[] invaders, Context context) {
-        // Build an army of invaders
         numInvaders = 3;
         levelTimeLimit = 450 + timeOffSet;
         startText = "";
@@ -533,7 +531,6 @@ public class Levels {
         invaders[2] = new BouncySprite(context, 0, -Levels.screenHeight/2, Levels.screenWidth);
     }
     public static void threeGravity(PlayerShip ship, InvaderAbstract[] invaders, Context context) {
-        // Build an army of invaders
         numInvaders = 4;
         levelTimeLimit = 500 + timeOffSet;
         startText = "It accelerates.";

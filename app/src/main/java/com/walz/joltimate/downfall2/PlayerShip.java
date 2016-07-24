@@ -74,25 +74,29 @@ public class PlayerShip {
             previousFrames[i] = new RectF();
         }
 
-        // Initialize the bitmap
-        /*bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.playership);
+    }
+    public void reset() {
+        // Start ship in roughly the screen centre
+        x = (Levels.screenWidth / 2) - width/2;
+        y = 6*Levels.screenHeight / 9 ;
 
-        // stretch the bitmap to a size appropriate for the screen resolution
-        bitmap = Bitmap.createScaledBitmap(bitmap,
-                (int) (width),
-                (int) (height),
-                false); */
+        rect.top = this.y;
+        rect.bottom = this.y + height;
+        rect.left = this.x;
+        rect.right = this.x + width;
+
 
     }
+    private int dif = 3;
     public void draw(Canvas c) {
         //c.drawRect(rect, paint);
 
         for (int i = 0; i < previousFrames.length-1; i++) {
             RectF next = previousFrames[i+1];
-            previousFrames[i].top = next.top;
-            previousFrames[i].bottom = next.bottom;
-            previousFrames[i].left = next.left;
-            previousFrames[i].right = next.right;
+            previousFrames[i].top = next.top+dif;
+            previousFrames[i].bottom = next.bottom+dif;
+            previousFrames[i].left = next.left+dif;
+            previousFrames[i].right = next.right-dif;
         }
         RectF newestDelayFrame = previousFrames[previousFrames.length-1];
         newestDelayFrame.top = this.y;
