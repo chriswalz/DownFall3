@@ -109,6 +109,8 @@ public class DownFallView extends SurfaceView implements Runnable{
     private int alpha = 255;
     private boolean increase = false;
 
+    private int gameState;
+
     // When the we initialize (call new()) on gameView
     // This special constructor method runs
     public DownFallView(Context context) {
@@ -197,6 +199,10 @@ public class DownFallView extends SurfaceView implements Runnable{
             // Lock the canvas ready to draw
             canvas = ourHolder.lockCanvas();
 
+            //canvas.drawArc(20, 20, 100, 100, 90, 20, true, paint);
+            //canvas.
+
+
             drawBackground();
             drawForeground();
             if (triggerWinAnimation) {
@@ -213,6 +219,7 @@ public class DownFallView extends SurfaceView implements Runnable{
 
             canvas.drawCircle((float) Levels.screenWidth/2, (float) Levels.screenHeight/2, winCircleRadius, winCirclePaint);
             winCircleRadius += Levels.screenHeight/60;
+            numFrames--;
 
         } else {
             winCircleRadius = 0;
@@ -318,7 +325,7 @@ public class DownFallView extends SurfaceView implements Runnable{
         paint.setColor(Color.argb(255,  249, 129, 0));
         paint.setTextSize(20);
         canvas.drawText(scoreText + score + " Invaders: " + Levels.numInvaders + " Part: " + Levels.currentSection + " Levels: " + Levels.currentLevel + " FPS: " + fps, 10,50, paint);
-        canvas.drawText(" Timer: " + (Levels.levelTimeLimit - numFrames) + " Difficulty Rating: " + Levels.difficultyRating, 10, Levels.screenHeight - 20, paint);
+        canvas.drawText("" + (Math.round(numFrames*100/Levels.levelTimeLimit)) + "% Difficulty Rating: " + Levels.difficultyRating, 10, Levels.screenHeight - 20, paint);
 
 
         if (alpha >= 255) {

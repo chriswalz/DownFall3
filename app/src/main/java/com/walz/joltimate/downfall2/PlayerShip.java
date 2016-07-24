@@ -40,12 +40,14 @@ public class PlayerShip {
     static {
         paint = new Paint();
         paint.setColor(Color.argb(255,23, 144, 245 )); //rgb(23, 144, 244)
+        paint.setFlags(Paint.ANTI_ALIAS_FLAG);
 
 
         int diff = 50;
         for (int i = 0; i < frameLen; i++) {
             framePaints[i] = new Paint();
             framePaints[i].setColor(Color.argb(255, (frameLen-1-i)*diff, (frameLen-1-i)*diff, 245));
+            framePaints[i].setAntiAlias(true);
         }
     }
     // This the the constructor method

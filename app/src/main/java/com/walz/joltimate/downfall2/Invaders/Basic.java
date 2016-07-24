@@ -46,7 +46,11 @@ public class Basic extends OneRectAbstract{
     @Override
     public void draw(Canvas c) {
         super.draw(c);
-        c.drawRect(rect, invaderPaint);
+        if (rect.top > Levels.screenHeight || rect.bottom < 0 || rect.right > Levels.screenWidth || rect.left < 0) {
+
+        } else {
+            c.drawRect(rect, invaderPaint);
+        }
     }
 
     @Override

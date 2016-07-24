@@ -45,7 +45,22 @@
             android:textAlignment="center"
             android:textColor="#a2ff9f"
             android:id="@+id/success"
-            android:layout_above="@id/next_button"/>
+            android:shadowColor="#455745"
+            android:shadowDx="1"
+            android:shadowDy="1"
+            android:shadowRadius="2"
+            android:layout_above="@id/next_button" />
+        <android.support.v7.widget.AppCompatTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Level x of 100"
+            android:textSize="36sp"
+            android:textAlignment="center"
+            android:shadowColor="#455745"
+            android:shadowDx="1"
+            android:shadowDy="1"
+            android:shadowRadius="2"
+            android:layout_above="@id/success" />
         <android.support.v7.widget.AppCompatTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

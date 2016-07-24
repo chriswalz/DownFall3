@@ -221,7 +221,7 @@ public class Levels {
 
     public static void twoBlocks(InvaderAbstract[] invaders, Context context) {
         // Build an army of invaders
-        numInvaders = 1;
+        numInvaders = 2;
         levelTimeLimit = 250 + timeOffSet; // convert to number of frames
         startText = "Tap to JUMP!";
         difficultyRating = 2;
