@@ -30,7 +30,7 @@ public class Levels {
 
     public static int screenWidth, screenHeight;
 
-    private static boolean debug = true;
+    private static boolean debug = false;
 
     private static SharedPreferences mPrefs;
 
@@ -193,6 +193,7 @@ public class Levels {
         }
     }
 
+    // Part 0
     /*public static void avoidTheBlock(InvaderAbstract[] invaders, Context context) {
         // Build an army of invaders
         numInvaders = 2;
@@ -297,7 +298,7 @@ public class Levels {
             invaders[i] = new Basic(context, screenWidth / 2, (int) (-(diff * (i - numInvaders / 2)) - diff / 2), (int) (screenWidth / 2), (int) (screenHeight / ratio));
         }
     }
-
+    // part 1
     public static void oneClamper(InvaderAbstract[] invaders, Context context) {
         // Build an army of invaders
         numInvaders = 5;
@@ -388,7 +389,7 @@ public class Levels {
     public static void fourBouncy(InvaderAbstract[] invaders, Context context) {
         // Build an army of invaders
         numInvaders = 4;
-        levelTimeLimit = 675 + timeOffSet;
+        levelTimeLimit = 575 + timeOffSet;
         startText = "Bouncy.";
         difficultyRating = 5;
 
@@ -402,8 +403,8 @@ public class Levels {
     public static void fourBouncyOneClamper(InvaderAbstract[] invaders, Context context) {
         // Build an army of invaders
         numInvaders = 5;
-        levelTimeLimit = 675 + timeOffSet;
-        startText = "Bouncy.";
+        levelTimeLimit = 575 + timeOffSet;
+        startText = "-|-";
         difficultyRating = 8;
 
         int diff = 65*Levels.screenHeight/100;
@@ -417,7 +418,7 @@ public class Levels {
     public static void fourBouncyTwoClamper(InvaderAbstract[] invaders, Context context) {
         // Build an army of invaders
         numInvaders = 6;
-        levelTimeLimit = 675 + timeOffSet;
+        levelTimeLimit = 575 + timeOffSet;
         startText = "Bouncy.";
         difficultyRating = 9;
 
@@ -492,14 +493,15 @@ public class Levels {
     }
     public static void twoBasicTwoAccelerator(InvaderAbstract[] invaders, Context context) {
         // Build an army of invaders
-        numInvaders = 4;
+        numInvaders = 5;
         levelTimeLimit = 450 + timeOffSet;
         startText = "Slow & Fast";
 
         invaders[0] = new Basic(context, 0, 0, Levels.screenWidth, Basic.basicHeight);
         invaders[1] = new Basic(context, 0, -Levels.screenHeight/2, Levels.screenWidth, Basic.basicHeight);
-        invaders[2] = new AcceleratorSprite(context, 0, -3 * Levels.screenHeight/4, Levels.screenWidth, false);
         invaders[3] = new AcceleratorSprite(context, 0, -Levels.screenHeight/4, Levels.screenWidth, false);
+        invaders[2] = new AcceleratorSprite(context, 0, -3 * Levels.screenHeight/4, Levels.screenWidth, false);
+        invaders[4] = new AcceleratorSprite(context, 0, -5*Levels.screenHeight/4, Levels.screenWidth, false);
     }
 
     public static void threeBounceOneAccel(InvaderAbstract[] invaders, Context context) {

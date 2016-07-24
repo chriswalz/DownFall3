@@ -86,6 +86,7 @@ public class PlayerShip {
     }
     public void draw(Canvas c) {
         //c.drawRect(rect, paint);
+
         for (int i = 0; i < previousFrames.length-1; i++) {
             RectF next = previousFrames[i+1];
             previousFrames[i].top = next.top;
@@ -119,8 +120,10 @@ public class PlayerShip {
         c.drawRoundRect(rect, curve/ratio, curve, paint);
         //c.drawCircle(x + width/2, y + width/2, width/4, paint2);
     }
-    public void setLocation(float x, float y) {
-
+    public void setLocation(float x, float y, int gameState) {
+        if (gameState != DownFallView.PLAYINGSCREEN) {
+            return;
+        }
 
         this.x = x - width / 2;
         this.y = y - height / 2;

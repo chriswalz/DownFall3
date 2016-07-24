@@ -70,8 +70,6 @@ public class DownFallView extends SurfaceView implements Runnable{
     // when the game is running- or not.
     private volatile boolean playing;
 
-    // Game is paused at the start
-    private boolean paused = true;
 
     // A Canvas and a Paint object
     private Canvas canvas;
@@ -110,6 +108,10 @@ public class DownFallView extends SurfaceView implements Runnable{
     private boolean increase = false;
 
     private int gameState;
+    private final int STARTSCREEN = 0;
+    public static final int PLAYINGSCREEN = 1;
+    private final int RETRYSCREEN = 2;
+    private final int WINSCREEN = 3;
 
     // When the we initialize (call new()) on gameView
     // This special constructor method runs
@@ -126,6 +128,8 @@ public class DownFallView extends SurfaceView implements Runnable{
         // Initialize ourHolder and paint objects
         ourHolder = getHolder();
         paint = new Paint();
+
+        gameState = STARTSCREEN;
 
         numFrames = 0;
 
@@ -154,17 +158,10 @@ public class DownFallView extends SurfaceView implements Runnable{
     }
 
     public void prepareCurrentLevel(){
-
-        // Here we will initialize all the game objects
-
-
-
-        // Make a new player space ship
-
-
+        // reset game
         playerShip = new PlayerShip(context);
         numFrames = 0;
-
+        gameState = STARTSCREEN;
         Levels.prepareLevel(playerShip, invaders, context);
 
     }
@@ -178,7 +175,7 @@ public class DownFallView extends SurfaceView implements Runnable{
 
 
             updateBackground();
-            if(!paused){
+            if(gameState == PLAYINGSCREEN){
                 updateForeground();
             }
             draw();
@@ -223,7 +220,7 @@ public class DownFallView extends SurfaceView implements Runnable{
 
         } else {
             winCircleRadius = 0;
-            paused = true;
+            gameState = WINSCREEN; // paused = true;
             triggerWinAnimation = false;
             score = 0;
             Levels.updateCurrentLevel(); ;
@@ -271,7 +268,7 @@ public class DownFallView extends SurfaceView implements Runnable{
                 if (triggerWinAnimation) {
                     break;
                 }
-                paused = true;
+                gameState = RETRYSCREEN; // paused = true;
                 score = 0;
                 //prepareCurrentLevel();
 
@@ -324,8 +321,10 @@ public class DownFallView extends SurfaceView implements Runnable{
         // Change the brush color
         paint.setColor(Color.argb(255,  249, 129, 0));
         paint.setTextSize(20);
-        canvas.drawText(scoreText + score + " Invaders: " + Levels.numInvaders + " Part: " + Levels.currentSection + " Levels: " + Levels.currentLevel + " FPS: " + fps, 10,50, paint);
-        canvas.drawText("" + (Math.round(numFrames*100/Levels.levelTimeLimit)) + "% Difficulty Rating: " + Levels.difficultyRating, 10, Levels.screenHeight - 20, paint);
+        canvas.drawText(scoreText + score + " Invaders: " + Levels.numInvaders + " Part: " + Levels.currentSection + " Levels: " + Levels.currentLevel + " FPS: " + fps + " Difficulty Rating: " + Levels.difficultyRating, 10,50, paint);
+
+        paint.setTextSize(40);
+        canvas.drawText("" + (Math.round(numFrames*100/Levels.levelTimeLimit)) + "%" , 10, Levels.screenHeight - 20, paint);
 
 
         if (alpha >= 255) {
@@ -339,7 +338,7 @@ public class DownFallView extends SurfaceView implements Runnable{
         } else {
             alpha -= 2;
         }
-        if (paused) {
+        if (gameState == STARTSCREEN) {
             textPaint.setColor(Color.argb(255, 255, 255, 255));
             textPaint.setTextSize(120);
             canvas.drawText(Levels.startText, Levels.screenWidth/2, Levels.screenHeight/2, textPaint);
@@ -375,7 +374,7 @@ public class DownFallView extends SurfaceView implements Runnable{
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent) {
 
-        playerShip.setLocation(motionEvent.getX(), motionEvent.getY());
+        playerShip.setLocation(motionEvent.getX(), motionEvent.getY(), gameState);
 
 
         switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
@@ -383,7 +382,9 @@ public class DownFallView extends SurfaceView implements Runnable{
             // Player has touched the screen
 
             case MotionEvent.ACTION_DOWN:
-                paused = false;
+                if (gameState == STARTSCREEN) {
+                    gameState = PLAYINGSCREEN;
+                }
                 // TODO research motionEvent.getPrecision
 
                 break;
