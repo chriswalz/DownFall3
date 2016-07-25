@@ -9,11 +9,15 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 
+import com.walz.joltimate.downfall2.Invaders.DeathAnimation;
+import com.walz.joltimate.downfall2.Invaders.FireworkSprite;
+
 /**
  * Created by chris on 7/2/16.
  */
 public class PlayerShip {
     public RectF rect;
+    public DeathAnimation deathAnimation;
 
     // The player ship will be represented by a Bitmap
     //public Bitmap bitmap;
@@ -36,6 +40,8 @@ public class PlayerShip {
     private final static int frameLen = 3;
     public static Paint[] framePaints = new Paint[frameLen];
     private static RectF[] previousFrames = new RectF[frameLen];
+
+    private boolean alive = true;
 
     static {
         paint = new Paint();
@@ -73,6 +79,7 @@ public class PlayerShip {
         for (int i = 0; i < previousFrames.length; i++) {
             previousFrames[i] = new RectF();
         }
+        deathAnimation = new DeathAnimation(context, 49, x, y);
 
     }
     public void reset() {
@@ -85,47 +92,53 @@ public class PlayerShip {
         rect.left = this.x;
         rect.right = this.x + width;
 
+        alive = true;
+
+        deathAnimation.reset();
 
     }
     private int dif = 3;
     public void draw(Canvas c) {
-        //c.drawRect(rect, paint);
+        if (alive) {
+            for (int i = 0; i < previousFrames.length-1; i++) {
+                RectF next = previousFrames[i+1];
+                previousFrames[i].top = next.top+dif;
+                previousFrames[i].bottom = next.bottom+dif;
+                previousFrames[i].left = next.left+dif;
+                previousFrames[i].right = next.right-dif;
+            }
+            RectF newestDelayFrame = previousFrames[previousFrames.length-1];
+            newestDelayFrame.top = this.y;
+            newestDelayFrame.bottom = this.y + height;
+            newestDelayFrame.left = this.x;
+            newestDelayFrame.right = this.x + width;
 
-        for (int i = 0; i < previousFrames.length-1; i++) {
-            RectF next = previousFrames[i+1];
-            previousFrames[i].top = next.top+dif;
-            previousFrames[i].bottom = next.bottom+dif;
-            previousFrames[i].left = next.left+dif;
-            previousFrames[i].right = next.right-dif;
-        }
-        RectF newestDelayFrame = previousFrames[previousFrames.length-1];
-        newestDelayFrame.top = this.y;
-        newestDelayFrame.bottom = this.y + height;
-        newestDelayFrame.left = this.x;
-        newestDelayFrame.right = this.x + width;
+            if (curve > 1*width/3) {
+                increase = false;
+            }
+            if (curve <= width/10 ) {
+                increase = true;
+            }
+            if (increase) {
+                curve += 1;
+            } else {
+                curve -= 1;
+            }
+            int ratio = 4;
+            int i = 0;
+            for (RectF r: previousFrames) {
+                c.drawRoundRect(r, curve/ratio, curve, framePaints[i]);
+                i++;
+            }
+            c.drawRoundRect(rect, curve/ratio, curve, paint);
 
-        if (curve > 1*width/3) {
-            increase = false;
-        }
-        if (curve <= width/10 ) {
-            increase = true;
-        }
-        if (increase) {
-            curve += 1;
         } else {
-            curve -= 1;
+            deathAnimation.draw(c);
         }
-        int ratio = 4;
-        int i = 0;
-        for (RectF r: previousFrames) {
-            c.drawRoundRect(r, curve/ratio, curve, framePaints[i]);
-            i++;
-        }
-        c.drawRoundRect(rect, curve/ratio, curve, paint);
-        //c.drawCircle(x + width/2, y + width/2, width/4, paint2);
+
     }
     public void setLocation(float x, float y, int gameState) {
-        if (gameState != DownFallView.PLAYINGSCREEN) {
+        if (gameState != DownFallView.PLAYINGSCREEN || !alive) {
             return;
         }
 
@@ -136,6 +149,15 @@ public class PlayerShip {
         rect.bottom = this.y + height;
         rect.left = this.x;
         rect.right = this.x + width;
+
+        deathAnimation.setOrigin(x, y);
+    }
+
+    // See setlocation as well
+    public void update() {
+        if (!alive) {
+            deathAnimation.update(-1);
+        }
     }
     public float getCenterX() {
         return x + width/2;
@@ -145,5 +167,7 @@ public class PlayerShip {
     }
 
 
-
+    public void setAlive(boolean alive) {
+        this.alive = alive;
+    }
 }

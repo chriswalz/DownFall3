@@ -7,9 +7,9 @@ import android.graphics.RectF;
 import com.walz.joltimate.downfall2.Levels;
 import com.walz.joltimate.downfall2.PlayerShip;
 
-public class FireworkSprite extends MultRectAbstract{
+public class DeathAnimation extends MultRectAbstract{
 
-
+    private int length;
     private int lenSep;
 
     private int[] xRand;
@@ -24,13 +24,14 @@ public class FireworkSprite extends MultRectAbstract{
 
     private int explosionHeight = 0;
 
-    public FireworkSprite(Context context, int length, float x) {
+    public DeathAnimation(Context context, int length, float x, float y) {
         super(length);
 
         this.lenSep = length/4;
+        this.length = length;
 
         this.x = x;
-        this.y = 0;
+        this.y = y;
 
         xRand = new int[length];
         yRand = new int[length];
@@ -38,40 +39,43 @@ public class FireworkSprite extends MultRectAbstract{
         xRandIncrement = new int[length];
         yRandIncrement = new int[length];
 
-        this.explosionHeight = (int) (Math.random() *(Levels.screenHeight/4 + (3 *Levels.screenHeight/ 4)) );
 
 
-
+        prepareAnimation();
+    }
+    int movement = 2;
+    private void prepareAnimation() {
+        this.explosionHeight = 0;
         for ( int i = 0; i < length/4; i++){
-            xRandIncrement[i] = i;
-            yRandIncrement[i] = length/4 - i;
+            xRandIncrement[i] = movement;
+            yRandIncrement[i] = movement; //length/4 - i;
 
-            xRandIncrement[i+lenSep] = -i;
-            yRandIncrement[i+lenSep] = length/4 - i;
+            xRandIncrement[i+lenSep] = -movement; //-i;
+            yRandIncrement[i+lenSep] = movement; //length/4 - i;
 
-            xRandIncrement[i+(2*lenSep)] = i;
-            yRandIncrement[i+(2*lenSep)] = -(length/4 - i);
+            xRandIncrement[i+(2*lenSep)] = movement;  //i;
+            yRandIncrement[i+(2*lenSep)] = -movement; //-(length/4 - i);
 
-            xRandIncrement[i+(3*lenSep)] = -i;
-            yRandIncrement[i+(3*lenSep)] = -(length/4 - i);
+            xRandIncrement[i+(3*lenSep)] = -movement; // -i;
+            yRandIncrement[i+(3*lenSep)] = -movement; //-(length/4 - i);
 
         }
 
         widthR = Levels.screenWidth / 40;
         heightR = Levels.screenWidth / 40;
         for (int i = 0; i < rects.length; i++) {
-            xRand[i] = (int) (0 - widthR / 2);
-            yRand[i] = 0;
             int xI = (int) this.x + xRand[i];
             int yI = (int) this.y + yRand[i];
 
             updateRectF(rects[i], xI, yI, widthR, heightR);
         }
-    }
-    public FireworkSprite(Context context, int length, float x, float explodeY) {
-        this(context, length, x);
-        this.y = explodeY;
-        this.explosionHeight = (int) explodeY;
+        int width = (int) Math.sqrt(rects.length);
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < width; j++) {
+                xRand[(i * width) + j] = i * widthR;
+                yRand[(i * width) + j] = j * widthR;
+            }
+        }
     }
     @Override
     public void update(int fps) {
@@ -97,7 +101,7 @@ public class FireworkSprite extends MultRectAbstract{
     @Override
     public void draw(Canvas c) {
         for(RectF r: rects){
-            c.drawRect(r, invaderPaint);
+            c.drawRect(r, PlayerShip.paint);
         }
     }
     @Override
@@ -108,5 +112,13 @@ public class FireworkSprite extends MultRectAbstract{
             }
         }
         return false;
+    }
+    public void setOrigin(float x, float y) {
+        this.x = x;
+        this.y = y;
+        this.explosionHeight = (int) y;
+    }
+    public void reset() {
+        prepareAnimation();
     }
 }

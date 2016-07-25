@@ -12,16 +12,16 @@
         <android.support.v7.widget.AppCompatButton
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Retry"
+            android:text="Play"
             android:textSize="54sp"
             android:layout_centerInParent="true"
             android:id="@+id/retry_button"/>
-        <android.support.v7.widget.AppCompatButton
+        <!-- <android.support.v7.widget.AppCompatButton
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Back"
             android:layout_below="@id/retry_button"
-            android:id="@+id/back_button"/>
+            android:id="@+id/back_button"/> -->
 
     </RelativeLayout>
     <RelativeLayout
@@ -71,14 +71,14 @@
             android:layout_above="@id/success"/>
 
 
-        <android.support.v7.widget.AppCompatButton
+        <!-- <android.support.v7.widget.AppCompatButton
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Back"
             android:textSize="18sp"
             android:id="@+id/win_back_button"
             android:layout_below="@id/next_button"
-            android:background="@null"/>
+            android:background="@null"/> -->
 
     </RelativeLayout>
 

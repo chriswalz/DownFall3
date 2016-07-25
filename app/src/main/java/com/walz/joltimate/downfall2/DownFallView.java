@@ -78,6 +78,8 @@ public class DownFallView extends SurfaceView implements Runnable{
     private Paint winCirclePaint;
 
     private boolean triggerWinAnimation = false;
+    private boolean triggerLoseAnimation = false;
+    private int animationFrames = 0;
 
     // This variable tracks the game frame rate
     private int fps;
@@ -156,7 +158,7 @@ public class DownFallView extends SurfaceView implements Runnable{
             backgroundBlocks[i] = new BackgroundBlock(context, (int)(Math.random()*Levels.screenWidth), (int)(Math.random()*Levels.screenHeight), sizeX, sizeY);
         }
 
-        distanceFromEdge = 2;
+        distanceFromEdge = 1;
 
         prepareCurrentLevel();
     }
@@ -184,7 +186,10 @@ public class DownFallView extends SurfaceView implements Runnable{
 
             updateBackground();
             if(gameState == PLAYINGSCREEN){
-                updateForeground();
+                if (!triggerLoseAnimation) {
+                    updateForeground();
+                }
+                playerShip.update(); // for loseAnimation only
             }
             draw();
 
@@ -213,6 +218,9 @@ public class DownFallView extends SurfaceView implements Runnable{
             if (triggerWinAnimation) {
                 drawWinAnimation();
             }
+            if (triggerLoseAnimation) {
+                drawLoseAnimation();
+            }
             drawHUD();
 
             // Draw everything to the screen
@@ -234,9 +242,21 @@ public class DownFallView extends SurfaceView implements Runnable{
             Levels.updateCurrentLevel(); ;
             DownFallActivity downFallActivity = (DownFallActivity) context;
             downFallActivity.setToWinScreen();
-            //Intent intent = new Intent(context, WinScreenActivity.class);
-            //context.startActivity(intent);
         }
+    }
+    private void drawLoseAnimation() {
+        if (animationFrames < 200) {
+            playerShip.setAlive(false);
+            animationFrames++;
+        } else {
+            triggerLoseAnimation = false;
+            animationFrames = 0;
+            gameState = RETRYSCREEN; // paused = true;
+            score = 0;
+            DownFallActivity downFallActivity = (DownFallActivity) context;
+            downFallActivity.setToRetryScreen();
+        }
+
     }
     private void updateBackground() {
         // Update all of the background
@@ -276,15 +296,7 @@ public class DownFallView extends SurfaceView implements Runnable{
                 if (triggerWinAnimation) {
                     break;
                 }
-                gameState = RETRYSCREEN; // paused = true;
-                score = 0;
-                //prepareCurrentLevel();
-
-                // player died -> go to homescreen
-                DownFallActivity downFallActivity = (DownFallActivity) context;
-                downFallActivity.setToRetryScreen();
-                //Intent intent = new Intent(context, RetryScreenActivity.class);
-                //context.startActivity(intent);
+                triggerLoseAnimation = true;
             }
         }
 
@@ -348,10 +360,10 @@ public class DownFallView extends SurfaceView implements Runnable{
         }
         if (gameState == STARTSCREEN) {
             textPaint.setColor(Color.argb(255, 255, 255, 255));
-            textPaint.setTextSize(120);
+            textPaint.setTextSize(80);
             canvas.drawText(Levels.startText, Levels.screenWidth/2, Levels.screenHeight/2, textPaint);
             textPaint.setColor(Color.argb(alpha, 255, 255, 255));
-            textPaint.setTextSize(60);
+            textPaint.setTextSize(30);
             canvas.drawText("Tap to Start", Levels.screenWidth/2, 3*Levels.screenHeight/5, textPaint);
         }
 
@@ -387,10 +399,12 @@ public class DownFallView extends SurfaceView implements Runnable{
         pX = motionEvent.getX();
         pY = motionEvent.getY();
 
-        if (pX < distanceFromEdge || pY < distanceFromEdge || pX > Levels.screenWidth - distanceFromEdge || pY > Levels.screenHeight - distanceFromEdge) {
+        // only have error touching prevention for bottom 3 / 8;
+        if (pY > 3 * Levels.screenHeight && (pX < distanceFromEdge || pY < distanceFromEdge || pX > Levels.screenWidth - distanceFromEdge || pY > Levels.screenHeight - distanceFromEdge)) {
         } else {
             playerShip.setLocation(motionEvent.getX(), motionEvent.getY(), gameState);
         }
+
 
 
 

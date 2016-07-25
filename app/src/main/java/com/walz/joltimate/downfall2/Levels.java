@@ -16,8 +16,8 @@ import com.walz.joltimate.downfall2.Invaders.RainSprite;
 public class Levels {
     // Current Level
     private static boolean lastLevelOfSection = false;
-    public static int currentSection = 2;
-    public static int currentLevel = 5;
+    public static int currentSection = 0;
+    public static int currentLevel = 0;
     private static int highestLevel;
     private static int highestSection;
     public static int difficultyRating;
@@ -493,7 +493,7 @@ public class Levels {
     }
     public static void twoBasicTwoAccelerator(InvaderAbstract[] invaders, Context context) {
         numInvaders = 5;
-        levelTimeLimit = 450 + timeOffSet;
+        levelTimeLimit = 350 + timeOffSet;
         startText = "Slow & Fast";
 
         invaders[0] = new Basic(context, 0, 0, Levels.screenWidth, Basic.basicHeight);
@@ -518,6 +518,7 @@ public class Levels {
         numInvaders = 1;
         levelTimeLimit = 450 + timeOffSet;
         startText = "Gravity";
+        difficultyRating = 2;
 
         invaders[0] = new GravitySprite(context, ship, 0, 0);
     }
@@ -525,6 +526,7 @@ public class Levels {
         numInvaders = 3;
         levelTimeLimit = 450 + timeOffSet;
         startText = "";
+        difficultyRating = 6;
 
         invaders[0] = new GravitySprite(context, ship, (float) (Levels.screenWidth * Math.random()), 0);
         invaders[1] = new BouncySprite(context, 0, 0, Levels.screenWidth);
@@ -538,7 +540,7 @@ public class Levels {
         invaders[0] = new GravitySprite(context, ship, 1*Levels.screenWidth/5, 6*Levels.screenHeight/7);
         invaders[1] = new GravitySprite(context, ship, 2*Levels.screenWidth/4, Levels.screenHeight/6);
         invaders[2] = new GravitySprite(context, ship, 4*Levels.screenWidth/5, 6*Levels.screenHeight/7);
-        invaders[3] = new Basic(context, 0, 0, Levels.screenWidth, Levels.screenHeight/4);
+        invaders[3] = new BouncySprite(context, 0, 0, Levels.screenWidth);
     }
 
 
