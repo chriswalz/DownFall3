@@ -22,9 +22,11 @@ public class DeathAnimation extends MultRectAbstract{
     private int widthR;
     private int heightR;
 
+    private int shipWidth;
+
     private int explosionHeight = 0;
 
-    public DeathAnimation(Context context, int length, float x, float y) {
+    public DeathAnimation(Context context, int length, float x, float y, int shipWidth) {
         super(length);
 
         this.lenSep = length/4;
@@ -32,6 +34,8 @@ public class DeathAnimation extends MultRectAbstract{
 
         this.x = x;
         this.y = y;
+
+        this.shipWidth = shipWidth;
 
         xRand = new int[length];
         yRand = new int[length];
@@ -43,36 +47,39 @@ public class DeathAnimation extends MultRectAbstract{
 
         prepareAnimation();
     }
-    int movement = 2;
+    int movement = baseSpeed * 3;
     private void prepareAnimation() {
         this.explosionHeight = 0;
-        for ( int i = 0; i < length/4; i++){
-            xRandIncrement[i] = movement;
-            yRandIncrement[i] = movement; //length/4 - i;
+        for ( int i = 0; i < length; i++){
+            if (i % 4 == 0) {
+                xRandIncrement[i] = (int) ((Math.random() * movement)) - movement/2;  // (int) ((Math.random() * movement));
+                yRandIncrement[i] = (int) ((Math.random() * movement)) + movement/4;  //(int) ((Math.random() * movement) - 2);
+            } else if (i % 4 == 1) {
+                xRandIncrement[i] = (int) ((Math.random() * movement)) - movement/2;
+                yRandIncrement[i] = (int) ((Math.random() * movement)) + movement/4;
+            } else if (i % 4 == 2) {
+                xRandIncrement[i] = (int) ((Math.random() * movement)) - movement/2;
+                yRandIncrement[i] = (int) ((Math.random() * movement)) + movement/4;
+            } else if (i % 4 == 3) {
+                xRandIncrement[i] = (int) ((Math.random() * movement)) - movement/2;
+                yRandIncrement[i] = (int) ((Math.random() * movement)) + movement/4;
+            }
 
-            xRandIncrement[i+lenSep] = -movement; //-i;
-            yRandIncrement[i+lenSep] = movement; //length/4 - i;
-
-            xRandIncrement[i+(2*lenSep)] = movement;  //i;
-            yRandIncrement[i+(2*lenSep)] = -movement; //-(length/4 - i);
-
-            xRandIncrement[i+(3*lenSep)] = -movement; // -i;
-            yRandIncrement[i+(3*lenSep)] = -movement; //-(length/4 - i);
 
         }
-
-        widthR = Levels.screenWidth / 40;
-        heightR = Levels.screenWidth / 40;
+        int width = (int) Math.sqrt(rects.length);
+        widthR = shipWidth/width;  //Levels.screenWidth / 40;
+        heightR = shipWidth/width;  //Levels.screenWidth / 40;
         for (int i = 0; i < rects.length; i++) {
             int xI = (int) this.x + xRand[i];
             int yI = (int) this.y + yRand[i];
 
             updateRectF(rects[i], xI, yI, widthR, heightR);
         }
-        int width = (int) Math.sqrt(rects.length);
+
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < width; j++) {
-                xRand[(i * width) + j] = i * widthR;
+                xRand[(i * width) + j] = i * (widthR);
                 yRand[(i * width) + j] = j * widthR;
             }
         }

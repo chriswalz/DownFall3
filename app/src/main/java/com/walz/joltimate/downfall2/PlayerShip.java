@@ -79,7 +79,7 @@ public class PlayerShip {
         for (int i = 0; i < previousFrames.length; i++) {
             previousFrames[i] = new RectF();
         }
-        deathAnimation = new DeathAnimation(context, 49, x, y);
+        deathAnimation = new DeathAnimation(context, 49, x, y, (int) width);
 
     }
     public void reset() {
