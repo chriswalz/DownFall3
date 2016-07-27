@@ -1,11 +1,9 @@
 package com.walz.joltimate.downfall2;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.RectF;
 import android.os.Vibrator;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -25,6 +23,11 @@ import com.walz.joltimate.downfall2.Invaders.InvaderAbstract;
 // randomness
 // review button, share button
 // teleport animation
+
+// USE STRING BUFFER INSTEAD
+
+// animate the title, show it often so it gets ingrained in their head.
+// encourage user to challenge their friends, encourage 5 star rating.
 
 // Test out GLSurfaceView??
 // Use the NDK??
@@ -107,6 +110,7 @@ public class DownFallView extends SurfaceView implements Runnable{
     private int winCircleRadius = 0;
 
     private Paint textPaint;
+    private Paint hudPaint;
     private int alpha = 255;
     private boolean increase = false;
 
@@ -118,6 +122,8 @@ public class DownFallView extends SurfaceView implements Runnable{
 
     private float distanceFromEdge;
     private Vibrator v;
+
+    private DownFallActivity downFallActivity;
 
     // When the we initialize (call new()) on gameView
     // This special constructor method runs
@@ -147,6 +153,10 @@ public class DownFallView extends SurfaceView implements Runnable{
 
         winCirclePaint = new Paint();
         winCirclePaint.setColor(Color.argb(255, 162, 255, 159));
+
+        hudPaint = new Paint();
+        hudPaint.setTextSize(80);
+        hudPaint.setColor(Color.argb(255, 40, 40, 60));
 
 
         int size = Levels.screenHeight/15;
@@ -180,7 +190,9 @@ public class DownFallView extends SurfaceView implements Runnable{
 
     @Override
     public void run() {
+
         while (playing) {
+
 
             // Capture the current time in milliseconds in startFrameTime
             long startFrameTime = System.currentTimeMillis();
@@ -242,7 +254,8 @@ public class DownFallView extends SurfaceView implements Runnable{
             triggerWinAnimation = false;
             score = 0;
             Levels.updateCurrentLevel(); ;
-            DownFallActivity downFallActivity = (DownFallActivity) context;
+            prepareCurrentLevel();
+            downFallActivity = (DownFallActivity) context;
             downFallActivity.setToWinScreen();
         }
     }
@@ -256,8 +269,8 @@ public class DownFallView extends SurfaceView implements Runnable{
             animationFrames = 0;
             gameState = RETRYSCREEN; // paused = true;
             score = 0;
-            DownFallActivity downFallActivity = (DownFallActivity) context;
-            downFallActivity.setToRetryScreen();
+            downFallActivity = (DownFallActivity) context;
+            downFallActivity.setToStartScreen();
         }
 
     }
@@ -300,7 +313,7 @@ public class DownFallView extends SurfaceView implements Runnable{
                     break;
                 }
                 if (!triggerLoseAnimation) {
-                    v.vibrate(25);
+                    v.vibrate(10);
                 }
                 triggerLoseAnimation = true;
             }
@@ -347,10 +360,11 @@ public class DownFallView extends SurfaceView implements Runnable{
         // Change the brush color
         paint.setColor(Color.argb(255,  249, 129, 0));
         paint.setTextSize(20);
-        canvas.drawText(scoreText + score + " Invaders: " + Levels.numInvaders + " Part: " + Levels.currentSection + " Levels: " + Levels.currentLevel + " FPS: " + fps + " Difficulty Rating: " + Levels.difficultyRating, 10,50, paint);
+        if (Levels.debug) {
+            canvas.drawText(scoreText + score + " Invaders: " + Levels.numInvaders + " Part: " + Levels.currentSection + " Levels: " + Levels.currentLevel + " FPS: " + fps + " Difficulty Rating: " + Levels.difficultyRating, 10,50, paint);
+        }
 
-        paint.setTextSize(40);
-        canvas.drawText("" + (Math.round(numFrames*100/Levels.levelTimeLimit)) + "%" , 10, Levels.screenHeight - 20, paint);
+        canvas.drawText("" + (Math.round(numFrames*100/Levels.levelTimeLimit)) + "%" , 2 * Levels.screenWidth/100, 98 * Levels.screenHeight / 100, hudPaint);
 
 
         if (alpha >= 255) {
@@ -367,10 +381,10 @@ public class DownFallView extends SurfaceView implements Runnable{
         if (gameState == STARTSCREEN) {
             textPaint.setColor(Color.argb(255, 255, 255, 255));
             textPaint.setTextSize(80);
-            canvas.drawText(Levels.startText, Levels.screenWidth/2, Levels.screenHeight/2, textPaint);
+            canvas.drawText(Levels.startText, Levels.screenWidth/2, 5*Levels.screenHeight/16, textPaint);
             textPaint.setColor(Color.argb(alpha, 255, 255, 255));
             textPaint.setTextSize(30);
-            canvas.drawText("Tap to Start", Levels.screenWidth/2, 3*Levels.screenHeight/5, textPaint);
+            //canvas.drawText("Tap to Start", Levels.screenWidth/2, 3*Levels.screenHeight/5, textPaint);
         }
 
     }
@@ -420,6 +434,8 @@ public class DownFallView extends SurfaceView implements Runnable{
 
             case MotionEvent.ACTION_DOWN:
                 if (gameState == STARTSCREEN) {
+                    downFallActivity = (DownFallActivity) context;
+                    downFallActivity.setToPlayingScreen();
                     gameState = PLAYINGSCREEN;
                 }
                 // TODO research motionEvent.getPrecision
