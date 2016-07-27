@@ -3,6 +3,7 @@ package com.walz.joltimate.downfall2.Invaders;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.RectF;
+import android.util.Log;
 
 import com.walz.joltimate.downfall2.Levels;
 import com.walz.joltimate.downfall2.PlayerShip;
@@ -47,10 +48,11 @@ public class DeathAnimation extends MultRectAbstract{
 
         prepareAnimation();
     }
-    int movement = baseSpeed * 3;
+    private int movement = 7 * baseSpeed/ 4 ;
+    private int width;
     private void prepareAnimation() {
         this.explosionHeight = 0;
-        for ( int i = 0; i < length; i++){
+        for (i = 0; i < length; i++){
             if (i % 4 == 0) {
                 xRandIncrement[i] = (int) ((Math.random() * movement)) - movement/2;  // (int) ((Math.random() * movement));
                 yRandIncrement[i] = (int) ((Math.random() * movement)) + movement/4;  //(int) ((Math.random() * movement) - 2);
@@ -67,17 +69,17 @@ public class DeathAnimation extends MultRectAbstract{
 
 
         }
-        int width = (int) Math.sqrt(rects.length);
+        width = (int) Math.sqrt(rects.length);
         widthR = shipWidth/width;  //Levels.screenWidth / 40;
         heightR = shipWidth/width;  //Levels.screenWidth / 40;
-        for (int i = 0; i < rects.length; i++) {
+        for (i = 0; i < rects.length; i++) {
             int xI = (int) this.x + xRand[i];
             int yI = (int) this.y + yRand[i];
 
             updateRectF(rects[i], xI, yI, widthR, heightR);
         }
 
-        for (int i = 0; i < width; i++) {
+        for (i = 0; i < width; i++) {
             for (int j = 0; j < width; j++) {
                 xRand[(i * width) + j] = i * (widthR);
                 yRand[(i * width) + j] = j * widthR;
@@ -86,18 +88,19 @@ public class DeathAnimation extends MultRectAbstract{
     }
     @Override
     public void update(int fps) {
+        //Log.d("DeathAnimation", "deathAnimation updating: " + xRand[0] + " " + xRandIncrement[0]);
         y += yVelocity;
 
-        for (int i = 0; i < rects.length; i++){
+        for (i = 0; i < rects.length; i++){
             int xI = (int) x + xRand[i];
             int yI = (int) y + yRand[i];
             updateRectF(rects[i], xI, yI, widthR, heightR);
         }
 
-        if ( y > explosionHeight){
+        if ( y >= explosionHeight){
             // possibly add color
 
-            for (int i = 0; i < rects.length; i++){
+            for (i = 0; i < rects.length; i++){
                 xRand[i] += xRandIncrement[i];
                 yRand[i] += yRandIncrement[i];
                 yVelocity = 0;

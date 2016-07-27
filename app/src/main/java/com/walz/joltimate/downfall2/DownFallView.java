@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -116,6 +117,7 @@ public class DownFallView extends SurfaceView implements Runnable{
     private final int WINSCREEN = 3;
 
     private float distanceFromEdge;
+    private Vibrator v;
 
     // When the we initialize (call new()) on gameView
     // This special constructor method runs
@@ -132,7 +134,7 @@ public class DownFallView extends SurfaceView implements Runnable{
         // Initialize ourHolder and paint objects
         ourHolder = getHolder();
         paint = new Paint();
-
+        v = (Vibrator) this.context.getSystemService(Context.VIBRATOR_SERVICE);
         gameState = STARTSCREEN;
 
         numFrames = 0;
@@ -186,8 +188,8 @@ public class DownFallView extends SurfaceView implements Runnable{
 
             updateBackground();
             if(gameState == PLAYINGSCREEN){
+                updateForeground();
                 if (!triggerLoseAnimation) {
-                    updateForeground();
                 }
                 playerShip.update(); // for loseAnimation only
             }
@@ -245,10 +247,11 @@ public class DownFallView extends SurfaceView implements Runnable{
         }
     }
     private void drawLoseAnimation() {
-        if (animationFrames < 200) {
+        if (animationFrames < 100) {
             playerShip.setAlive(false);
             animationFrames++;
         } else {
+
             triggerLoseAnimation = false;
             animationFrames = 0;
             gameState = RETRYSCREEN; // paused = true;
@@ -295,6 +298,9 @@ public class DownFallView extends SurfaceView implements Runnable{
             if (invaders[i].isColliding(playerShip)) { //invaders[i].isVisible && RectF.intersects(invaders[i].rect, playerShip.rect
                 if (triggerWinAnimation) {
                     break;
+                }
+                if (!triggerLoseAnimation) {
+                    v.vibrate(25);
                 }
                 triggerLoseAnimation = true;
             }

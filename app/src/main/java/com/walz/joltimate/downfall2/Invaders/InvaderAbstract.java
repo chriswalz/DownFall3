@@ -27,6 +27,7 @@ public abstract class InvaderAbstract {
 
     protected static Paint backgroundBlockPaint;
     protected static Paint invaderPaint;
+    protected int i;
 
 
     static {

@@ -42,7 +42,7 @@ public class FireworkSprite extends MultRectAbstract{
 
 
 
-        for ( int i = 0; i < length/4; i++){
+        for (i = 0; i < length/4; i++){
             xRandIncrement[i] = i;
             yRandIncrement[i] = length/4 - i;
 
@@ -59,7 +59,7 @@ public class FireworkSprite extends MultRectAbstract{
 
         widthR = Levels.screenWidth / 40;
         heightR = Levels.screenWidth / 40;
-        for (int i = 0; i < rects.length; i++) {
+        for (i = 0; i < rects.length; i++) {
             xRand[i] = (int) (0 - widthR / 2);
             yRand[i] = 0;
             int xI = (int) this.x + xRand[i];
@@ -77,7 +77,7 @@ public class FireworkSprite extends MultRectAbstract{
     public void update(int fps) {
         y += yVelocity;
 
-        for (int i = 0; i < rects.length; i++){
+        for (i = 0; i < rects.length; i++){
             int xI = (int) x + xRand[i];
             int yI = (int) y + yRand[i];
             updateRectF(rects[i], xI, yI, widthR, heightR);
@@ -86,7 +86,7 @@ public class FireworkSprite extends MultRectAbstract{
         if ( y > explosionHeight){
             // possibly add color
 
-            for (int i = 0; i < rects.length; i++){
+            for (i = 0; i < rects.length; i++){
                 xRand[i] += xRandIncrement[i];
                 yRand[i] += yRandIncrement[i];
                 yVelocity = 0;

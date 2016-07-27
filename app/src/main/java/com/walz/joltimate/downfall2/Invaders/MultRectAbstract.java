@@ -10,7 +10,7 @@ public abstract class MultRectAbstract extends InvaderAbstract{
 
     public MultRectAbstract(int length){
         rects = new RectF[length];
-        for (int i = 0; i < rects.length; i++) {
+        for (i = 0; i < rects.length; i++) {
             rects[i] = new RectF();
         }
     }

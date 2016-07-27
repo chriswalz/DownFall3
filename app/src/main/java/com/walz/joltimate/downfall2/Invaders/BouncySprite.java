@@ -39,21 +39,23 @@ public class BouncySprite extends OneRectAbstract {
         super.update(fps);
         if (goDown){
             y += yVelocity;
-            if(y > (Levels.screenHeight-height) ){
+            if(y >= (Levels.screenHeight-height) ){
                 goDown = false;
             }
         } else {
             y -= yVelocity;
         }
-        if (goRight){
-            x += xVelocity;
-            if(x > Levels.screenWidth - width ){
-                goRight = false;
-            }
-        } else {
-            x -= xVelocity;
-            if(x < 0 ){
-                goRight = true;
+        if (width != Levels.screenWidth) {
+            if (goRight){
+                x += xVelocity;
+                if(x >= Levels.screenWidth - width ){
+                    goRight = false;
+                }
+            } else {
+                x -= xVelocity;
+                if(x < 0 ){
+                    goRight = true;
+                }
             }
         }
 
