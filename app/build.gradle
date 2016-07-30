@@ -8,8 +8,8 @@ android {
         applicationId "com.walz.joltimate.downfall2"
         minSdkVersion 15
         targetSdkVersion 24
-        versionCode 38
-        versionName "2.0.3.5"
+        versionCode 39
+        versionName "2.0.4.0"
     }
     buildTypes {
         debug {

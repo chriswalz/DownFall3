@@ -313,7 +313,7 @@ public class DownFallView extends SurfaceView implements Runnable{
                     break;
                 }
                 if (!triggerLoseAnimation) {
-                    v.vibrate(10);
+                    v.vibrate(20);
                 }
                 triggerLoseAnimation = true;
             }

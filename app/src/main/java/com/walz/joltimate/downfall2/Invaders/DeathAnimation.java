@@ -26,6 +26,7 @@ public class DeathAnimation extends MultRectAbstract{
     private int shipWidth;
 
     private int explosionHeight = 0;
+    private int j;
 
     public DeathAnimation(Context context, int length, float x, float y, int shipWidth) {
         super(length);
@@ -80,9 +81,11 @@ public class DeathAnimation extends MultRectAbstract{
         }
 
         for (i = 0; i < width; i++) {
-            for (int j = 0; j < width; j++) {
+            for (j = 0; j < width; j++) {
                 xRand[(i * width) + j] = i * (widthR);
                 yRand[(i * width) + j] = j * widthR;
+                xRand[(i * width) + j] -= widthR;
+                yRand[(i * width) + j] -= widthR;
             }
         }
     }

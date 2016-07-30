@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Down Fall 3</string>
-    <string name="title_activity_down_fall">DownFallActivity</string>
-    <string name="title_activity_home_screen">HomeScreenActivity</string>
+    <string name="app_name">Down Fall</string>
+    <string name="title_activity_down_fall">Down Fall</string>
+    <string name="title_activity_home_screen">Home Screen</string>
 </resources>
