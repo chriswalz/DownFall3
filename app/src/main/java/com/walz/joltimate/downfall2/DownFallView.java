@@ -59,6 +59,7 @@ import com.walz.joltimate.downfall2.Invaders.InvaderAbstract;
 // trail animation is a bit long. Go back to original
 // VectorDrawable
 
+// localization
 
 public class DownFallView extends SurfaceView implements Runnable{
 
@@ -260,7 +261,7 @@ public class DownFallView extends SurfaceView implements Runnable{
         }
     }
     private void drawLoseAnimation() {
-        if (animationFrames < 100) {
+        if (animationFrames < 60) {
             playerShip.setAlive(false);
             animationFrames++;
         } else {

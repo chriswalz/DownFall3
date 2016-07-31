@@ -28,6 +28,7 @@ public class PlayerShip {
 
     private int curve = 100;
     private boolean increase = false;
+    private int i;
 
     // X is the far left of the rectangle which forms our paddle
     public float x;
@@ -37,7 +38,7 @@ public class PlayerShip {
 
     public static Paint paint;
 
-    private final static int frameLen = 3;
+    private final static int frameLen = 2;
     public static Paint[] framePaints = new Paint[frameLen];
     private static RectF[] previousFrames = new RectF[frameLen];
 
@@ -97,15 +98,15 @@ public class PlayerShip {
         deathAnimation.reset();
 
     }
-    private int dif = 3;
+    private int dif = -3;
     public void draw(Canvas c) {
         if (alive) {
-            for (int i = 0; i < previousFrames.length-1; i++) {
+            for (i = 0; i < previousFrames.length-1; i++) {
                 RectF next = previousFrames[i+1];
                 previousFrames[i].top = next.top+dif;
                 previousFrames[i].bottom = next.bottom+dif;
-                previousFrames[i].left = next.left+dif;
-                previousFrames[i].right = next.right-dif;
+                previousFrames[i].left = next.left-dif;
+                previousFrames[i].right = next.right+dif;
             }
             RectF newestDelayFrame = previousFrames[previousFrames.length-1];
             newestDelayFrame.top = this.y;

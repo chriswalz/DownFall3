@@ -32,24 +32,26 @@ public class BitmapSprite extends InvaderAbstract {
     }
     @Override
     public void update(int fps) {
+        int mod = 120;
+        int end = mod - 1;
+        int ratio = 8;
         y += baseSpeed;
         frames++;
         if (y >= Levels.screenHeight && !isRecycled) {
             recycle();
-        }
-
-    }
-    @Override
-    public void draw(Canvas c) {
-        int mod = 120;
-        int end = mod - 1;
-        int ratio = 8;
-        if (y <= Levels.screenHeight && !isRecycled) {
+        } else {
             if ( frames % mod < end) {
                 y+=baseSpeed/ratio;
             } else {
                 y-= end*baseSpeed/ratio;
             }
+        }
+
+    }
+    @Override
+    public void draw(Canvas c) {
+
+        if (y <= Levels.screenHeight && !isRecycled) {
             c.drawBitmap(bitmap, x, y, invaderPaint);
         }
 

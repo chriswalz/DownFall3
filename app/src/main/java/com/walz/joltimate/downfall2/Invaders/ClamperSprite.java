@@ -18,7 +18,7 @@ public class ClamperSprite extends OneRectAbstract{
         width = Levels.screenHeight/20;
     }
 
-    public ClamperSprite(Context context, float xVal, float yVal, int height) {
+    public ClamperSprite(Context context, double multiplier, float xVal, float yVal, int height) {
 
         //this.rect2 = new RectF();
 
@@ -27,7 +27,7 @@ public class ClamperSprite extends OneRectAbstract{
         this.x = xVal;
         this.y = yVal - height;
 
-        this.xVelocity = Levels.screenWidth/130;
+        this.xVelocity = (int) (baseSpeed * multiplier);
 
     }
 

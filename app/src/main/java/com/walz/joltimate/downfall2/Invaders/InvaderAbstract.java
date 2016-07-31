@@ -18,8 +18,10 @@ public abstract class InvaderAbstract {
     // Y is the top coordinate
     public float y;
 
+    public static int BASE_SPEED;
+
     // This will hold the pixels per second speedthat the paddle will move
-    public static int baseSpeed;
+    public int baseSpeed;
 
     protected int yVelocity;
 
@@ -33,7 +35,7 @@ public abstract class InvaderAbstract {
     static {
         //253, 234, 175
         backgroundBlockPaint = new Paint();
-        backgroundBlockPaint.setColor(Color.argb(255, 253, 240, 181)); //Color.argb(255, 24, 24, 24));
+        backgroundBlockPaint.setColor(Color.argb(255, 253, 236, 178)); //Color.argb(255, 24, 24, 24));canvas.drawColor(Color.argb(255, 253, 234, 175))
 
         invaderPaint = new Paint();
         invaderPaint.setColor(Color.argb(255, 255, 41, 83) );//Color.argb(255, 203, 232, 107)); // rgb(255, 41, 83)
@@ -44,7 +46,7 @@ public abstract class InvaderAbstract {
     public InvaderAbstract() {
 
         // Initialize a blank RectF
-
+        baseSpeed = BASE_SPEED;
         isVisible = true;
 
 //        x = (float) (Math.random() * screenWidth); //column * (width + padding);
