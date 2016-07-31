@@ -51,6 +51,7 @@
             android:shadowRadius="2"
             android:layout_above="@id/next_button" />
         <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/current_level_textview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Level x of 100"

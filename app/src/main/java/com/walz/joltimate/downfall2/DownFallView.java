@@ -60,6 +60,7 @@ import com.walz.joltimate.downfall2.Invaders.InvaderAbstract;
 // VectorDrawable
 
 // localization
+// ease hit box
 
 public class DownFallView extends SurfaceView implements Runnable{
 
@@ -94,7 +95,7 @@ public class DownFallView extends SurfaceView implements Runnable{
     public static long numFrames;
 
     // The players ship
-    private PlayerShip playerShip; // Player
+    public static PlayerShip playerShip; // Player
 
     // Up to 60 invaders
     private InvaderAbstract[] invaders = new InvaderAbstract[60];
@@ -362,7 +363,7 @@ public class DownFallView extends SurfaceView implements Runnable{
         paint.setColor(Color.argb(255,  249, 129, 0));
         paint.setTextSize(20);
         if (Levels.debug) {
-            canvas.drawText(scoreText + score + " Invaders: " + Levels.numInvaders + " Part: " + Levels.currentSection + " Levels: " + Levels.currentLevel + " FPS: " + fps + " Difficulty Rating: " + Levels.difficultyRating, 10,50, paint);
+            canvas.drawText(scoreText + score + " Invaders: " + Levels.numInvaders + " Levels: " + Levels.currentLevel + " FPS: " + fps + " Difficulty Rating: " + Levels.difficultyRating, 10,50, paint);
         }
 
         canvas.drawText("" + (Math.round(numFrames*100/Levels.levelTimeLimit)) + "%" , 2 * Levels.screenWidth/100, 98 * Levels.screenHeight / 100, hudPaint);

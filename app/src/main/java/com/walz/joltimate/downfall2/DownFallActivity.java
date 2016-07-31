@@ -36,6 +36,8 @@ public class DownFallActivity extends AppCompatActivity {
     AppCompatImageButton ratingButton;
     AppCompatTextView titleText;
 
+    AppCompatTextView currentLevelTextView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,6 +78,8 @@ public class DownFallActivity extends AppCompatActivity {
             }
         }); */
         playButton = (AppCompatImageButton) secondLayerView.findViewById(R.id.play_button);
+
+        currentLevelTextView = (AppCompatTextView) secondLayerView.findViewById(R.id.current_level_textview);
 
         titleText = (AppCompatTextView) secondLayerView.findViewById(R.id.title_text);
 
@@ -160,8 +164,9 @@ public class DownFallActivity extends AppCompatActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                supportMenu.setVisibility(View.GONE);
+                supportMenu.setVisibility(View.VISIBLE);
                 winLayer.setVisibility(View.VISIBLE);
+                currentLevelTextView.setText("Level " + (Levels.currentLevel+1) + " of " + (Levels.levels.length));
             }
         });
     }
