@@ -436,16 +436,16 @@ public class DownFallView extends SurfaceView implements Runnable{
 
             case MotionEvent.ACTION_DOWN:
                 if (gameState == STARTSCREEN) {
-                    downFallActivity = (DownFallActivity) context;
-                    downFallActivity.setToPlayingScreen();
-                    gameState = PLAYINGSCREEN;
+                    if (pY > Levels.screenHeight/5 && pY < 4*Levels.screenHeight/5) {
+                        downFallActivity = (DownFallActivity) context;
+                        downFallActivity.setToPlayingScreen();
+                        gameState = PLAYINGSCREEN;
+                    }
                 }
                 // TODO research motionEvent.getPrecision
 
                 break;
-            // Player has removed finger from screen
-            case MotionEvent.ACTION_UP:
-                // change animation state
+            default:
                 break;
         }
         return true;

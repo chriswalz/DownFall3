@@ -28,7 +28,7 @@ public class Levels {
 
     public static int screenWidth, screenHeight;
 
-    public static boolean debug = true;
+    public static boolean debug = false;
 
     private static SharedPreferences mPrefs;
 
@@ -460,7 +460,7 @@ public class Levels {
             mEditor.commit();
         }
     }
-    
+
 
 
 
