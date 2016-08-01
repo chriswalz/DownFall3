@@ -13,12 +13,9 @@ import android.view.SurfaceView;
 import com.walz.joltimate.downfall2.Invaders.BackgroundBlock;
 import com.walz.joltimate.downfall2.Invaders.InvaderAbstract;
 
-// create level object ?
 // what customization options do i want for a level & invader
 // attach attributes to an invader
 // create level structure.
-// create homescreen
-// saved data
 // create give on edge of screen, create give on rect
 // randomness
 // review button, share button
@@ -41,6 +38,7 @@ import com.walz.joltimate.downfall2.Invaders.InvaderAbstract;
 
 // PSYCHOLOGY - Show difficulty rating, Progress Part 2 (Level 3/100) ,
 // make levels longer
+// only a certain number of lives per day (40)!
 
 // marketing
 // email wilson w later
@@ -49,18 +47,22 @@ import com.walz.joltimate.downfall2.Invaders.InvaderAbstract;
 // firebase share with friends
 
 // Describing the game to a player:
+// Surive by avoiding the red enemies
+//
 // A series of 50 mini levels
-// The goal is to avoid the white blocks
+// The goal is to avoid the red blocks
 // You can drag your finger to move around, the kicker is that you teleport as well!
 
 // Notes from people observations:
 // Game didnt get hard quick enough
 // win animation is confusing.
 // trail animation is a bit long. Go back to original
-// VectorDrawable
 
-// localization
+// localization / use res strings :(
 // ease hit box
+// change play store category
+// soundpool
+// tweak initial levels
 
 public class DownFallView extends SurfaceView implements Runnable{
 
@@ -363,7 +365,7 @@ public class DownFallView extends SurfaceView implements Runnable{
         paint.setColor(Color.argb(255,  249, 129, 0));
         paint.setTextSize(20);
         if (Levels.debug) {
-            canvas.drawText(scoreText + score + " Invaders: " + Levels.numInvaders + " Levels: " + Levels.currentLevel + " FPS: " + fps + " Difficulty Rating: " + Levels.difficultyRating, 10,50, paint);
+            canvas.drawText(scoreText + score + " Invaders: " + Levels.numInvaders + " Levels: " + Levels.currentLevel + " FPS: " + fps + " Difficulty Rating: " + Levels.difficultyRating + " Highest Level: " + Levels.highestLevel, 10,50, paint);
         }
 
         canvas.drawText("" + (Math.round(numFrames*100/Levels.levelTimeLimit)) + "%" , 2 * Levels.screenWidth/100, 98 * Levels.screenHeight / 100, hudPaint);

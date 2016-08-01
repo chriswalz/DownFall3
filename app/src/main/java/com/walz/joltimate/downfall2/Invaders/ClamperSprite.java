@@ -48,6 +48,7 @@ public class ClamperSprite extends OneRectAbstract{
 
 
     }
+    @Override
     public void draw(Canvas c) {
         super.draw(c);
         c.drawRect(rect, invaderPaint);

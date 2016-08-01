@@ -15,6 +15,7 @@ import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
 
 public class DownFallActivity extends AppCompatActivity {
@@ -38,10 +39,14 @@ public class DownFallActivity extends AppCompatActivity {
 
     AppCompatTextView currentLevelTextView;
 
+    private View v;
+    private NumberPicker levelPicker;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        v = getWindow().getDecorView();
         // Get a Display object to access screen details
         Display display = getWindowManager().getDefaultDisplay();
         // Load the resolution into a Point object
@@ -77,6 +82,16 @@ public class DownFallActivity extends AppCompatActivity {
                 downFallView.prepareCurrentLevel();
             }
         }); */
+        levelPicker = (NumberPicker) secondLayerView.findViewById(R.id.level_picker);
+        levelPicker.setMinValue(0);
+        levelPicker.setMaxValue(Levels.highestLevel);
+        levelPicker.setOnScrollListener(new NumberPicker.OnScrollListener() {
+            @Override
+            public void onScrollStateChange(NumberPicker numberPicker, int i) {
+
+            }
+        });
+
         playButton = (AppCompatImageButton) secondLayerView.findViewById(R.id.play_button);
 
         currentLevelTextView = (AppCompatTextView) secondLayerView.findViewById(R.id.current_level_textview);
@@ -122,23 +137,14 @@ public class DownFallActivity extends AppCompatActivity {
 
 
     }
-    @Override
-    protected void onStart() {
-        super.onStart();
-        View v = getWindow().getDecorView();
-        v.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
 
-    }
     public void setToStartScreen() {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 //retryLayer.setVisibility(View.VISIBLE);
+                levelPicker.setMaxValue(Levels.highestLevel);
+                levelPicker.setValue(Levels.currentLevel);
                 titleText.setVisibility(View.VISIBLE);
                 playButton.setVisibility(View.VISIBLE);
                 winLayer.setVisibility(View.GONE);
@@ -179,6 +185,12 @@ public class DownFallActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
+        v.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
         // Tell the gameView resume method to execute
         downFallView.resume();
     }

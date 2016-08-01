@@ -17,7 +17,7 @@ import com.walz.joltimate.downfall2.Invaders.RainSprite;
 public class Levels {
     // Current Level
     public static int currentLevel = 22;
-    private static int highestLevel;
+    public static int highestLevel;
     public static int difficultyRating;
 
     public static String startText = "";
@@ -256,23 +256,6 @@ public class Levels {
                 new Level() {
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
-                        // Two clampers and bouncies :D
-                        numInvaders = 6;
-                        levelTimeLimit = 575 + timeOffSet;
-                        startText = "-|-|-";
-                        difficultyRating = 8;
-
-                        int diff = 75*Levels.screenHeight/100;
-                        for (int i = 0; i < numInvaders; i++) {
-                            invaders[i] = new BouncySprite(context, 0, i * -diff, Levels.screenWidth);
-                        }
-                        invaders[4] = new ClamperSprite(context, 0.6, 0, 0, 7*Levels.screenHeight/3);
-                        invaders[5] = new ClamperSprite(context, 0.6, Levels.screenWidth-ClamperSprite.width, 0, 7*Levels.screenHeight/3);
-                    }
-                },
-                new Level() {
-                    @Override
-                    public void prepare(InvaderAbstract[] invaders, Context context) {
                         // Snake status
                         numInvaders = 48;
                         levelTimeLimit = 575 + timeOffSet;
@@ -430,14 +413,33 @@ public class Levels {
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         numInvaders = 4;
                         levelTimeLimit = 500 + timeOffSet;
-                        startText = "It accelerates.";
+                        startText = "It gravitates.";
 
                         invaders[0] = new GravitySprite(context, DownFallView.playerShip, 1*Levels.screenWidth/5, 6*Levels.screenHeight/7);
                         invaders[1] = new GravitySprite(context, DownFallView.playerShip, 2*Levels.screenWidth/4, Levels.screenHeight/6);
                         invaders[2] = new GravitySprite(context, DownFallView.playerShip, 4*Levels.screenWidth/5, 6*Levels.screenHeight/7);
                         invaders[3] = new BouncySprite(context, 0, 0, Levels.screenWidth);
                     }
-                }
+                },
+
+                // v hard levels
+                new Level() {
+                    @Override
+                    public void prepare(InvaderAbstract[] invaders, Context context) {
+                        // Two clampers and bouncies :D
+                        numInvaders = 6;
+                        levelTimeLimit = 575 + timeOffSet;
+                        startText = "-|-|-";
+                        difficultyRating = 8;
+
+                        int diff = 75*Levels.screenHeight/100;
+                        for (int i = 0; i < numInvaders; i++) {
+                            invaders[i] = new BouncySprite(context, 0, i * -diff, Levels.screenWidth);
+                        }
+                        invaders[4] = new ClamperSprite(context, 0.6, 0, 0, 7*Levels.screenHeight/3);
+                        invaders[5] = new ClamperSprite(context, 0.6, Levels.screenWidth-ClamperSprite.width, 0, 7*Levels.screenHeight/3);
+                    }
+                },
         };
 
     }
@@ -451,7 +453,10 @@ public class Levels {
 
 
     public static void updateCurrentLevel() {
-        Levels.currentLevel++;
+        currentLevel++;
+        if (currentLevel > highestLevel) {
+            highestLevel = currentLevel;
+        }
 
         if (!debug) {
             SharedPreferences.Editor mEditor = mPrefs.edit();
