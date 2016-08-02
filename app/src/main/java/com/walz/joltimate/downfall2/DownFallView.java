@@ -166,6 +166,7 @@ public class DownFallView extends SurfaceView implements Runnable{
         hudPaint.setTextSize(80);
         hudPaint.setColor(Color.argb(255, 40, 40, 60));
 
+        downFallActivity = (DownFallActivity) context;
 
         int size = Levels.screenHeight/15;
         int distX = Levels.screenWidth - size;
@@ -181,6 +182,7 @@ public class DownFallView extends SurfaceView implements Runnable{
         distanceFromEdge = 1;
 
         prepareCurrentLevel();
+
     }
 
     public void prepareCurrentLevel(){
@@ -263,7 +265,6 @@ public class DownFallView extends SurfaceView implements Runnable{
             score = 0;
             Levels.updateCurrentLevel(); ;
             prepareCurrentLevel();
-            downFallActivity = (DownFallActivity) context;
             downFallActivity.setToWinScreen();
         }
     }
@@ -277,7 +278,6 @@ public class DownFallView extends SurfaceView implements Runnable{
             animationFrames = 0;
             gameState = RETRYSCREEN; // paused = true;
             score = 0;
-            downFallActivity = (DownFallActivity) context;
             downFallActivity.setToStartScreen();
         }
 
@@ -443,7 +443,6 @@ public class DownFallView extends SurfaceView implements Runnable{
             case MotionEvent.ACTION_DOWN:
                 if (gameState == STARTSCREEN) {
                     if (pY > Levels.screenHeight/5 && pY < 4*Levels.screenHeight/5) {
-                        downFallActivity = (DownFallActivity) context;
                         downFallActivity.setToPlayingScreen();
                         gameState = PLAYINGSCREEN;
                     }

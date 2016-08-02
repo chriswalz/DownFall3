@@ -128,17 +128,11 @@ public class DownFallActivity extends AppCompatActivity {
         winButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //playButton.setVisibility(View.VISIBLE);
-                playButton.animate().alpha(1.0f);
-                //winLayer.setVisibility(View.GONE);
-                winLayer.animate().alpha(0.0f);
-                supportMenu.setVisibility(View.VISIBLE);
-                //titleText.setVisibility(View.VISIBLE);
-                titleText.animate().alpha(1.0f);
-                winButton.setClickable(false);
-                downFallView.prepareCurrentLevel();
+                startScreen();
             }
         });
+
+        setToStartScreen();
 
 
     }
@@ -147,23 +141,27 @@ public class DownFallActivity extends AppCompatActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                //retryLayer.setVisibility(View.VISIBLE);
-                levelPicker.setMaxValue(Levels.highestLevel);
-                levelPicker.setValue(Levels.currentLevel);
-                //titleText.setVisibility(View.VISIBLE);
-                titleText.animate().alpha(1.0f);
-                //playButton.setVisibility(View.VISIBLE);
-                playButton.animate().alpha(1.0f);
-                playButton.setEnabled(false);
-                playButton.setClickable(false);
-                //winLayer.setVisibility(View.GONE);
-                winLayer.animate().alpha(0.0f);
-                winButton.setClickable(false);
-                supportMenu.setVisibility(View.VISIBLE);
+                startScreen();
 
-                downFallView.prepareCurrentLevel();
             }
         });
+    }
+    private void startScreen() {
+        //retryLayer.setVisibility(View.VISIBLE);
+        levelPicker.setMaxValue(Levels.highestLevel);
+        levelPicker.setValue(Levels.currentLevel);
+        //titleText.setVisibility(View.VISIBLE);
+        titleText.animate().alpha(1.0f).scaleX(1.0f).scaleY(1.0f).y(Levels.screenHeight/13);
+        //playButton.setVisibility(View.VISIBLE);
+        playButton.animate().alpha(1.0f);
+        playButton.setEnabled(false);
+        playButton.setClickable(false);
+        //winLayer.setVisibility(View.GONE);
+        winLayer.animate().alpha(0.0f);
+        winButton.setClickable(false);
+        supportMenu.setVisibility(View.VISIBLE);
+
+        downFallView.prepareCurrentLevel();
     }
     public void setToPlayingScreen() {
         runOnUiThread(new Runnable() {
@@ -171,7 +169,7 @@ public class DownFallActivity extends AppCompatActivity {
             public void run() {
                 //retryLayer.setVisibility(View.VISIBLE);
                 //titleText.setVisibility(View.GONE);
-                titleText.animate().alpha(0.0f);
+                titleText.animate().alpha(0.0f).scaleX(0.3f).scaleY(0.3f).y(Levels.screenHeight/5);
                 //playButton.setVisibility(View.GONE);
                 playButton.animate().alpha(0.0f);
                 //winLayer.setVisibility(View.GONE);
