@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatImageButton;
+import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.view.Display;
@@ -33,7 +34,7 @@ public class DownFallActivity extends AppCompatActivity {
     AppCompatButton winButton;
 
     LinearLayoutCompat supportMenu;
-    AppCompatImageButton playButton;
+    AppCompatImageView playButton;
     AppCompatImageButton ratingButton;
     AppCompatTextView titleText;
 
@@ -92,7 +93,7 @@ public class DownFallActivity extends AppCompatActivity {
             }
         });
 
-        playButton = (AppCompatImageButton) secondLayerView.findViewById(R.id.play_button);
+        playButton = (AppCompatImageView) secondLayerView.findViewById(R.id.play_button);
 
         currentLevelTextView = (AppCompatTextView) secondLayerView.findViewById(R.id.current_level_textview);
 
@@ -127,11 +128,15 @@ public class DownFallActivity extends AppCompatActivity {
         winButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                playButton.setVisibility(View.VISIBLE);
-                winLayer.setVisibility(View.GONE);
+                //playButton.setVisibility(View.VISIBLE);
+                playButton.animate().alpha(1.0f);
+                //winLayer.setVisibility(View.GONE);
+                winLayer.animate().alpha(0.0f);
                 supportMenu.setVisibility(View.VISIBLE);
-                titleText.setVisibility(View.VISIBLE);
-                //downFallView.prepareCurrentLevel();
+                //titleText.setVisibility(View.VISIBLE);
+                titleText.animate().alpha(1.0f);
+                winButton.setClickable(false);
+                downFallView.prepareCurrentLevel();
             }
         });
 
@@ -145,10 +150,17 @@ public class DownFallActivity extends AppCompatActivity {
                 //retryLayer.setVisibility(View.VISIBLE);
                 levelPicker.setMaxValue(Levels.highestLevel);
                 levelPicker.setValue(Levels.currentLevel);
-                titleText.setVisibility(View.VISIBLE);
-                playButton.setVisibility(View.VISIBLE);
-                winLayer.setVisibility(View.GONE);
+                //titleText.setVisibility(View.VISIBLE);
+                titleText.animate().alpha(1.0f);
+                //playButton.setVisibility(View.VISIBLE);
+                playButton.animate().alpha(1.0f);
+                playButton.setEnabled(false);
+                playButton.setClickable(false);
+                //winLayer.setVisibility(View.GONE);
+                winLayer.animate().alpha(0.0f);
+                winButton.setClickable(false);
                 supportMenu.setVisibility(View.VISIBLE);
+
                 downFallView.prepareCurrentLevel();
             }
         });
@@ -158,9 +170,12 @@ public class DownFallActivity extends AppCompatActivity {
             @Override
             public void run() {
                 //retryLayer.setVisibility(View.VISIBLE);
-                titleText.setVisibility(View.GONE);
-                playButton.setVisibility(View.GONE);
-                winLayer.setVisibility(View.GONE);
+                //titleText.setVisibility(View.GONE);
+                titleText.animate().alpha(0.0f);
+                //playButton.setVisibility(View.GONE);
+                playButton.animate().alpha(0.0f);
+                //winLayer.setVisibility(View.GONE);
+                winLayer.animate().alpha(0.0f);
                 supportMenu.setVisibility(View.GONE);
 
             }
@@ -171,7 +186,9 @@ public class DownFallActivity extends AppCompatActivity {
             @Override
             public void run() {
                 supportMenu.setVisibility(View.VISIBLE);
-                winLayer.setVisibility(View.VISIBLE);
+                //winLayer.setVisibility(View.VISIBLE);
+                winLayer.animate().alpha(1.0f);
+                winButton.setClickable(true);
                 currentLevelTextView.setText("Level " + (Levels.currentLevel+1) + " of " + (Levels.levels.length));
             }
         });

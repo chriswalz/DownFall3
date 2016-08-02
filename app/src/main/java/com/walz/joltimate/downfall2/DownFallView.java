@@ -64,6 +64,10 @@ import com.walz.joltimate.downfall2.Invaders.InvaderAbstract;
 // soundpool
 // tweak initial levels
 
+// add notification service (determine best time and day??)
+// 25 lives per day. Watch ad to get +25 ads (max is 100)
+// beautiful animations, points
+
 public class DownFallView extends SurfaceView implements Runnable{
 
     private Context context;
