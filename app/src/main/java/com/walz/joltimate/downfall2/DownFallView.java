@@ -16,7 +16,7 @@ import com.walz.joltimate.downfall2.Invaders.InvaderAbstract;
 // what customization options do i want for a level & invader
 // attach attributes to an invader
 // create level structure.
-// create give on edge of screen, create give on rect
+// create give on edge of screen, create give on hitbox
 // randomness
 // review button, share button
 // teleport animation
@@ -316,7 +316,7 @@ public class DownFallView extends SurfaceView implements Runnable{
                 continue;
             }
             // Lost level
-            if (invaders[i].isColliding(playerShip)) { //invaders[i].isVisible && RectF.intersects(invaders[i].rect, playerShip.rect
+            if (invaders[i].isColliding(playerShip)) { //invaders[i].isVisible && RectF.intersects(invaders[i].hitbox, playerShip.hitbox
                 if (triggerWinAnimation) {
                     break;
                 }

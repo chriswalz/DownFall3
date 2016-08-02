@@ -3,9 +3,7 @@ package com.walz.joltimate.downfall2.Invaders;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.RectF;
-import android.util.Log;
 
-import com.walz.joltimate.downfall2.Levels;
 import com.walz.joltimate.downfall2.PlayerShip;
 
 public class DeathAnimation extends MultRectAbstract{
@@ -120,7 +118,7 @@ public class DeathAnimation extends MultRectAbstract{
     @Override
     public boolean isColliding(PlayerShip playerShip) {
         for (RectF r: rects) {
-            if (RectF.intersects(r, playerShip.rect)) {
+            if (RectF.intersects(r, playerShip.hitbox)) {
                 return true;
             }
         }

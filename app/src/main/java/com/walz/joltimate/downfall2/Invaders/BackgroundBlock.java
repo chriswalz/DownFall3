@@ -35,7 +35,7 @@ public class BackgroundBlock extends OneRectAbstract{
         y += yVelocity;
         x += xSpeed;
 
-        // Update rect which is used to detect hits
+        // Update hitbox which is used to detect hits
         rect.top = y;
         rect.bottom = y + height;
         rect.left = x;

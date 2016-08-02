@@ -77,7 +77,7 @@ public class RainSprite extends MultRectAbstract{
     @Override
     public boolean isColliding(PlayerShip playerShip) {
         for (RectF r : rects) {
-            if (RectF.intersects(r, playerShip.rect)) {
+            if (RectF.intersects(r, playerShip.hitbox)) {
                 return true;
             }
         }

@@ -1,22 +1,19 @@
 package com.walz.joltimate.downfall2;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.graphics.RectF;
 
 import com.walz.joltimate.downfall2.Invaders.DeathAnimation;
-import com.walz.joltimate.downfall2.Invaders.FireworkSprite;
 
 /**
  * Created by chris on 7/2/16.
  */
 public class PlayerShip {
-    public RectF rect;
+    public RectF hitbox;
+    public RectF rectDraw;
     public DeathAnimation deathAnimation;
 
     // The player ship will be represented by a Bitmap
@@ -44,6 +41,8 @@ public class PlayerShip {
 
     private boolean alive = true;
 
+    private float offset;
+
     static {
         paint = new Paint();
         paint.setColor(Color.argb(255,23, 144, 245 )); //rgb(23, 144, 244)
@@ -63,19 +62,27 @@ public class PlayerShip {
     public PlayerShip(Context context){
 
         // Initialize a blank RectF
-        rect = new RectF();
+        rectDraw = new RectF();
+        hitbox = new RectF();
 
         width = Levels.screenWidth/5;
         height = Levels.screenWidth/5;
+
+        offset = width/60;
 
         // Start ship in roughly the screen centre
         x = (Levels.screenWidth / 2) - width/2;
         y = 6*Levels.screenHeight / 9 ;
 
-        rect.top = this.y;
-        rect.bottom = this.y + height;
-        rect.left = this.x;
-        rect.right = this.x + width;
+        hitbox.top = this.y + offset;
+        hitbox.bottom = this.y + height - offset;
+        hitbox.left = this.x + offset;
+        hitbox.right = this.x + width - offset;
+
+        rectDraw.top = this.y;
+        rectDraw.bottom = this.y + height;
+        rectDraw.left = this.x;
+        rectDraw.right = this.x + width;
 
         for (int i = 0; i < previousFrames.length; i++) {
             previousFrames[i] = new RectF();
@@ -88,10 +95,15 @@ public class PlayerShip {
         x = (Levels.screenWidth / 2) - width/2;
         y = 6*Levels.screenHeight / 9 ;
 
-        rect.top = this.y;
-        rect.bottom = this.y + height;
-        rect.left = this.x;
-        rect.right = this.x + width;
+        hitbox.top = this.y + offset;
+        hitbox.bottom = this.y + height - offset;
+        hitbox.left = this.x + offset;
+        hitbox.right = this.x + width - offset;
+
+        rectDraw.top = this.y;
+        rectDraw.bottom = this.y + height;
+        rectDraw.left = this.x;
+        rectDraw.right = this.x + width;
 
         alive = true;
 
@@ -131,7 +143,7 @@ public class PlayerShip {
                 c.drawRoundRect(r, curve/ratio, curve, framePaints[i]);
                 i++;
             }
-            c.drawRoundRect(rect, curve/ratio, curve, paint);
+            c.drawRoundRect(rectDraw, curve/ratio, curve, paint);
 
         } else {
             deathAnimation.draw(c);
@@ -146,10 +158,15 @@ public class PlayerShip {
         this.x = x - width / 2;
         this.y = y - height / 2;
 
-        rect.top = this.y;
-        rect.bottom = this.y + height;
-        rect.left = this.x;
-        rect.right = this.x + width;
+        hitbox.top = this.y + offset;
+        hitbox.bottom = this.y + height - offset;
+        hitbox.left = this.x + offset;
+        hitbox.right = this.x + width - offset;
+
+        rectDraw.top = this.y;
+        rectDraw.bottom = this.y + height;
+        rectDraw.left = this.x;
+        rectDraw.right = this.x + width;
 
         deathAnimation.setOrigin(x, y);
     }

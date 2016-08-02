@@ -40,7 +40,7 @@ public class ClamperSprite extends OneRectAbstract{
             xVelocity = -xVelocity;
         }
 
-        // Update rect which is used to detect hits
+        // Update hitbox which is used to detect hits
         rect.top = y;
         rect.bottom = y + height;
         rect.left = x;
@@ -55,6 +55,6 @@ public class ClamperSprite extends OneRectAbstract{
     }
     @Override
     public boolean isColliding(PlayerShip playerShip) {
-        return RectF.intersects(rect, playerShip.rect);
+        return RectF.intersects(rect, playerShip.hitbox);
     }
 }

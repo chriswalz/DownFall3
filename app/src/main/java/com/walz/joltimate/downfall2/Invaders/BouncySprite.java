@@ -72,6 +72,6 @@ public class BouncySprite extends OneRectAbstract {
 
     @Override
     public boolean isColliding(PlayerShip playerShip) {
-        return RectF.intersects(rect, playerShip.rect);
+        return RectF.intersects(rect, playerShip.hitbox);
     }
 }
