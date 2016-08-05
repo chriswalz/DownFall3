@@ -12,6 +12,7 @@ import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutCompat;
+import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -128,6 +129,7 @@ public class DownFallActivity extends AppCompatActivity {
         winButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.d("winButtonClicked!!","winButtonClicked!!");
                 startScreen();
             }
         });
@@ -153,10 +155,11 @@ public class DownFallActivity extends AppCompatActivity {
         //titleText.setVisibility(View.VISIBLE);
         titleText.animate().alpha(1.0f).scaleX(1.0f).scaleY(1.0f).y(Levels.screenHeight/13);
         //playButton.setVisibility(View.VISIBLE);
-        playButton.animate().alpha(1.0f);
+        playButton.animate().alpha(1.0f).setDuration(175);
         playButton.setEnabled(false);
         playButton.setClickable(false);
         //winLayer.setVisibility(View.GONE);
+        winLayer.setY(-Levels.screenHeight/2);
         winLayer.animate().alpha(0.0f);
         winButton.setClickable(false);
         supportMenu.setVisibility(View.VISIBLE);
@@ -169,7 +172,7 @@ public class DownFallActivity extends AppCompatActivity {
             public void run() {
                 //retryLayer.setVisibility(View.VISIBLE);
                 //titleText.setVisibility(View.GONE);
-                titleText.animate().alpha(0.0f).scaleX(0.3f).scaleY(0.3f).y(Levels.screenHeight/5);
+                titleText.animate().alpha(0.0f).scaleX(0.8f).scaleY(0.8f).y(Levels.screenHeight/8);
                 //playButton.setVisibility(View.GONE);
                 playButton.animate().alpha(0.0f);
                 //winLayer.setVisibility(View.GONE);
@@ -185,7 +188,9 @@ public class DownFallActivity extends AppCompatActivity {
             public void run() {
                 supportMenu.setVisibility(View.VISIBLE);
                 //winLayer.setVisibility(View.VISIBLE);
-                winLayer.animate().alpha(1.0f);
+                winLayer.setScaleX(0.5f);
+                winLayer.setScaleY(0.5f);
+                winLayer.animate().y(0).alpha(1.0f).scaleX(1.0f).scaleY(1.0f);
                 winButton.setClickable(true);
                 currentLevelTextView.setText("Level " + (Levels.currentLevel+1) + " of " + (Levels.levels.length));
             }

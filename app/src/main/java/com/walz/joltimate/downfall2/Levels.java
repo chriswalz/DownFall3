@@ -16,6 +16,7 @@ import com.walz.joltimate.downfall2.Invaders.RainSprite;
 // Change class to non-static
 public class Levels {
     // Current Level
+    public static int score;
     public static int currentLevel = 22;
     public static int highestLevel;
     public static int difficultyRating;
@@ -45,6 +46,7 @@ public class Levels {
             mPrefs = context.getSharedPreferences("com.google.downfall2", 0);
             currentLevel = mPrefs.getInt("currentLevel", 0);
             highestLevel = mPrefs.getInt("highestLevel", 0);
+            score = mPrefs.getInt("score", 0);
         }
 
         levels = new Level[]{
@@ -240,7 +242,7 @@ public class Levels {
                 new Level() {
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
-                        // Clamper plus bouncies O.O
+                        // Clamper plus bouncies
                         numInvaders = 5;
                         levelTimeLimit = 575 + timeOffSet;
                         startText = "-|-";
@@ -250,7 +252,7 @@ public class Levels {
                         for (int i = 0; i < numInvaders-1; i++) {
                             invaders[i] = new BouncySprite(context, 0, i * -diff, Levels.screenWidth);
                         }
-                        invaders[numInvaders-1] = new ClamperSprite(context, 0.6, 0, 0, 2 *screenHeight);
+                        invaders[numInvaders-1] = new ClamperSprite(context, 0.2, 0, 0, 2 *screenHeight);
                     }
                 },
                 new Level() {
@@ -273,8 +275,8 @@ public class Levels {
                     // Firework status
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
-                        numInvaders = 1;
-                        levelTimeLimit = 375 + timeOffSet;
+                        numInvaders = 2;
+                        levelTimeLimit = 325 + timeOffSet;
                         startText = "It explodes";
                         difficultyRating = 2;
 
@@ -287,14 +289,15 @@ public class Levels {
                     // Three fireworks
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
-                        numInvaders = 3;
-                        levelTimeLimit = 375 + timeOffSet;
+                        numInvaders = 4;
+                        levelTimeLimit = 350 + timeOffSet;
                         startText = "Fireworks!";
                         difficultyRating = 4;
 
-                        for (int i = 0; i < numInvaders; i++) {
+                        for (int i = 0; i < numInvaders-1; i++) {
                             invaders[i] = new FireworkSprite(context, 36, (i * Levels.screenWidth/(numInvaders+1)) + Levels.screenWidth/(numInvaders+1));
                         }
+                        invaders[numInvaders-1] = new BouncySprite(context, 0, 0, Levels.screenWidth);
                     }
                 },
                 new Level() {
@@ -321,7 +324,7 @@ public class Levels {
                         difficultyRating = 3;
 
                         for (int i = 0; i < numInvaders; i++) {
-                            invaders[i] = new RainSprite(context, 40, 0);
+                            invaders[i] = new RainSprite(context, 40);
                         }
                     }
                 },
@@ -329,13 +332,16 @@ public class Levels {
                     // Double the rain
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
-                        numInvaders = 2;
+                        numInvaders = 5;
                         levelTimeLimit = 1025 + timeOffSet;
                         startText = "More rain";
                         difficultyRating = 5;
 
-                        invaders[0] = new RainSprite(context, 40, 0);
-                        invaders[1] = new RainSprite(context, 40, (int) levelTimeLimit / 2);
+                        invaders[0] = new RainSprite(context, 40);
+                        invaders[1] = new RainSprite(context, 40);
+                        invaders[2] = new Basic(context, 0, 0, Levels.screenWidth);
+                        invaders[3] = new Basic(context, 0, -RainSprite.HEIGHT, Levels.screenWidth);
+                        invaders[4] = new Basic(context, 0, -2*RainSprite.HEIGHT, Levels.screenWidth, 2 * Basic.basicHeight);
                     }
                 },
                 // Chapter 7, Accelerator
@@ -382,6 +388,22 @@ public class Levels {
                         invaders[numInvaders - 1] = new AcceleratorSprite(context, 0, -Levels.screenHeight / 2, Levels.screenWidth, false);
                     }
                 },
+                new Level() {
+                    // Three bounce 1 accelerator
+                    @Override
+                    public void prepare(InvaderAbstract[] invaders, Context context) {
+                        numInvaders = 5;
+                        levelTimeLimit = 550 + timeOffSet;
+                        startText = "";
+                        difficultyRating = 5;
+
+                        invaders[0] = new Basic(context, 0, -Levels.screenHeight, Levels.screenWidth);
+                        invaders[1] = new ClamperSprite(context, 0.6, 0, 0, 2*Levels.screenHeight);
+                        invaders[2] = new BouncySprite(context, 0, 0, Levels.screenWidth);
+                        invaders[3] = new RainSprite(context, 12, Levels.screenHeight/4);
+                        invaders[4] = new AcceleratorSprite(context, 0, -8*Levels.screenHeight/4, Levels.screenWidth, false);
+                    }
+                },
                 // Chapter 8, Gravity Sprite ------------------
                 new Level() {
                     @Override
@@ -421,7 +443,22 @@ public class Levels {
                         invaders[3] = new BouncySprite(context, 0, 0, Levels.screenWidth);
                     }
                 },
+                new Level() {
+                    @Override
+                    public void prepare(InvaderAbstract[] invaders, Context context) {
+                        // Clamper plus bouncies
+                        numInvaders = 5;
+                        levelTimeLimit = 575 + timeOffSet;
+                        startText = "-|-";
+                        difficultyRating = 8;
 
+                        int diff = 65*Levels.screenHeight/100;
+                        for (int i = 0; i < numInvaders-1; i++) {
+                            invaders[i] = new BouncySprite(context, 0, i * -diff, Levels.screenWidth);
+                        }
+                        invaders[numInvaders-1] = new ClamperSprite(context, 0.8, 0, 0, 2 *screenHeight);
+                    }
+                },
                 // v hard levels
                 new Level() {
                     @Override
@@ -462,6 +499,7 @@ public class Levels {
             SharedPreferences.Editor mEditor = mPrefs.edit();
             mEditor.putInt("currentLevel", currentLevel);
             mEditor.putInt("highestLevel", highestLevel);
+            mEditor.putInt("score", score);
             mEditor.commit();
         }
     }

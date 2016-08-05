@@ -372,8 +372,10 @@ public class DownFallView extends SurfaceView implements Runnable{
             canvas.drawText(scoreText + score + " Invaders: " + Levels.numInvaders + " Levels: " + Levels.currentLevel + " FPS: " + fps + " Difficulty Rating: " + Levels.difficultyRating + " Highest Level: " + Levels.highestLevel, 10,50, paint);
         }
 
+        hudPaint.setTextAlign(Paint.Align.LEFT);
         canvas.drawText("" + (Math.round(numFrames*100/Levels.levelTimeLimit)) + "%" , 2 * Levels.screenWidth/100, 98 * Levels.screenHeight / 100, hudPaint);
-
+        hudPaint.setTextAlign(Paint.Align.RIGHT);
+        canvas.drawText(""+Levels.score, 98 * Levels.screenWidth/100, 98 * Levels.screenHeight / 100, hudPaint);
 
         if (alpha >= 255) {
             increase = false;

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.RectF;
 
+import com.walz.joltimate.downfall2.Level;
 import com.walz.joltimate.downfall2.Levels;
 import com.walz.joltimate.downfall2.PlayerShip;
 
@@ -18,17 +19,25 @@ public class RainSprite extends MultRectAbstract{
 
     private int delay = 0;
 
-    public RainSprite(Context context, int length, int delay) {
-        super(length);
+    public static int HEIGHT = 2 * Levels.screenHeight;
 
-        this.height = 2*Levels.screenHeight;
+    public RainSprite(Context context, int length) {
+        super(length);
+        prepare(HEIGHT, length);
+    }
+    public RainSprite(Context context, int length, int height) {
+        super(length);
+        prepare(height, length);
+    }
+    private void prepare(int height, int length) {
+        this.height = height;
         this.delay = delay;
 
         rWidth = Levels.screenWidth/20;
 
         this.x = 0;
         this.y = -(height + rWidth);
-        
+
         xRand = new int[length];
         yRand = new int[length];
         ySpeedIncrement = new int[length];
