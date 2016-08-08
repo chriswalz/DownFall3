@@ -122,6 +122,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_share_black_24dp"
+            android:id="@+id/share_button"
             android:background="@null"/>
 
     </android.support.v7.widget.LinearLayoutCompat>

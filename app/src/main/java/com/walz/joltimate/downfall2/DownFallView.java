@@ -247,13 +247,13 @@ public class DownFallView extends SurfaceView implements Runnable{
 
             drawBackground();
             drawForeground();
-            if (triggerWinAnimation && !triggerLoseAnimation) {
+            if (triggerWinAnimation) {
                 drawWinAnimation();
             }
             if (triggerLoseAnimation) {
                 drawLoseAnimation();
             }
-            drawHUD();
+            //drawHUD();
 
             // Draw everything to the screen
             ourHolder.unlockCanvasAndPost(canvas);
@@ -305,7 +305,7 @@ public class DownFallView extends SurfaceView implements Runnable{
     private void updateForeground() {
 
         // Beat level
-        if (numFrames >= Levels.levelTimeLimit) {
+        if (numFrames >= Levels.levelTimeLimit && !triggerLoseAnimation) {
             // player won -> go to win screen
             triggerWinAnimation = true;
 
@@ -389,7 +389,11 @@ public class DownFallView extends SurfaceView implements Runnable{
         }
 
         hudPaint.setTextAlign(Paint.Align.LEFT);
-        canvas.drawText("" + (Math.round(numFrames*100/Levels.levelTimeLimit)) + "%" , 2 * Levels.screenWidth/100, 98 * Levels.screenHeight / 100, hudPaint);
+        if (gameState == PLAYINGSCREEN) {
+            canvas.drawText("" + (Math.round(numFrames*100/Levels.levelTimeLimit)) + "%" , 2 * Levels.screenWidth/100, 98 * Levels.screenHeight / 100, hudPaint);
+        } else {
+            canvas.drawText("Level: "+Levels.currentLevel, 2 * Levels.screenWidth/100, 98 * Levels.screenHeight / 100, hudPaint);
+        }
         hudPaint.setTextAlign(Paint.Align.RIGHT);
         canvas.drawText(""+Levels.score, 98 * Levels.screenWidth/100, 98 * Levels.screenHeight / 100, hudPaint);
 

@@ -71,8 +71,10 @@ public class RainSprite extends MultRectAbstract{
         for (int i = 0; i < rects.length; i++){
             updateRectF(rects[i], x + xRand[i], y+yRand[i], rWidth, rWidth);
         }
-        for(int i = 0; i < rects.length; i++){
-            yRand[i] += ySpeedIncrement[i]; // adds 1 or 0, making some sprites faster
+        if ( y > -(height + rWidth) ) {
+            for(int i = 0; i < rects.length; i++){
+                yRand[i] += ySpeedIncrement[i]; // adds 1 or 0, making some sprites faster
+            }
         }
 
     }

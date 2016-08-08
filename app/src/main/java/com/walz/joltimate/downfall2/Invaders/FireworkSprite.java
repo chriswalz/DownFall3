@@ -29,8 +29,11 @@ public class FireworkSprite extends MultRectAbstract{
 
         this.lenSep = length/4;
 
+        widthR = Levels.screenWidth / 40;
+        heightR = Levels.screenWidth / 40;
+
         this.x = x;
-        this.y = 0;
+        this.y = -widthR;
 
         xRand = new int[length];
         yRand = new int[length];
@@ -57,8 +60,7 @@ public class FireworkSprite extends MultRectAbstract{
 
         }
 
-        widthR = Levels.screenWidth / 40;
-        heightR = Levels.screenWidth / 40;
+
         for (i = 0; i < rects.length; i++) {
             xRand[i] = (int) (0 - widthR / 2);
             yRand[i] = 0;

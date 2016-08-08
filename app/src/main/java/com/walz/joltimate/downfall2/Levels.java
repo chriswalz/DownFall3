@@ -17,7 +17,7 @@ import com.walz.joltimate.downfall2.Invaders.RainSprite;
 public class Levels {
     // Current Level
     public static int score;
-    public static int currentLevel = 17;
+    public static int currentLevel = 12;
     public static int highestLevel;
     public static int numberAttempts;
     public static int difficultyRating;
@@ -26,7 +26,7 @@ public class Levels {
 
     public static int numInvaders;
     public static int levelTimeLimit;
-    public static int timeOffSet = 50;
+    public static double timeOffSetMultiplier = 1.35;
 
     public static int screenWidth, screenHeight;
 
@@ -69,7 +69,7 @@ public class Levels {
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         numInvaders = 5;
-                        levelTimeLimit = 300 + timeOffSet; // convert to number of frames
+                        levelTimeLimit = (int) (300 * timeOffSetMultiplier); // convert to number of frames
                         startText = "Drag to move!";
                         difficultyRating = 1;
 
@@ -86,7 +86,7 @@ public class Levels {
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         numInvaders = 4; // one is a overlay
-                        levelTimeLimit = 250 + timeOffSet; // convert to number of frames
+                        levelTimeLimit = (int) (250 * timeOffSetMultiplier); // convert to number of frames
                         startText = "Tap above the block!";
                         difficultyRating = 2;
 
@@ -100,7 +100,7 @@ public class Levels {
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         numInvaders = 4;
-                        levelTimeLimit = 300 + timeOffSet;
+                        levelTimeLimit = (int) (300 * timeOffSetMultiplier);
                         difficultyRating = 3;
 
                         invaders[0] = new Basic(context, 0, 0, screenWidth, screenHeight / 10);
@@ -113,7 +113,7 @@ public class Levels {
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         numInvaders = 7;
-                        levelTimeLimit = 450 + timeOffSet;
+                        levelTimeLimit = (int) (450 * timeOffSetMultiplier);
                         difficultyRating = 3;
 
                         int diff = 3 * screenHeight / 6;
@@ -130,7 +130,7 @@ public class Levels {
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         numInvaders = 5;
-                        levelTimeLimit = 450 + timeOffSet;
+                        levelTimeLimit = (int) (450 * timeOffSetMultiplier);
                         difficultyRating = 5;
 
                         int diff = 5 * screenHeight / 12;
@@ -144,7 +144,7 @@ public class Levels {
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         numInvaders = 5;
-                        levelTimeLimit = 450 + timeOffSet;
+                        levelTimeLimit = (int) (450 * timeOffSetMultiplier);
                         startText = "Chapter 2";
                         difficultyRating = 4;
 
@@ -160,7 +160,7 @@ public class Levels {
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         numInvaders = 4;
-                        levelTimeLimit = 450 + timeOffSet;
+                        levelTimeLimit = (int) (450 * timeOffSetMultiplier);
                         startText = "The Crusher";
                         difficultyRating = 4;
 
@@ -174,7 +174,7 @@ public class Levels {
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         numInvaders = 9;
-                        levelTimeLimit = 600 + timeOffSet;
+                        levelTimeLimit = (int) (600 * timeOffSetMultiplier);
                         startText = "";
                         difficultyRating = 4;
 
@@ -193,7 +193,7 @@ public class Levels {
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         numInvaders = 13;
-                        levelTimeLimit = 650 + timeOffSet;
+                        levelTimeLimit = (int) (650 * timeOffSetMultiplier);
                         startText = "(.^.)";
                         difficultyRating = 5;
 
@@ -214,7 +214,7 @@ public class Levels {
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         numInvaders = 1;
-                        levelTimeLimit = 325 + timeOffSet;
+                        levelTimeLimit = (int) (325 * timeOffSetMultiplier);
                         startText = "Bouncy.";
                         difficultyRating = 2;
 
@@ -228,7 +228,7 @@ public class Levels {
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         // Three bouncy
                         numInvaders = 3;
-                        levelTimeLimit = 475 + timeOffSet;
+                        levelTimeLimit = (int) (475 * timeOffSetMultiplier);
                         startText = "";
                         difficultyRating = 4;
 
@@ -243,7 +243,7 @@ public class Levels {
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         // Four bouncy
                         numInvaders = 4;
-                        levelTimeLimit = 525 + timeOffSet;
+                        levelTimeLimit = (int) (525 * timeOffSetMultiplier);
                         startText = "";
                         difficultyRating = 5;
 
@@ -258,7 +258,7 @@ public class Levels {
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         // Clamper plus bouncies
                         numInvaders = 5;
-                        levelTimeLimit = 575 + timeOffSet;
+                        levelTimeLimit = (int) (500 * timeOffSetMultiplier);
                         startText = "-|-";
                         difficultyRating = 8;
 
@@ -274,13 +274,15 @@ public class Levels {
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         // Snake status
                         numInvaders = 48;
-                        levelTimeLimit = 575 + timeOffSet;
+                        levelTimeLimit = (int) (525 * timeOffSetMultiplier);
                         startText = "Snake";
                         difficultyRating = 5;
 
+                        int add = (int)(Math.random()*screenWidth);
+
                         int ratio = 2;
                         for (int i = 0; i < numInvaders; i++) {
-                            invaders[i] = new BouncySprite(context, i * Levels.screenWidth/(numInvaders/ratio), -i * Levels.screenHeight/(numInvaders/ratio), 1*Levels.screenWidth/4, Levels.screenHeight/(numInvaders/ratio));
+                            invaders[i] = new BouncySprite(context, (i * Levels.screenWidth/(numInvaders/ratio)) % screenWidth, -i * Levels.screenHeight/(numInvaders/ratio), 1*Levels.screenWidth/4, Levels.screenHeight/(numInvaders/ratio));
                         }
                     }
                 },
@@ -290,7 +292,7 @@ public class Levels {
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         numInvaders = 2;
-                        levelTimeLimit = 325 + timeOffSet;
+                        levelTimeLimit = (int) (325 * timeOffSetMultiplier);
                         startText = "It explodes";
                         difficultyRating = 2;
 
@@ -304,7 +306,7 @@ public class Levels {
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         numInvaders = 4;
-                        levelTimeLimit = 350 + timeOffSet;
+                        levelTimeLimit = (int) (350 * timeOffSetMultiplier);
                         startText = "Fireworks!";
                         difficultyRating = 4;
 
@@ -319,7 +321,7 @@ public class Levels {
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         numInvaders = 4;
-                        levelTimeLimit = 375 + timeOffSet;
+                        levelTimeLimit = (int) (375 * timeOffSetMultiplier);
                         startText = "";
                         difficultyRating = 6;
 
@@ -333,7 +335,7 @@ public class Levels {
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         numInvaders = 8;
-                        levelTimeLimit = 675 + timeOffSet;
+                        levelTimeLimit = (int) (625 * timeOffSetMultiplier);
                         startText = "";
                         difficultyRating = 6;
 
@@ -349,7 +351,7 @@ public class Levels {
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         numInvaders = 1;
-                        levelTimeLimit = 675 + timeOffSet;
+                        levelTimeLimit = (int) (625 * timeOffSetMultiplier);
                         startText = "Let it rain!";
                         difficultyRating = 3;
 
@@ -363,7 +365,7 @@ public class Levels {
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         numInvaders = 2;
-                        levelTimeLimit = 950 + timeOffSet;
+                        levelTimeLimit = (int) (850 * timeOffSetMultiplier);
                         startText = "More rain";
                         difficultyRating = 5;
 
@@ -376,7 +378,7 @@ public class Levels {
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         numInvaders = 5;
-                        levelTimeLimit = 900 + timeOffSet;
+                        levelTimeLimit = (int) (800 * timeOffSetMultiplier);
                         startText = "More rain";
                         difficultyRating = 5;
 
@@ -392,7 +394,7 @@ public class Levels {
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         numInvaders = 1;
-                        levelTimeLimit = 150 + timeOffSet;
+                        levelTimeLimit = (int) (150 * timeOffSetMultiplier);
                         startText = "It accelerates.";
                         difficultyRating = 2;
 
@@ -404,7 +406,7 @@ public class Levels {
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         numInvaders = 5;
-                        levelTimeLimit = 325 + timeOffSet;
+                        levelTimeLimit = (int) (300 * timeOffSetMultiplier);
                         startText = "Slow & Fast";
                         difficultyRating = 5;
 
@@ -420,7 +422,7 @@ public class Levels {
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         numInvaders = 6;
-                        levelTimeLimit = 300 + timeOffSet;
+                        levelTimeLimit = (int) (300 * timeOffSetMultiplier);
                         startText = "";
                         difficultyRating = 5;
 
@@ -437,7 +439,7 @@ public class Levels {
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         numInvaders = 5;
-                        levelTimeLimit = 625 + timeOffSet;
+                        levelTimeLimit = (int) (575 * timeOffSetMultiplier);
                         startText = "";
                         difficultyRating = 5;
 
@@ -453,7 +455,7 @@ public class Levels {
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         numInvaders = 1;
-                        levelTimeLimit = 450 + timeOffSet;
+                        levelTimeLimit = (int) (450 * timeOffSetMultiplier);
                         startText = "Gravity";
                         difficultyRating = 2;
 
@@ -465,7 +467,7 @@ public class Levels {
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         numInvaders = 3;
-                        levelTimeLimit = 450 + timeOffSet;
+                        levelTimeLimit = (int) (450 * timeOffSetMultiplier);
                         startText = "";
                         difficultyRating = 7;
 
@@ -478,7 +480,7 @@ public class Levels {
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         numInvaders = 4;
-                        levelTimeLimit = 500 + timeOffSet;
+                        levelTimeLimit = (int) (500 * timeOffSetMultiplier);
                         startText = "It gravitates.";
 
                         invaders[0] = new GravitySprite(context, DownFallView.playerShip, 1*Levels.screenWidth/5, 6*Levels.screenHeight/7);
@@ -492,7 +494,7 @@ public class Levels {
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         // Clamper plus bouncies
                         numInvaders = 5;
-                        levelTimeLimit = 575 + timeOffSet;
+                        levelTimeLimit = (int) (575 * timeOffSetMultiplier);
                         startText = "-|-";
                         difficultyRating = 8;
 
@@ -509,7 +511,7 @@ public class Levels {
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         // Two clampers and bouncies :D
                         numInvaders = 6;
-                        levelTimeLimit = 575 + timeOffSet;
+                        levelTimeLimit = (int) (575 * timeOffSetMultiplier);
                         startText = "-|-|-";
                         difficultyRating = 8;
 
@@ -519,6 +521,25 @@ public class Levels {
                         }
                         invaders[4] = new ClamperSprite(context, 0.6, 0, 0, 7*Levels.screenHeight/3);
                         invaders[5] = new ClamperSprite(context, 0.6, Levels.screenWidth-ClamperSprite.width, 0, 7*Levels.screenHeight/3);
+                    }
+                },
+
+                // v hard levels
+                new Level() {
+                    @Override
+                    public void prepare(InvaderAbstract[] invaders, Context context) {
+                        // Two clampers and bouncies :D
+                        numInvaders = 8;
+                        levelTimeLimit = (int) (725 * timeOffSetMultiplier);
+                        startText = "-|-|-";
+                        difficultyRating = 8;
+
+                        int diff = 75*Levels.screenHeight/100;
+                        for (int i = 0; i < numInvaders; i++) {
+                            invaders[i] = new BouncySprite(context, 0, i * -diff, Levels.screenWidth);
+                        }
+                        invaders[6] = new ClamperSprite(context, 0.1, 0, 0, diff*numInvaders);
+                        invaders[7] = new ClamperSprite(context, 0.1, Levels.screenWidth-ClamperSprite.width, 0, diff*numInvaders);
                     }
                 },
         };
@@ -557,7 +578,7 @@ public class Levels {
     /*public static void narrowPaths(InvaderAbstract[] invaders, Context context) {
         // Build an army of invaders
         numInvaders = 21;
-        levelTimeLimit = 450 + timeOffSet;
+        levelTimeLimit = 450 + timeOffSetMultiplier;
         difficultyRating = 5;
 
         int diff = 4 * Levels.screenHeight / 9 ;
@@ -601,7 +622,7 @@ public class Levels {
     /* public static void squareSquadMedium(InvaderAbstract[] invaders, Context context) {
         // Build an army of invaders
         numInvaders = 8;
-        levelTimeLimit = 750 + timeOffSet;
+        levelTimeLimit = 750 + timeOffSetMultiplier;
         startText = "Tap & Drag!";
         double ratio = 1.5;
 

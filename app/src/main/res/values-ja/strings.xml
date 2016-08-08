@@ -3,4 +3,5 @@
     <string name="app_name">落ちます</string>
     <string name="next_level">次のレベル</string>
     <string name="success_text">成功</string>
+    <string name="invitation_message">秋ダウン試してみてください</string>
 </resources>

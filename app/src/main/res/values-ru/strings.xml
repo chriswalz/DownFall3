@@ -3,4 +3,5 @@
     <string name="app_name">Вниз Падение</string>
     <string name="next_level">Следующий уровень</string>
     <string name="success_text">успех</string>
+    <string name="invitation_message">Попробуйте вниз падения</string>
 </resources>

@@ -3,4 +3,5 @@
     <string name="app_name">नीचे गिर जाते हैं</string>
     <string name="next_level">अगला स्तर</string>
     <string name="success_text">सफलता</string>
+    <string name="invitation_message">गिरावट के नीचे बाहर की कोशिश करो</string>
 </resources>

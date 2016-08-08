@@ -3,4 +3,5 @@
     <string name="app_name">쓰러지 다</string>
     <string name="next_level">다음 레벨</string>
     <string name="success_text">성공</string>
+    <string name="invitation_message">가을 다운 해보세요</string>
 </resources>

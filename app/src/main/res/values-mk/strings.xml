@@ -3,4 +3,5 @@
     <string name="app_name">по падот</string>
     <string name="next_level">Следно ниво</string>
     <string name="success_text">успех</string>
+    <string name="invitation_message">Пробате по падот</string>
 </resources>

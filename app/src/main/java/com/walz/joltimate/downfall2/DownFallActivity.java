@@ -24,10 +24,11 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 public class DownFallActivity extends AppCompatActivity {
-
+    public final static int REQUEST_INVITE = 100;
     // downFallView will be the view of the game
     // It will also hold the logic of the game
     // and respond to screen touches as well
@@ -43,6 +44,7 @@ public class DownFallActivity extends AppCompatActivity {
     private LinearLayoutCompat supportMenu;
     private AppCompatImageView playButton;
     private AppCompatImageButton ratingButton;
+    private AppCompatImageButton shareButton;
     private AppCompatTextView titleText;
 
     private AppCompatTextView currentLevelTextView;
@@ -57,6 +59,7 @@ public class DownFallActivity extends AppCompatActivity {
     private AdRequest adRequest;
 
     private int requestAdAmount = 1;
+    private String playStoreUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +81,7 @@ public class DownFallActivity extends AppCompatActivity {
         }
         Levels.init(getApplicationContext(), size.x, size.y + navSize);
 
+        playStoreUrl = "http://play.google.com/store/apps/details?id=" + getPackageName();
 
         // Initialize gameView and set it as the view
         downFallView = new DownFallView(this);
@@ -129,9 +133,16 @@ public class DownFallActivity extends AppCompatActivity {
                     startActivity(goToMarket);
                 } catch (ActivityNotFoundException e) {
                     startActivity(new Intent(Intent.ACTION_VIEW,
-                            Uri.parse("http://play.google.com/store/apps/details?id=" + getPackageName())));
+                            Uri.parse(playStoreUrl)));
                 }
 
+            }
+        });
+        shareButton = (AppCompatImageButton) secondLayerView.findViewById(R.id.share_button);
+        shareButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onInviteClicked();
             }
         });
 
@@ -209,7 +220,7 @@ public class DownFallActivity extends AppCompatActivity {
         playButton.setEnabled(false);
         playButton.setClickable(false);
         //winLayer.setVisibility(View.GONE);
-        winLayer.setY(-Levels.screenHeight/2);
+        //winLayer.setY(-Levels.screenHeight/2);
         winLayer.animate().alpha(0.0f);
         winButton.setClickable(false);
         supportMenu.setVisibility(View.VISIBLE);
@@ -238,9 +249,9 @@ public class DownFallActivity extends AppCompatActivity {
             public void run() {
                 supportMenu.setVisibility(View.VISIBLE);
                 //winLayer.setVisibility(View.VISIBLE);
-                winLayer.setScaleX(0.5f);
-                winLayer.setScaleY(0.5f);
-                winLayer.animate().y(0).alpha(1.0f).scaleX(1.0f).scaleY(1.0f);
+                //winLayer.setScaleX(0.5f);
+                //winLayer.setScaleY(0.5f);
+                winLayer.animate().alpha(1.0f); //.scaleX(1.0f).scaleY(1.0f); //.y(0);
                 winButton.setClickable(true);
                 //android.content.res.Resources res = getResources();
                 //String.format(res.getString(R.string.level_textview), Levels.currentLevel+1, Levels.levels.length)
@@ -268,6 +279,20 @@ public class DownFallActivity extends AppCompatActivity {
     public void setUserExperiment() {
 
     }
+    public void onInviteClicked() {
+        /*Intent intent = new AppInviteInvitation.IntentBuilder(getString(R.string.invitation_title))
+                .setMessage(getString(R.string.invitation_message))
+                .setDeepLink(Uri.parse(getString(R.string.invitation_deep_link)))
+                //.setCustomImage(Uri.parse(getString(R.string.invitation_custom_image)))
+                .setCallToActionText(getString(R.string.invitation_cta))
+                .build();
+        startActivityForResult(intent, REQUEST_INVITE); */
+        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, getString(R.string.invitation_title));
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, getString(R.string.invitation_message) + " " + playStoreUrl);
+        startActivity(Intent.createChooser(sharingIntent, "Share via"));
+    }
 
     // This method executes when the player starts the game
     @Override
@@ -291,5 +316,23 @@ public class DownFallActivity extends AppCompatActivity {
 
         // Tell the gameView pause method to execute
         downFallView.pause();
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d("TAG", "onActivityResult: requestCode=" + requestCode + ", resultCode=" + resultCode);
+
+        if (requestCode == REQUEST_INVITE) {
+            if (resultCode == RESULT_OK) {
+                // Get the invitation IDs of all sent messages
+                String[] ids = AppInviteInvitation.getInvitationIds(resultCode, data);
+                for (String id : ids) {
+                    Log.d("TAG", "onActivityResult: sent invitation " + id);
+                }
+            } else {
+                // Sending failed or it was canceled, show failure message to the user
+                // ...
+            }
+        }
     }
 }
