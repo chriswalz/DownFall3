@@ -68,6 +68,16 @@ import com.walz.joltimate.downfall2.Invaders.InvaderAbstract;
 // 25 lives per day. Watch ad to get +25 ads (max is 100)
 // beautiful animations, points
 
+// New objects
+// blinkers, expanders, just x movement bouncers,
+
+// Things to know before playing
+// 1. Stay alive.
+// 2. Survive by avoiding the red enemies
+// 3. But you'll die a lot. And that's okay :)
+// 4. Master your movement & Use your thumbs
+// 5. Strategize your moves
+
 public class DownFallView extends SurfaceView implements Runnable{
 
     private Context context;
@@ -109,8 +119,6 @@ public class DownFallView extends SurfaceView implements Runnable{
     // Background parellax
     private BackgroundBlock[] backgroundBlocks = new BackgroundBlock[10];
 
-    // The score
-    private int score = 0;
 
     private final String scoreText = "Score: ";
 
@@ -163,7 +171,7 @@ public class DownFallView extends SurfaceView implements Runnable{
         winCirclePaint.setColor(Color.argb(255, 162, 255, 159));
 
         hudPaint = new Paint();
-        hudPaint.setTextSize(80);
+        hudPaint.setTextSize(70);
         hudPaint.setColor(Color.argb(255, 40, 40, 60));
 
         downFallActivity = (DownFallActivity) context;
@@ -239,7 +247,7 @@ public class DownFallView extends SurfaceView implements Runnable{
 
             drawBackground();
             drawForeground();
-            if (triggerWinAnimation) {
+            if (triggerWinAnimation && !triggerLoseAnimation) {
                 drawWinAnimation();
             }
             if (triggerLoseAnimation) {
@@ -262,10 +270,11 @@ public class DownFallView extends SurfaceView implements Runnable{
             winCircleRadius = 0;
             gameState = WINSCREEN; // paused = true;
             triggerWinAnimation = false;
-            score = 0;
+            downFallActivity.fireWinEvent();
             Levels.updateCurrentLevel(); ;
             prepareCurrentLevel();
             downFallActivity.setToWinScreen();
+            downFallActivity.showInterstitialIfReady();
         }
     }
     private void drawLoseAnimation() {
@@ -273,14 +282,18 @@ public class DownFallView extends SurfaceView implements Runnable{
             playerShip.setAlive(false);
             animationFrames++;
         } else {
-
-            triggerLoseAnimation = false;
-            animationFrames = 0;
-            gameState = RETRYSCREEN; // paused = true;
-            score = 0;
-            downFallActivity.setToStartScreen();
+            lose();
         }
 
+    }
+    private void lose() {
+        downFallActivity.fireLoseEvent(Math.round(numFrames*100/Levels.levelTimeLimit));
+        Levels.numberAttempts++;
+        triggerLoseAnimation = false;
+        animationFrames = 0;
+        gameState = RETRYSCREEN; // paused = true;
+        downFallActivity.setToStartScreen();
+        downFallActivity.showInterstitialIfReady();
     }
     private void updateBackground() {
         // Update all of the background
@@ -326,6 +339,9 @@ public class DownFallView extends SurfaceView implements Runnable{
                 triggerLoseAnimation = true;
             }
         }
+        if (numFrames % 15 == 0 && !triggerLoseAnimation) {
+            Levels.score += 1;
+        }
 
 
     }
@@ -369,7 +385,7 @@ public class DownFallView extends SurfaceView implements Runnable{
         paint.setColor(Color.argb(255,  249, 129, 0));
         paint.setTextSize(20);
         if (Levels.debug) {
-            canvas.drawText(scoreText + score + " Invaders: " + Levels.numInvaders + " Levels: " + Levels.currentLevel + " FPS: " + fps + " Difficulty Rating: " + Levels.difficultyRating + " Highest Level: " + Levels.highestLevel, 10,50, paint);
+            canvas.drawText(scoreText + Levels.score + " Invaders: " + Levels.numInvaders + " Levels: " + Levels.currentLevel + " FPS: " + fps + " Difficulty Rating: " + Levels.difficultyRating + " Highest Level: " + Levels.highestLevel, 10,50, paint);
         }
 
         hudPaint.setTextAlign(Paint.Align.LEFT);
@@ -403,6 +419,9 @@ public class DownFallView extends SurfaceView implements Runnable{
     // shutdown our thread.
     public void pause() {
         playing = false;
+        if (gameState == PLAYINGSCREEN) {
+            lose();
+        }
         try {
             gameThread.join();
         } catch (InterruptedException e) {

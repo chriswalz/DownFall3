@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">쓰러지 다</string>
+    <string name="next_level">다음 레벨</string>
+    <string name="success_text">성공</string>
+</resources>

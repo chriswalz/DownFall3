@@ -68,10 +68,10 @@ public class FireworkSprite extends MultRectAbstract{
             updateRectF(rects[i], xI, yI, widthR, heightR);
         }
     }
-    public FireworkSprite(Context context, int length, float x, float explodeY) {
+    public FireworkSprite(Context context, int length, float x, float y) {
         this(context, length, x);
-        this.y = explodeY;
-        this.explosionHeight = (int) explodeY;
+        this.y = y; //explodeY;
+        //this.explosionHeight = (int) explodeY;
     }
     @Override
     public void update(int fps) {

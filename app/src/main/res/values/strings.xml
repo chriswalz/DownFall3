@@ -1,5 +1,15 @@
 <resources>
     <string name="app_name">Down Fall</string>
-    <string name="title_activity_down_fall">Down Fall</string>
-    <string name="title_activity_home_screen">Home Screen</string>
+    <string name="title_activity_down_fall" translatable="false">@string/app_name</string>
+    <string name="title_activity_home_screen" translatable="false"></string>
+
+    <string name="success_text">Success</string>
+    <string name="next_level">Next Level</string>
+    <string name="package_name" translatable="false">com.google.downfall2</string>
+    <string name="current_level" translatable="false">currentLevel</string>
+    <string name="highest_level" translatable="false">highestLevel</string>
+    <string name="score" translatable="false">score</string>
+    <string name="number_attempts" translatable="false">numberAttempts</string>
+    <string name="image_interstitial" translatable="false">ca-app-pub-8477647394434056/8857578526</string>
+    <string name="admob_app_id" translatable="false">ca-app-pub-8477647394434056~7520446123</string>
 </resources>

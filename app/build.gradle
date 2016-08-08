@@ -8,8 +8,8 @@ android {
         applicationId "com.walz.joltimate.downfall2"
         minSdkVersion 15
         targetSdkVersion 24
-        versionCode 44
-        versionName "2.0.6.0"
+        versionCode 46
+        versionName "2.0.8.0"
     }
     buildTypes {
         debug {
@@ -27,4 +27,9 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:24.1.1'
     compile 'com.android.support:design:24.1.1'
+    compile 'com.google.firebase:firebase-core:9.4.0'
+    compile 'com.google.firebase:firebase-crash:9.4.0'
+    compile 'com.google.firebase:firebase-ads:9.4.0'
 }
+
+apply plugin: 'com.google.gms.google-services'

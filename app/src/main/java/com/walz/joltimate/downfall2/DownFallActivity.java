@@ -20,29 +20,43 @@ import android.view.ViewGroup;
 import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 public class DownFallActivity extends AppCompatActivity {
 
     // downFallView will be the view of the game
     // It will also hold the logic of the game
     // and respond to screen touches as well
-    DownFallView downFallView;
-    View secondLayerView;
+    private DownFallView downFallView;
+    private View secondLayerView;
 
     //AppCompatButton retryButton;
     //RelativeLayout retryLayer;
 
-    RelativeLayout winLayer;
-    AppCompatButton winButton;
+    private RelativeLayout winLayer;
+    private AppCompatButton winButton;
 
-    LinearLayoutCompat supportMenu;
-    AppCompatImageView playButton;
-    AppCompatImageButton ratingButton;
-    AppCompatTextView titleText;
+    private LinearLayoutCompat supportMenu;
+    private AppCompatImageView playButton;
+    private AppCompatImageButton ratingButton;
+    private AppCompatTextView titleText;
 
-    AppCompatTextView currentLevelTextView;
+    private AppCompatTextView currentLevelTextView;
 
     private View v;
     private NumberPicker levelPicker;
+
+    private FirebaseAnalytics mFirebaseAnalytics;
+    private Bundle bundle;
+
+    private InterstitialAd mInterstitialAd;
+    private AdRequest adRequest;
+
+    private int requestAdAmount = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,7 +150,43 @@ public class DownFallActivity extends AppCompatActivity {
 
         setToStartScreen();
 
+        if (!Levels.debug) {
+            mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+            MobileAds.initialize(getApplicationContext(), getString(R.string.admob_app_id));
+            mInterstitialAd = new InterstitialAd(this);
 
+            mInterstitialAd.setAdUnitId(getString(R.string.image_interstitial));
+            mInterstitialAd.setAdListener(new AdListener() {
+                @Override
+                public void onAdClosed() {
+                    requestNewInterstitial();
+                    //beginPlayingGame();
+                }
+            });
+            requestNewInterstitial();
+        }
+
+
+    }
+    public void requestNewInterstitial() {
+        if (!Levels.debug) {
+            adRequest = new AdRequest.Builder().build();
+            mInterstitialAd.loadAd(adRequest);
+        }
+    }
+    public void showInterstitialIfReady() {
+
+        if (!Levels.debug && requestAdAmount % 7 == 0) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (mInterstitialAd.isLoaded()) {
+                        mInterstitialAd.show();
+                    }
+                }
+            });
+        }
+        requestAdAmount++;
     }
 
     public void setToStartScreen() {
@@ -192,11 +242,30 @@ public class DownFallActivity extends AppCompatActivity {
                 winLayer.setScaleY(0.5f);
                 winLayer.animate().y(0).alpha(1.0f).scaleX(1.0f).scaleY(1.0f);
                 winButton.setClickable(true);
-                currentLevelTextView.setText("Level " + (Levels.currentLevel+1) + " of " + (Levels.levels.length));
+                //android.content.res.Resources res = getResources();
+                //String.format(res.getString(R.string.level_textview), Levels.currentLevel+1, Levels.levels.length)
+                currentLevelTextView.setText((Levels.currentLevel+1) + "/" + Levels.levels.length); //"Level " + (Levels.currentLevel+1) + " of " + (Levels.levels.length));
             }
         });
     }
-    public void setOverlayInvisible() {
+
+    public void fireLoseEvent(int completionPercentage) {
+        if (!Levels.debug) {
+            bundle = new Bundle();
+            bundle.putInt("level_number", Levels.currentLevel);
+            bundle.putInt("completion_percentage", completionPercentage);
+            mFirebaseAnalytics.logEvent("lose_level", bundle);
+        }
+    }
+    public void fireWinEvent() {
+        if (!Levels.debug) {
+            bundle = new Bundle();
+            bundle.putInt("level_number", Levels.currentLevel);
+            bundle.putInt("number_attempts", Levels.numberAttempts);
+            mFirebaseAnalytics.logEvent("win_level", bundle);
+        }
+    }
+    public void setUserExperiment() {
 
     }
 
