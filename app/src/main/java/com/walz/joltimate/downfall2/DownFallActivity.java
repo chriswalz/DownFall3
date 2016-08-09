@@ -1,10 +1,16 @@
 package com.walz.joltimate.downfall2;
 
+import android.annotation.TargetApi;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Point;
+import android.media.AudioAttributes;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.SoundPool;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
@@ -61,6 +67,10 @@ public class DownFallActivity extends AppCompatActivity {
     private int requestAdAmount = 1;
     private String playStoreUrl;
 
+    private SoundPool sounds;
+    private int[] soundIds;
+    private MediaPlayer mPlayer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,6 +93,7 @@ public class DownFallActivity extends AppCompatActivity {
 
         playStoreUrl = "http://play.google.com/store/apps/details?id=" + getPackageName();
 
+        soundIds = new int[5];
         // Initialize gameView and set it as the view
         downFallView = new DownFallView(this);
         setContentView(downFallView);
@@ -176,8 +187,34 @@ public class DownFallActivity extends AppCompatActivity {
             });
             requestNewInterstitial();
         }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            createNewSoundPool();
+        } else {
+            createOldSoundPool();
+        }
+        soundIds[0] = sounds.load(getApplicationContext(), R.raw.body_punch, 1);
+        soundIds[1] = sounds.load(getApplicationContext(), R.raw.object_pass_sound, 1);
+        soundIds[2] = sounds.load(getApplicationContext(), R.raw.touch_release, 1);
+        /*sounds.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
+            @Override
+            public void onLoadComplete(SoundPool soundPool, int i, int i1) {
+                soundPool.play(i, 1, 1, 0, 0, 1);
+            }
+        }); */
+        mPlayer = MediaPlayer.create(getApplicationContext(), R.raw.the_sea_beneath); // in 2nd param u have to pass your desire ringtone
+        mPlayer.setLooping(true);
+        mPlayer.setVolume(0.25f, 0.25f);
 
 
+    }
+    public void playLoseSound() {
+        sounds.play(soundIds[0], 0.3f, 0.3f, 0, 0, 1);
+    }
+    public void playWinSound() {
+        sounds.play(soundIds[2], 0.5f, 0.5f, 0, 0, 1);
+    }
+    public void playTeleportSound() {
+        sounds.play(soundIds[1], 0.15f, 0.15f, 0, 0, 1);
     }
     public void requestNewInterstitial() {
         if (!Levels.debug) {
@@ -187,7 +224,7 @@ public class DownFallActivity extends AppCompatActivity {
     }
     public void showInterstitialIfReady() {
 
-        if (!Levels.debug && requestAdAmount % 7 == 0) {
+        if (!Levels.debug && requestAdAmount % 9 == 0) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -305,17 +342,45 @@ public class DownFallActivity extends AppCompatActivity {
                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
-        // Tell the gameView resume method to execute
+
+        mPlayer.start();
         downFallView.resume();
+
+    }
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    protected void createNewSoundPool(){
+        AudioAttributes attributes = new AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_GAME)
+                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                .build();
+        sounds = new SoundPool.Builder()
+                .setAudioAttributes(attributes)
+                .build();
+    }
+
+    @SuppressWarnings("deprecation")
+    protected void createOldSoundPool(){
+        sounds = new SoundPool(5,AudioManager.STREAM_MUSIC,0);
     }
 
     // This method executes when the player quits the game
     @Override
     protected void onPause() {
-        super.onPause();
 
-        // Tell the gameView pause method to execute
+
+        mPlayer.pause();
+
         downFallView.pause();
+        super.onPause();
+    }
+    @Override
+    protected void onDestroy() {
+        sounds.release();
+        sounds = null;
+        mPlayer.release();
+        mPlayer = null;
+
+        super.onDestroy();
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

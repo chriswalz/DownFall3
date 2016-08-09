@@ -30,7 +30,7 @@ public class Levels {
 
     public static int screenWidth, screenHeight;
 
-    public static boolean debug = false;
+    public static boolean debug = true;
 
     private static SharedPreferences mPrefs;
 

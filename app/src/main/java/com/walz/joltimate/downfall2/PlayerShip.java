@@ -20,8 +20,8 @@ public class PlayerShip {
     //public Bitmap bitmap;
 
     // How long and high our paddle will be
-    private float width;
-    private float height;
+    public float width;
+    public float height;
 
     private int curve = 100;
     private boolean increase = false;
@@ -187,5 +187,8 @@ public class PlayerShip {
 
     public void setAlive(boolean alive) {
         this.alive = alive;
+    }
+    public boolean getAlive() {
+        return alive;
     }
 }

@@ -197,6 +197,7 @@ public class DownFallView extends SurfaceView implements Runnable{
         // reset game
         if (playerShip == null) {
             playerShip = new PlayerShip(context);
+            jumpDistance = (int) (1.5 * playerShip.width);
         } else {
             playerShip.reset();
         }
@@ -216,6 +217,7 @@ public class DownFallView extends SurfaceView implements Runnable{
             long startFrameTime = System.currentTimeMillis();
 
 
+            draw();
             updateBackground();
             if(gameState == PLAYINGSCREEN){
                 updateForeground();
@@ -223,7 +225,6 @@ public class DownFallView extends SurfaceView implements Runnable{
                 }
                 playerShip.update(); // for loseAnimation only
             }
-            draw();
 
             // Calculate the fps this frame
             // We can then use the result to
@@ -267,6 +268,7 @@ public class DownFallView extends SurfaceView implements Runnable{
             numFrames--;
 
         } else {
+            downFallActivity.playWinSound();
             winCircleRadius = 0;
             gameState = WINSCREEN; // paused = true;
             triggerWinAnimation = false;
@@ -334,6 +336,7 @@ public class DownFallView extends SurfaceView implements Runnable{
                     break;
                 }
                 if (!triggerLoseAnimation) {
+                    downFallActivity.playLoseSound();
                     v.vibrate(20);
                 }
                 triggerLoseAnimation = true;
@@ -447,6 +450,8 @@ public class DownFallView extends SurfaceView implements Runnable{
 
     private float pX;
     private float pY;
+
+    private int jumpDistance;
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent) {
         pX = motionEvent.getX();
@@ -455,7 +460,12 @@ public class DownFallView extends SurfaceView implements Runnable{
         // only have error touching prevention for bottom 3 / 8;
         if (pY > 3 * Levels.screenHeight && (pX < distanceFromEdge || pY < distanceFromEdge || pX > Levels.screenWidth - distanceFromEdge || pY > Levels.screenHeight - distanceFromEdge)) {
         } else {
-            playerShip.setLocation(motionEvent.getX(), motionEvent.getY(), gameState);
+            /*if (pX - playerShip.getCenterX() > jumpDistance || playerShip.getCenterX() - pX > jumpDistance || pY - playerShip.getCenterY() > jumpDistance || playerShip.getCenterY() - pY > jumpDistance) {
+                if (playerShip.getAlive()) {
+
+                }
+            } */
+            playerShip.setLocation(pX, pY, gameState);
         }
 
 
@@ -472,6 +482,8 @@ public class DownFallView extends SurfaceView implements Runnable{
                         gameState = PLAYINGSCREEN;
                     }
                 }
+                v.vibrate(2);
+                downFallActivity.playTeleportSound();
                 // TODO research motionEvent.getPrecision
 
                 break;
