@@ -49,8 +49,8 @@ public abstract class InvaderAbstract {
         baseSpeed = BASE_SPEED;
         isVisible = true;
 
-//        x = (float) (Math.random() * screenWidth); //column * (width + padding);
- //       y = (float) -(Math.random() * screenHeight);//row * (width + padding/4);
+//        x = (float) (Math.random() * screenWidth); //column * (clamperWidth + padding);
+ //       y = (float) -(Math.random() * screenHeight);//row * (clamperWidth + padding/4);
         yVelocity = baseSpeed;
 
 

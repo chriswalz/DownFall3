@@ -18,13 +18,19 @@ public class BackgroundBlock extends OneRectAbstract{
         this.x = xVal;
         this.y = yVal - height;
 
-        this.yVelocity = 1; //+ (int) (2 *Math.random());
+        this.yVelocity = (int) (3 * Math.random()) - 1; //+ (int) (2 *Math.random());
+        if (this.yVelocity == 0) {
+            this.yVelocity = -1;
+        }
         this.xSpeed = -1 + (int) (3 * Math.random());
     }
 
     public void update(int fps) {
         if (y > Levels.screenHeight) {
             y = -height;
+        }
+        if (y < -height) {
+            y = Levels.screenHeight;
         }
         if (x > Levels.screenWidth) {
             x = -width;

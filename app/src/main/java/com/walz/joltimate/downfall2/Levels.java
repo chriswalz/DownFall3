@@ -17,10 +17,11 @@ import com.walz.joltimate.downfall2.Invaders.RainSprite;
 public class Levels {
     // Current Level
     public static int score;
-    public static int currentLevel = 12;
-    public static int highestLevel;
+    public static int currentLevel = 2;
+    public static int highestLevel=4;
     public static int numberAttempts;
     public static int difficultyRating;
+    public static int requestAdAmount = 0;
 
     public static String startText = "";
 
@@ -30,7 +31,7 @@ public class Levels {
 
     public static int screenWidth, screenHeight;
 
-    public static boolean debug = true;
+    public static boolean debug = false;
 
     private static SharedPreferences mPrefs;
 
@@ -41,6 +42,7 @@ public class Levels {
     private static String highestLevelStr;
     private static String scoreStr;
     private static String numberAttemptsStr;
+    private static String requestAdAmountStr;
 
     public static void init(Context context, int screenX, int screenY) {
         InvaderAbstract.BASE_SPEED = 1 * screenY / 140;
@@ -55,11 +57,13 @@ public class Levels {
             highestLevelStr = context.getString(R.string.highest_level);
             scoreStr = context.getString(R.string.score);
             numberAttemptsStr = context.getString(R.string.number_attempts);
+            requestAdAmountStr = context.getString(R.string.request_ad_amount);
 
             mPrefs = context.getSharedPreferences(packageNameStr, 0);
             currentLevel = mPrefs.getInt(currentLevelStr, 0);
             highestLevel = mPrefs.getInt(highestLevelStr, 0);
             numberAttempts = mPrefs.getInt(numberAttemptsStr, 0);
+            requestAdAmount = mPrefs.getInt(requestAdAmountStr, 0);
             score = mPrefs.getInt(scoreStr, 0);
         }
 
@@ -90,10 +94,26 @@ public class Levels {
                         startText = "Tap above the block!";
                         difficultyRating = 2;
 
-                        invaders[0] = new Basic(context, 0, -1*screenHeight/3, screenWidth, screenHeight / 10);
-                        invaders[1] = new BitmapSprite(context, R.drawable.ic_touch_app_black_24dp, screenWidth/2, -5*screenHeight/6, Levels.screenWidth/7, Levels.screenWidth/7);
-                        invaders[2] = new Basic(context, 0, -3*screenHeight/3, screenWidth, screenHeight / 10);
-                        invaders[3] = new BitmapSprite(context, R.drawable.ic_touch_app_black_24dp, screenWidth/2, -9*screenHeight/6, Levels.screenWidth/7, Levels.screenWidth/7);
+                        int diff = 4*screenHeight/9;
+                        invaders[0] = new Basic(context, 0, -1*diff, screenWidth, screenHeight / 10);
+                        invaders[1] = new BitmapSprite(context, R.drawable.ic_touch_app_black_24dp, screenWidth/2, -2*diff, Levels.screenWidth/7, Levels.screenWidth/7);
+                        invaders[2] = new Basic(context, 0, -3*diff, screenWidth, screenHeight / 10);
+                        invaders[3] = new BitmapSprite(context, R.drawable.ic_touch_app_black_24dp, screenWidth/2, -4*diff, Levels.screenWidth/7, Levels.screenWidth/7);
+                    }
+                },
+                new Level() {
+                    @Override
+                    public void prepare(InvaderAbstract[] invaders, Context context) {
+                        numInvaders = 2; // one is a overlay
+                        levelTimeLimit = (int) (250 * timeOffSetMultiplier); // convert to number of frames
+                        startText = "Tap below the block!";
+                        difficultyRating = 2;
+
+                        int diff = 4*screenHeight/9;
+                        invaders[0] = new Basic(context, 0, -1*diff, screenWidth, screenHeight / 10, true);
+                       // invaders[1] = new BitmapSprite(context, R.drawable.ic_touch_app_black_24dp, screenWidth/2, -2*diff, Levels.screenWidth/7, Levels.screenWidth/7);
+                        invaders[1] = new Basic(context, 0, -3*diff, screenWidth, screenHeight / 10, true);
+                        //invaders[3] = new BitmapSprite(context, R.drawable.ic_touch_app_black_24dp, screenWidth/2, -4*diff, Levels.screenWidth/7, Levels.screenWidth/7);
                     }
                 },
                 new Level() {
@@ -165,7 +185,7 @@ public class Levels {
                         difficultyRating = 4;
 
                         invaders[0] = new ClamperSprite(context, 0.6, 0, 0, 3 * Levels.screenHeight);
-                        invaders[1] = new ClamperSprite(context, 0.6, Levels.screenWidth-ClamperSprite.width, 0, 3 * Levels.screenHeight);
+                        invaders[1] = new ClamperSprite(context, 0.6, Levels.screenWidth-ClamperSprite.clamperWidth, 0, 3 * Levels.screenHeight);
                         invaders[2] = new Basic(context, 0, -3 * Levels.screenHeight, Levels.screenWidth, Basic.basicHeight);
                         invaders[3] = new Basic(context, 0, 0, Levels.screenWidth, Basic.basicHeight);
                     }
@@ -184,7 +204,7 @@ public class Levels {
                             invaders[i] = new ClamperSprite(context, 1.0, 0, -i * rectHeight, rectHeight);
                         }
                         for (int i = 1; i < numInvaders/2; i+=2) {
-                            invaders[i] = new ClamperSprite(context, 0.7, Levels.screenWidth-ClamperSprite.width, -i * rectHeight, rectHeight);
+                            invaders[i] = new ClamperSprite(context, 0.7, Levels.screenWidth-ClamperSprite.clamperWidth, -i * rectHeight, rectHeight);
                         }
                         invaders[numInvaders-1] = new Basic(context, 0, -(numInvaders-1)*rectHeight/2, screenWidth, screenHeight/2);
                     }
@@ -202,7 +222,7 @@ public class Levels {
                             invaders[i] = new ClamperSprite(context, 1.0, 0, -i * rectHeight, rectHeight);
                         }
                         for (int i = 1; i < numInvaders/2; i+=2) {
-                            invaders[i] = new ClamperSprite(context, 1.0, Levels.screenWidth-ClamperSprite.width, -i * rectHeight, rectHeight);
+                            invaders[i] = new ClamperSprite(context, 1.0, Levels.screenWidth-ClamperSprite.clamperWidth, -i * rectHeight, rectHeight);
                         }
                         for (int i = numInvaders/2; i < numInvaders; i++) {
                             invaders[i] = new Basic(context, 0, -(i-numInvaders/2) * rectHeight, Levels.screenWidth, Basic.basicHeight);
@@ -520,7 +540,7 @@ public class Levels {
                             invaders[i] = new BouncySprite(context, 0, i * -diff, Levels.screenWidth);
                         }
                         invaders[4] = new ClamperSprite(context, 0.6, 0, 0, 7*Levels.screenHeight/3);
-                        invaders[5] = new ClamperSprite(context, 0.6, Levels.screenWidth-ClamperSprite.width, 0, 7*Levels.screenHeight/3);
+                        invaders[5] = new ClamperSprite(context, 0.6, Levels.screenWidth-ClamperSprite.clamperWidth, 0, 7*Levels.screenHeight/3);
                     }
                 },
 
@@ -539,7 +559,7 @@ public class Levels {
                             invaders[i] = new BouncySprite(context, 0, i * -diff, Levels.screenWidth);
                         }
                         invaders[6] = new ClamperSprite(context, 0.1, 0, 0, diff*numInvaders);
-                        invaders[7] = new ClamperSprite(context, 0.1, Levels.screenWidth-ClamperSprite.width, 0, diff*numInvaders);
+                        invaders[7] = new ClamperSprite(context, 0.1, Levels.screenWidth-ClamperSprite.clamperWidth, 0, diff*numInvaders);
                     }
                 },
         };
@@ -553,7 +573,7 @@ public class Levels {
         levels[currentLevel].prepare(invaderAbstracts, context);
     }
 
-
+    private static SharedPreferences.Editor mEditor;
     public static void updateCurrentLevel() {
         currentLevel++;
         numberAttempts = 0;
@@ -562,11 +582,33 @@ public class Levels {
         }
 
         if (!debug) {
-            SharedPreferences.Editor mEditor = mPrefs.edit();
+            mEditor = mPrefs.edit();
             mEditor.putInt(currentLevelStr, currentLevel);
             mEditor.putInt(highestLevelStr, highestLevel);
             mEditor.putInt(scoreStr, score);
             mEditor.putInt(numberAttemptsStr, numberAttempts);
+            mEditor.putInt(requestAdAmountStr, requestAdAmount);
+            mEditor.commit();
+        }
+    }
+    public static void saveRequestAdAmount() {
+        if (!debug) {
+            mEditor = mPrefs.edit();
+            mEditor.putInt(requestAdAmountStr, requestAdAmount);
+            mEditor.commit();
+        }
+    }
+    public static void saveNumberAttempts() {
+        if (!debug) {
+            mEditor = mPrefs.edit();
+            mEditor.putInt(numberAttemptsStr, numberAttempts);
+            mEditor.commit();
+        }
+    }
+    public static void saveScore() {
+        if (!debug) {
+            mEditor = mPrefs.edit();
+            mEditor.putInt(scoreStr, score);
             mEditor.commit();
         }
     }

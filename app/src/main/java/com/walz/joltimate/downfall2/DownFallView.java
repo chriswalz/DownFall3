@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Vibrator;
+import android.support.v4.view.MotionEventCompat;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -217,7 +218,6 @@ public class DownFallView extends SurfaceView implements Runnable{
             long startFrameTime = System.currentTimeMillis();
 
 
-            draw();
             updateBackground();
             if(gameState == PLAYINGSCREEN){
                 updateForeground();
@@ -225,6 +225,7 @@ public class DownFallView extends SurfaceView implements Runnable{
                 }
                 playerShip.update(); // for loseAnimation only
             }
+            draw();
 
             // Calculate the fps this frame
             // We can then use the result to
@@ -254,7 +255,7 @@ public class DownFallView extends SurfaceView implements Runnable{
             if (triggerLoseAnimation) {
                 drawLoseAnimation();
             }
-            //drawHUD();
+            drawHUD();
 
             // Draw everything to the screen
             ourHolder.unlockCanvasAndPost(canvas);
@@ -289,6 +290,9 @@ public class DownFallView extends SurfaceView implements Runnable{
 
     }
     private void lose() {
+        Levels.saveNumberAttempts();
+        Levels.saveRequestAdAmount();
+        Levels.saveScore();
         downFallActivity.fireLoseEvent(Math.round(numFrames*100/Levels.levelTimeLimit));
         Levels.numberAttempts++;
         triggerLoseAnimation = false;
@@ -342,7 +346,7 @@ public class DownFallView extends SurfaceView implements Runnable{
                 triggerLoseAnimation = true;
             }
         }
-        if (numFrames % 15 == 0 && !triggerLoseAnimation) {
+        if (numFrames % 50 == 0 && !triggerLoseAnimation) {
             Levels.score += 1;
         }
 
@@ -395,7 +399,7 @@ public class DownFallView extends SurfaceView implements Runnable{
         if (gameState == PLAYINGSCREEN) {
             canvas.drawText("" + (Math.round(numFrames*100/Levels.levelTimeLimit)) + "%" , 2 * Levels.screenWidth/100, 98 * Levels.screenHeight / 100, hudPaint);
         } else {
-            canvas.drawText("Level: "+Levels.currentLevel, 2 * Levels.screenWidth/100, 98 * Levels.screenHeight / 100, hudPaint);
+            canvas.drawText("Level: "+(Levels.currentLevel+1), 2 * Levels.screenWidth/100, 98 * Levels.screenHeight / 100, hudPaint);
         }
         hudPaint.setTextAlign(Paint.Align.RIGHT);
         canvas.drawText(""+Levels.score, 98 * Levels.screenWidth/100, 98 * Levels.screenHeight / 100, hudPaint);
@@ -452,10 +456,26 @@ public class DownFallView extends SurfaceView implements Runnable{
     private float pY;
 
     private int jumpDistance;
+    private int index;
+
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent) {
-        pX = motionEvent.getX();
-        pY = motionEvent.getY();
+        index = motionEvent.getPointerCount() - 1; //MotionEventCompat.getActionIndex(motionEvent);
+
+        if (motionEvent.getPointerCount() > 1) {
+            // the responding View or Activity.
+            pX = (int)MotionEventCompat.getX(motionEvent, index);
+            pY = (int)MotionEventCompat.getY(motionEvent, index);
+
+        } else {
+
+            pX = (int)MotionEventCompat.getX(motionEvent, index);
+            pY = (int)MotionEventCompat.getY(motionEvent, index);
+        }
+
+
+       // pX = motionEvent.getX(motionEvent.getActionIndex());
+        //pY = motionEvent.getY(motionEvent.getActionIndex());
 
         // only have error touching prevention for bottom 3 / 8;
         if (pY > 3 * Levels.screenHeight && (pX < distanceFromEdge || pY < distanceFromEdge || pX > Levels.screenWidth - distanceFromEdge || pY > Levels.screenHeight - distanceFromEdge)) {
@@ -478,12 +498,17 @@ public class DownFallView extends SurfaceView implements Runnable{
             case MotionEvent.ACTION_DOWN:
                 if (gameState == STARTSCREEN) {
                     if (pY > Levels.screenHeight/5 && pY < 4*Levels.screenHeight/5) {
+                        if (downFallActivity.shouldPrepareLevelAgain()) {
+                            prepareCurrentLevel();
+                        }
                         downFallActivity.setToPlayingScreen();
                         gameState = PLAYINGSCREEN;
                     }
                 }
-                v.vibrate(2);
-                downFallActivity.playTeleportSound();
+                if (gameState == PLAYINGSCREEN && playerShip.getAlive()) {
+                    v.vibrate(1);
+                    downFallActivity.playTeleportSound();
+                }
                 // TODO research motionEvent.getPrecision
 
                 break;

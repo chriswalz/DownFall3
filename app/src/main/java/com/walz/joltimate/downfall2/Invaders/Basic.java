@@ -13,23 +13,27 @@ public class Basic extends OneRectAbstract{
     static {
         basicHeight = Levels.screenHeight / 10;
     }
-
-    public Basic(Context context, float xVal, float yVal, int width, int height) {
-
-        this.width = width;
-        this.height = height;
-
-        this.x = xVal;
-        this.y = yVal - height;
-    }
     public Basic(Context context, float xVal, float yVal, int width) {
-
+        super();
         this.width = width;
         this.height = basicHeight;
 
         this.x = xVal;
         this.y = yVal - height;
     }
+    public Basic(Context context, float xVal, float yVal, int width, int height) {
+        this(context, xVal, yVal, width);
+        this.height = height;
+        this.y = yVal - height;
+    }
+    public Basic(Context context, float xVal, float yVal, int width, int height, boolean reverse) {
+        this(context, xVal, yVal, width, height);
+        this.y = (-yVal) + Levels.screenHeight;
+        if (reverse) {
+            yVelocity = -yVelocity;
+        }
+    }
+
 
     @Override
     public void update(int fps) {

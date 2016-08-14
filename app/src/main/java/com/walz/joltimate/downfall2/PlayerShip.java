@@ -58,7 +58,7 @@ public class PlayerShip {
     }
     // This the the constructor method
     // When we create an object from this class we will pass
-    // in the screen width and height
+    // in the screen clamperWidth and height
     public PlayerShip(Context context){
 
         // Initialize a blank RectF

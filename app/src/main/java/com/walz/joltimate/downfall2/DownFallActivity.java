@@ -32,6 +32,7 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.crash.FirebaseCrash;
 
 public class DownFallActivity extends AppCompatActivity {
     public final static int REQUEST_INVITE = 100;
@@ -52,6 +53,10 @@ public class DownFallActivity extends AppCompatActivity {
     private AppCompatImageButton ratingButton;
     private AppCompatImageButton shareButton;
     private AppCompatTextView titleText;
+    private AppCompatImageButton addButton;
+    private AppCompatImageButton subtractButton;
+
+    private boolean levelManuallyChanged = false;
 
     private AppCompatTextView currentLevelTextView;
 
@@ -64,7 +69,6 @@ public class DownFallActivity extends AppCompatActivity {
     private InterstitialAd mInterstitialAd;
     private AdRequest adRequest;
 
-    private int requestAdAmount = 1;
     private String playStoreUrl;
 
     private SoundPool sounds;
@@ -89,6 +93,8 @@ public class DownFallActivity extends AppCompatActivity {
         } else {
             navSize = 0;
         }
+        bundle = new Bundle();
+
         Levels.init(getApplicationContext(), size.x, size.y + navSize);
 
         playStoreUrl = "http://play.google.com/store/apps/details?id=" + getPackageName();
@@ -143,6 +149,7 @@ public class DownFallActivity extends AppCompatActivity {
                 try {
                     startActivity(goToMarket);
                 } catch (ActivityNotFoundException e) {
+                    fireRatingClickedEvent();
                     startActivity(new Intent(Intent.ACTION_VIEW,
                             Uri.parse(playStoreUrl)));
                 }
@@ -153,11 +160,33 @@ public class DownFallActivity extends AppCompatActivity {
         shareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                fireShareClickedEvent();
                 onInviteClicked();
             }
         });
 
         supportMenu = (LinearLayoutCompat) secondLayerView.findViewById(R.id.support_menu);
+
+        addButton = (AppCompatImageButton) secondLayerView.findViewById(R.id.add_button);
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (Levels.highestLevel > Levels.currentLevel) {
+                    levelManuallyChanged = true;
+                    Levels.currentLevel++;
+                }
+            }
+        });
+        subtractButton = (AppCompatImageButton) secondLayerView.findViewById(R.id.subtract_button);
+        subtractButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (Levels.currentLevel > 0) {
+                    levelManuallyChanged = true;
+                    Levels.currentLevel--;
+                }
+            }
+        });
 
 
         winLayer = (RelativeLayout) secondLayerView.findViewById(R.id.winLayer);
@@ -174,6 +203,7 @@ public class DownFallActivity extends AppCompatActivity {
 
         if (!Levels.debug) {
             mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+            mFirebaseAnalytics.setAnalyticsCollectionEnabled(true);
             MobileAds.initialize(getApplicationContext(), getString(R.string.admob_app_id));
             mInterstitialAd = new InterstitialAd(this);
 
@@ -186,6 +216,9 @@ public class DownFallActivity extends AppCompatActivity {
                 }
             });
             requestNewInterstitial();
+        } else {
+            FirebaseAnalytics.getInstance(this).setAnalyticsCollectionEnabled(false);
+
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             createNewSoundPool();
@@ -222,9 +255,17 @@ public class DownFallActivity extends AppCompatActivity {
             mInterstitialAd.loadAd(adRequest);
         }
     }
+    public boolean shouldPrepareLevelAgain() {
+        if (levelManuallyChanged) {
+            levelManuallyChanged = false;
+            return true;
+        }
+        return false;
+
+    }
     public void showInterstitialIfReady() {
 
-        if (!Levels.debug && requestAdAmount % 9 == 0) {
+        if (!Levels.debug && Levels.requestAdAmount % 15 == 0) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -234,7 +275,7 @@ public class DownFallActivity extends AppCompatActivity {
                 }
             });
         }
-        requestAdAmount++;
+        Levels.requestAdAmount++;
     }
 
     public void setToStartScreen() {
@@ -260,6 +301,8 @@ public class DownFallActivity extends AppCompatActivity {
         //winLayer.setY(-Levels.screenHeight/2);
         winLayer.animate().alpha(0.0f);
         winButton.setClickable(false);
+        addButton.setVisibility(View.VISIBLE);
+        subtractButton.setVisibility(View.VISIBLE);
         supportMenu.setVisibility(View.VISIBLE);
 
         downFallView.prepareCurrentLevel();
@@ -275,6 +318,8 @@ public class DownFallActivity extends AppCompatActivity {
                 playButton.animate().alpha(0.0f);
                 //winLayer.setVisibility(View.GONE);
                 winLayer.animate().alpha(0.0f);
+                addButton.setVisibility(View.GONE);
+                subtractButton.setVisibility(View.GONE);
                 supportMenu.setVisibility(View.GONE);
 
             }
@@ -290,6 +335,9 @@ public class DownFallActivity extends AppCompatActivity {
                 //winLayer.setScaleY(0.5f);
                 winLayer.animate().alpha(1.0f); //.scaleX(1.0f).scaleY(1.0f); //.y(0);
                 winButton.setClickable(true);
+
+                addButton.setVisibility(View.GONE);
+                subtractButton.setVisibility(View.GONE);
                 //android.content.res.Resources res = getResources();
                 //String.format(res.getString(R.string.level_textview), Levels.currentLevel+1, Levels.levels.length)
                 currentLevelTextView.setText((Levels.currentLevel+1) + "/" + Levels.levels.length); //"Level " + (Levels.currentLevel+1) + " of " + (Levels.levels.length));
@@ -299,18 +347,45 @@ public class DownFallActivity extends AppCompatActivity {
 
     public void fireLoseEvent(int completionPercentage) {
         if (!Levels.debug) {
-            bundle = new Bundle();
-            bundle.putInt("level_number", Levels.currentLevel);
+            bundle.clear();
+            //bundle.putLong(FirebaseAnalytics.Param.LEVEL, Levels.currentLevel);
             bundle.putInt("completion_percentage", completionPercentage);
-            mFirebaseAnalytics.logEvent("lose_level", bundle);
+            //bundle.putInt(FirebaseAnalytics.Param.VALUE, 1);
+            mFirebaseAnalytics.logEvent("level_" + Levels.currentLevel+"_lose", bundle);
         }
     }
     public void fireWinEvent() {
         if (!Levels.debug) {
-            bundle = new Bundle();
-            bundle.putInt("level_number", Levels.currentLevel);
-            bundle.putInt("number_attempts", Levels.numberAttempts);
-            mFirebaseAnalytics.logEvent("win_level", bundle);
+            bundle.clear();
+            bundle.putInt(numberAttempts, Levels.numberAttempts);
+            //bundle.putLong(FirebaseAnalytics.Param.LEVEL, Levels.currentLevel);
+            //bundle.putInt(FirebaseAnalytics.Param.VALUE, 1);
+            mFirebaseAnalytics.logEvent("level_" + Levels.currentLevel+"_win", bundle);
+        }
+    }
+    private String numberAttempts = "number_attempts";
+    public void fireShareClickedEvent() {
+        if (!Levels.debug) {
+            bundle.clear();
+            bundle.putInt(FirebaseAnalytics.Param.LEVEL, Levels.currentLevel);
+            bundle.putInt(numberAttempts, Levels.numberAttempts);
+            mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SHARE, bundle);
+        }
+    }
+    private String ratingButtonClicked = "rating_button_clicked";
+    public void fireRatingClickedEvent() {
+        if (!Levels.debug) {
+            bundle.clear();
+            bundle.putInt(FirebaseAnalytics.Param.LEVEL, Levels.currentLevel);
+            mFirebaseAnalytics.logEvent(ratingButtonClicked, bundle);
+        }
+    }
+    private String interstitialImpression = "interstitial_impression";
+    public void fireAdImpression() {
+        if (!Levels.debug) {
+            bundle.clear();
+            bundle.putInt(FirebaseAnalytics.Param.LEVEL, Levels.currentLevel);
+            mFirebaseAnalytics.logEvent(interstitialImpression, bundle);
         }
     }
     public void setUserExperiment() {

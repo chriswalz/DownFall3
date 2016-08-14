@@ -9,6 +9,7 @@
     <string name="current_level" translatable="false">currentLevel</string>
     <string name="highest_level" translatable="false">highestLevel</string>
     <string name="score" translatable="false">score</string>
+    <string name="request_ad_amount" translatable="false">requestAdAmount</string>
     <string name="number_attempts" translatable="false">numberAttempts</string>
     <string name="image_interstitial" translatable="false">ca-app-pub-8477647394434056/8857578526</string>
     <string name="admob_app_id" translatable="false">ca-app-pub-8477647394434056~7520446123</string>
