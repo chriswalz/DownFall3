@@ -22,6 +22,7 @@ import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
@@ -30,9 +31,9 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crash.FirebaseCrash;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 public class DownFallActivity extends AppCompatActivity {
     public final static int REQUEST_INVITE = 100;
@@ -75,6 +76,8 @@ public class DownFallActivity extends AppCompatActivity {
     private int[] soundIds;
     private MediaPlayer mPlayer;
 
+    private AppCompatTextView helpTextView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,12 +89,14 @@ public class DownFallActivity extends AppCompatActivity {
         Point size = new Point();
         display.getSize(size);
         Resources resources = getResources();
-        int navSize;
-        int resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            navSize = resources.getDimensionPixelSize(resourceId);
-        } else {
-            navSize = 0;
+        int navSize = 0;
+        if (!ViewConfiguration.get(getApplicationContext()).hasPermanentMenuKey()) {
+            int resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
+            if (resourceId > 0) {
+                navSize = resources.getDimensionPixelSize(resourceId);
+            } else {
+                navSize = 0;
+            }
         }
         bundle = new Bundle();
 
@@ -99,8 +104,9 @@ public class DownFallActivity extends AppCompatActivity {
 
         playStoreUrl = "http://play.google.com/store/apps/details?id=" + getPackageName();
 
-        soundIds = new int[5];
+        soundIds = new int[6];
         // Initialize gameView and set it as the view
+
         downFallView = new DownFallView(this);
         setContentView(downFallView);
 
@@ -108,6 +114,8 @@ public class DownFallActivity extends AppCompatActivity {
         ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         secondLayerView = LayoutInflater.from(this).inflate(R.layout.activity_game_screen_overlay, null, false);
         addContentView(secondLayerView, lp);
+
+        helpTextView = (AppCompatTextView) secondLayerView.findViewById(R.id.help_textview);
 
         /* retryLayer = (RelativeLayout) secondLayerView.findViewById(R.id.retryLayer);
 
@@ -119,6 +127,8 @@ public class DownFallActivity extends AppCompatActivity {
                 downFallView.prepareCurrentLevel();
             }
         }); */
+
+
         levelPicker = (NumberPicker) secondLayerView.findViewById(R.id.level_picker);
         levelPicker.setMinValue(0);
         levelPicker.setMaxValue(Levels.highestLevel);
@@ -228,6 +238,7 @@ public class DownFallActivity extends AppCompatActivity {
         soundIds[0] = sounds.load(getApplicationContext(), R.raw.body_punch, 1);
         soundIds[1] = sounds.load(getApplicationContext(), R.raw.object_pass_sound, 1);
         soundIds[2] = sounds.load(getApplicationContext(), R.raw.touch_release, 1);
+        soundIds[3] = sounds.load(getApplicationContext(), R.raw.win_jingle, 1);
         /*sounds.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
             @Override
             public void onLoadComplete(SoundPool soundPool, int i, int i1) {
@@ -238,13 +249,19 @@ public class DownFallActivity extends AppCompatActivity {
         mPlayer.setLooping(true);
         mPlayer.setVolume(0.25f, 0.25f);
 
+        if (!Levels.debug) {
+            FirebaseMessaging.getInstance().subscribeToTopic("downfall");
+        } else {
+            FirebaseMessaging.getInstance().subscribeToTopic("downfalldebug");
+        }
+
 
     }
     public void playLoseSound() {
         sounds.play(soundIds[0], 0.3f, 0.3f, 0, 0, 1);
     }
     public void playWinSound() {
-        sounds.play(soundIds[2], 0.5f, 0.5f, 0, 0, 1);
+        sounds.play(soundIds[3], 0.5f, 0.5f, 0, 0, 1);
     }
     public void playTeleportSound() {
         sounds.play(soundIds[1], 0.15f, 0.15f, 0, 0, 1);
@@ -304,6 +321,7 @@ public class DownFallActivity extends AppCompatActivity {
         addButton.setVisibility(View.VISIBLE);
         subtractButton.setVisibility(View.VISIBLE);
         supportMenu.setVisibility(View.VISIBLE);
+        helpTextView.animate().alpha(1.0f).setDuration(1000);
 
         downFallView.prepareCurrentLevel();
     }
@@ -321,6 +339,9 @@ public class DownFallActivity extends AppCompatActivity {
                 addButton.setVisibility(View.GONE);
                 subtractButton.setVisibility(View.GONE);
                 supportMenu.setVisibility(View.GONE);
+                supportMenu.setScaleX(1.0f);
+                supportMenu.setScaleY(1.0f);
+                helpTextView.animate().alpha(0.0f).setDuration(900);
 
             }
         });
@@ -338,9 +359,13 @@ public class DownFallActivity extends AppCompatActivity {
 
                 addButton.setVisibility(View.GONE);
                 subtractButton.setVisibility(View.GONE);
+                helpTextView.setAlpha(0);
                 //android.content.res.Resources res = getResources();
                 //String.format(res.getString(R.string.level_textview), Levels.currentLevel+1, Levels.levels.length)
                 currentLevelTextView.setText((Levels.currentLevel+1) + "/" + Levels.levels.length); //"Level " + (Levels.currentLevel+1) + " of " + (Levels.levels.length));
+                if (Levels.currentLevel % 5 == 0 && Levels.currentLevel >= 5) {
+                    supportMenu.animate().scaleY(1.2f).scaleX(1.2f).setDuration(1000); //.y(3*Levels.screenHeight/4); //.scaleX(1.0f).scaleY(1.0f);
+                }
             }
         });
     }
@@ -457,7 +482,7 @@ public class DownFallActivity extends AppCompatActivity {
 
         super.onDestroy();
     }
-    @Override
+    /*@Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Log.d("TAG", "onActivityResult: requestCode=" + requestCode + ", resultCode=" + resultCode);
@@ -473,6 +498,16 @@ public class DownFallActivity extends AppCompatActivity {
                 // Sending failed or it was canceled, show failure message to the user
                 // ...
             }
+        }
+    } */
+    public void setHelpTextView(final String text) {
+        if (helpTextView != null) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    helpTextView.setText(text);
+                }
+            });
         }
     }
 }

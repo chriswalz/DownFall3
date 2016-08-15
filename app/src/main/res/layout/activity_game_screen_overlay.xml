@@ -104,6 +104,22 @@
         android:src="@drawable/ic_play_circle_outline_black_24dp"
         android:background="@null"
         android:id="@+id/play_button"/>
+    <android.support.v7.widget.AppCompatTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/play_button"
+        android:layout_centerHorizontal="true"
+        android:textSize="24sp"
+        android:textColor="@color/black"
+        android:shadowColor="#FFF"
+        android:shadowDx="1"
+        android:shadowDy="1"
+        android:shadowRadius="2"
+        android:layout_marginBottom="16dp"
+        android:textAlignment="center"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:id="@+id/help_textview"/>
 
     <android.support.v7.widget.LinearLayoutCompat
         android:layout_width="wrap_content"

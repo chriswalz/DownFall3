@@ -79,6 +79,10 @@ import com.walz.joltimate.downfall2.Invaders.InvaderAbstract;
 // 4. Master your movement & Use your thumbs
 // 5. Strategize your moves
 
+// lookup game art design
+// ASO
+// increase number of positive reviews
+
 public class DownFallView extends SurfaceView implements Runnable{
 
     private Context context;
@@ -139,6 +143,8 @@ public class DownFallView extends SurfaceView implements Runnable{
 
     private float distanceFromEdge;
     private Vibrator v;
+
+    private boolean inDrawMode = false;
 
     private DownFallActivity downFallActivity;
 
@@ -202,6 +208,7 @@ public class DownFallView extends SurfaceView implements Runnable{
         } else {
             playerShip.reset();
         }
+        downFallActivity.setHelpTextView(Levels.startText);
         numFrames = 0;
         gameState = STARTSCREEN;
         Levels.prepareLevel(playerShip, invaders, context);
@@ -217,14 +224,16 @@ public class DownFallView extends SurfaceView implements Runnable{
             // Capture the current time in milliseconds in startFrameTime
             long startFrameTime = System.currentTimeMillis();
 
-
+            inDrawMode = false;
             updateBackground();
             if(gameState == PLAYINGSCREEN){
                 updateForeground();
                 if (!triggerLoseAnimation) {
                 }
+                inDrawMode = true;
                 playerShip.update(); // for loseAnimation only
             }
+            inDrawMode = true;
             draw();
 
             // Calculate the fps this frame
@@ -416,9 +425,9 @@ public class DownFallView extends SurfaceView implements Runnable{
             alpha -= 2;
         }
         if (gameState == STARTSCREEN) {
-            textPaint.setColor(Color.argb(255, 255, 255, 255));
-            textPaint.setTextSize(80);
-            canvas.drawText(Levels.startText, Levels.screenWidth/2, 5*Levels.screenHeight/16, textPaint);
+            //textPaint.setColor(Color.argb(255, 255, 255, 255));
+            //textPaint.setTextSize(80);
+            //canvas.drawText(Levels.startText, Levels.screenWidth/2, 5*Levels.screenHeight/16, textPaint);
             textPaint.setColor(Color.argb(alpha, 255, 255, 255));
             textPaint.setTextSize(30);
             //canvas.drawText("Tap to Start", Levels.screenWidth/2, 3*Levels.screenHeight/5, textPaint);
@@ -485,7 +494,9 @@ public class DownFallView extends SurfaceView implements Runnable{
 
                 }
             } */
-            playerShip.setLocation(pX, pY, gameState);
+            if (inDrawMode) {
+                playerShip.setLocation(pX, pY, gameState);
+            }
         }
 
 

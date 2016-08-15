@@ -17,8 +17,8 @@ import com.walz.joltimate.downfall2.Invaders.RainSprite;
 public class Levels {
     // Current Level
     public static int score;
-    public static int currentLevel = 2;
-    public static int highestLevel=4;
+    public static int currentLevel = 20;
+    public static int highestLevel=40;
     public static int numberAttempts;
     public static int difficultyRating;
     public static int requestAdAmount = 0;
@@ -27,11 +27,11 @@ public class Levels {
 
     public static int numInvaders;
     public static int levelTimeLimit;
-    public static double timeOffSetMultiplier = 1.35;
+    public static double timeOffSetMultiplier = 1.55;
 
     public static int screenWidth, screenHeight;
 
-    public static boolean debug = false;
+    public static boolean debug = true;
 
     private static SharedPreferences mPrefs;
 
@@ -44,8 +44,10 @@ public class Levels {
     private static String numberAttemptsStr;
     private static String requestAdAmountStr;
 
+    private static int i;
+
     public static void init(Context context, int screenX, int screenY) {
-        InvaderAbstract.BASE_SPEED = 1 * screenY / 140;
+        InvaderAbstract.BASE_SPEED = 1 * screenY / 160;
         screenWidth = screenX;
         screenHeight = screenY;
 
@@ -95,9 +97,9 @@ public class Levels {
                         difficultyRating = 2;
 
                         int diff = 4*screenHeight/9;
-                        invaders[0] = new Basic(context, 0, -1*diff, screenWidth, screenHeight / 10);
+                        invaders[0] = new Basic(context, 0, (-1*diff)+(diff/4), screenWidth, screenHeight / 10);
                         invaders[1] = new BitmapSprite(context, R.drawable.ic_touch_app_black_24dp, screenWidth/2, -2*diff, Levels.screenWidth/7, Levels.screenWidth/7);
-                        invaders[2] = new Basic(context, 0, -3*diff, screenWidth, screenHeight / 10);
+                        invaders[2] = new Basic(context, 0, (-3*diff)+(diff/4), screenWidth, screenHeight / 10);
                         invaders[3] = new BitmapSprite(context, R.drawable.ic_touch_app_black_24dp, screenWidth/2, -4*diff, Levels.screenWidth/7, Levels.screenWidth/7);
                     }
                 },
@@ -106,7 +108,7 @@ public class Levels {
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         numInvaders = 2; // one is a overlay
                         levelTimeLimit = (int) (250 * timeOffSetMultiplier); // convert to number of frames
-                        startText = "Tap below the block!";
+                        startText = "Watch out below!";
                         difficultyRating = 2;
 
                         int diff = 4*screenHeight/9;
@@ -122,6 +124,7 @@ public class Levels {
                         numInvaders = 4;
                         levelTimeLimit = (int) (300 * timeOffSetMultiplier);
                         difficultyRating = 3;
+                        startText = "Tap & Drag, Tap & Drag, Tap & Drag";
 
                         invaders[0] = new Basic(context, 0, 0, screenWidth, screenHeight / 10);
                         invaders[1] = new Basic(context, 0, -screenHeight/2, screenWidth, screenHeight / 10);
@@ -135,6 +138,7 @@ public class Levels {
                         numInvaders = 7;
                         levelTimeLimit = (int) (450 * timeOffSetMultiplier);
                         difficultyRating = 3;
+                        startText = "Stay near the bottom or else";
 
                         int diff = 3 * screenHeight / 6;
                         for (int i = 0; i < numInvaders; i++) {
@@ -165,7 +169,7 @@ public class Levels {
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         numInvaders = 5;
                         levelTimeLimit = (int) (450 * timeOffSetMultiplier);
-                        startText = "Chapter 2";
+                        startText = "Chapter 2:\n Things get shifty";
                         difficultyRating = 4;
 
                         invaders[0] = new ClamperSprite(context, 0.6, 0, 0, 2 * Levels.screenHeight);
@@ -201,7 +205,7 @@ public class Levels {
                         int rectHeight = 3*Levels.screenHeight/4;
 
                         for (int i = 0; i < numInvaders/2; i+=2) {
-                            invaders[i] = new ClamperSprite(context, 1.0, 0, -i * rectHeight, rectHeight);
+                            invaders[i] = new ClamperSprite(context, 1.4, 0, -i * rectHeight, rectHeight);
                         }
                         for (int i = 1; i < numInvaders/2; i+=2) {
                             invaders[i] = new ClamperSprite(context, 0.7, Levels.screenWidth-ClamperSprite.clamperWidth, -i * rectHeight, rectHeight);
@@ -385,12 +389,12 @@ public class Levels {
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         numInvaders = 2;
-                        levelTimeLimit = (int) (850 * timeOffSetMultiplier);
+                        levelTimeLimit = (int) (750 * timeOffSetMultiplier);
                         startText = "More rain";
                         difficultyRating = 5;
 
-                        invaders[0] = new RainSprite(context, 40);
-                        invaders[1] = new RainSprite(context, 40);
+                        invaders[0] = new RainSprite(context, 24);
+                        invaders[1] = new RainSprite(context, 24);
                     }
                 },
                 new Level() {
@@ -398,12 +402,12 @@ public class Levels {
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         numInvaders = 5;
-                        levelTimeLimit = (int) (800 * timeOffSetMultiplier);
-                        startText = "More rain";
+                        levelTimeLimit = (int) (650 * timeOffSetMultiplier);
+                        startText = "Rain and Blocks";
                         difficultyRating = 5;
 
-                        invaders[0] = new RainSprite(context, 36);
-                        invaders[1] = new RainSprite(context, 36);
+                        invaders[0] = new RainSprite(context, 24);
+                        invaders[1] = new RainSprite(context, 24);
                         invaders[2] = new Basic(context, 0, 0, Levels.screenWidth);
                         invaders[3] = new Basic(context, 0, -RainSprite.HEIGHT, Levels.screenWidth);
                         invaders[4] = new Basic(context, 0, -2*RainSprite.HEIGHT, Levels.screenWidth, 2 * Basic.basicHeight);
@@ -514,7 +518,7 @@ public class Levels {
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         // Clamper plus bouncies
                         numInvaders = 5;
-                        levelTimeLimit = (int) (575 * timeOffSetMultiplier);
+                        levelTimeLimit = (int) (550 * timeOffSetMultiplier);
                         startText = "-|-";
                         difficultyRating = 8;
 
@@ -532,7 +536,7 @@ public class Levels {
                         // Two clampers and bouncies :D
                         numInvaders = 6;
                         levelTimeLimit = (int) (575 * timeOffSetMultiplier);
-                        startText = "-|-|-";
+                        startText = "-|-";
                         difficultyRating = 8;
 
                         int diff = 75*Levels.screenHeight/100;
@@ -550,7 +554,7 @@ public class Levels {
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         // Two clampers and bouncies :D
                         numInvaders = 8;
-                        levelTimeLimit = (int) (725 * timeOffSetMultiplier);
+                        levelTimeLimit = (int) (675 * timeOffSetMultiplier);
                         startText = "-|-|-";
                         difficultyRating = 8;
 
@@ -558,8 +562,25 @@ public class Levels {
                         for (int i = 0; i < numInvaders; i++) {
                             invaders[i] = new BouncySprite(context, 0, i * -diff, Levels.screenWidth);
                         }
-                        invaders[6] = new ClamperSprite(context, 0.1, 0, 0, diff*numInvaders);
-                        invaders[7] = new ClamperSprite(context, 0.1, Levels.screenWidth-ClamperSprite.clamperWidth, 0, diff*numInvaders);
+                        invaders[6] = new ClamperSprite(context, 0.3, 0, 0, diff*numInvaders);
+                        invaders[7] = new ClamperSprite(context, 0.3, Levels.screenWidth-ClamperSprite.clamperWidth, 0, diff*numInvaders);
+                    }
+                },
+                new Level() {
+                    @Override
+                    public void prepare(InvaderAbstract[] invaders, Context context) {
+                        numInvaders = 9;
+                        levelTimeLimit = (int) (450 * timeOffSetMultiplier);
+                        startText = "The Crusher 2.0";
+                        difficultyRating = 4;
+
+                        invaders[0] = new ClamperSprite(context, 0.6, 0, 0, 3 * Levels.screenHeight);
+                        invaders[1] = new ClamperSprite(context, 0.6, Levels.screenWidth-ClamperSprite.clamperWidth, 0, 3 * Levels.screenHeight);
+
+                        int diff = (3*Levels.screenHeight)/(numInvaders-2);
+                        for (int i = 2; i < numInvaders; i++) {
+                            invaders[i] = new Basic(context, 0, -(i-2) * diff, Levels.screenWidth, Basic.basicHeight);
+                        }
                     }
                 },
         };
@@ -569,6 +590,9 @@ public class Levels {
     public static void prepareLevel(PlayerShip ship, InvaderAbstract[] invaderAbstracts, Context context) {
         if (currentLevel >= levels.length) {
             currentLevel--;
+        }
+        for (i = 0; i < invaderAbstracts.length; i++) {
+            invaderAbstracts[i] = null;
         }
         levels[currentLevel].prepare(invaderAbstracts, context);
     }
