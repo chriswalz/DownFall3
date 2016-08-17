@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.os.Vibrator;
 import android.support.v4.view.MotionEventCompat;
 import android.util.Log;
@@ -138,7 +139,6 @@ public class DownFallView extends SurfaceView implements Runnable{
     private int gameState;
     private final int STARTSCREEN = 0;
     public static final int PLAYINGSCREEN = 1;
-    private final int RETRYSCREEN = 2;
     private final int WINSCREEN = 3;
 
     private float distanceFromEdge;
@@ -177,8 +177,10 @@ public class DownFallView extends SurfaceView implements Runnable{
         winCirclePaint = new Paint();
         winCirclePaint.setColor(Color.argb(255, 162, 255, 159));
 
+        Typeface tf = Typeface.create("Roboto", Typeface.NORMAL);
         hudPaint = new Paint();
-        hudPaint.setTextSize(70);
+        hudPaint.setTypeface(tf);
+        hudPaint.setTextSize(60);
         hudPaint.setColor(Color.argb(255, 40, 40, 60));
 
         downFallActivity = (DownFallActivity) context;
@@ -257,10 +259,10 @@ public class DownFallView extends SurfaceView implements Runnable{
 
 
             drawBackground();
-            drawForeground();
             if (triggerWinAnimation) {
                 drawWinAnimation();
             }
+            drawForeground();
             if (triggerLoseAnimation) {
                 drawLoseAnimation();
             }
@@ -273,24 +275,24 @@ public class DownFallView extends SurfaceView implements Runnable{
     private void drawWinAnimation() {
         if (winCircleRadius < 3*Levels.screenHeight/4) {
 
-            canvas.drawCircle((float) Levels.screenWidth/2, (float) Levels.screenHeight/2, winCircleRadius, winCirclePaint);
+            canvas.drawCircle((float) playerShip.getCenterX(), (float) playerShip.getCenterY(), winCircleRadius, winCirclePaint);
             winCircleRadius += Levels.screenHeight/60;
             numFrames--;
 
         } else {
             downFallActivity.playWinSound();
             winCircleRadius = 0;
-            gameState = WINSCREEN; // paused = true;
             triggerWinAnimation = false;
             downFallActivity.fireWinEvent();
             Levels.updateCurrentLevel(); ;
             prepareCurrentLevel();
+            gameState = WINSCREEN; // paused = true;
             downFallActivity.setToWinScreen();
             downFallActivity.showInterstitialIfReady();
         }
     }
     private void drawLoseAnimation() {
-        if (animationFrames < 60) {
+        if (animationFrames < 40) {
             playerShip.setAlive(false);
             animationFrames++;
         } else {
@@ -306,7 +308,7 @@ public class DownFallView extends SurfaceView implements Runnable{
         Levels.numberAttempts++;
         triggerLoseAnimation = false;
         animationFrames = 0;
-        gameState = RETRYSCREEN; // paused = true;
+        gameState = STARTSCREEN; // paused = true;
         downFallActivity.setToStartScreen();
         downFallActivity.showInterstitialIfReady();
     }
@@ -401,7 +403,7 @@ public class DownFallView extends SurfaceView implements Runnable{
         paint.setColor(Color.argb(255,  249, 129, 0));
         paint.setTextSize(20);
         if (Levels.debug) {
-            canvas.drawText(scoreText + Levels.score + " Invaders: " + Levels.numInvaders + " Levels: " + Levels.currentLevel + " FPS: " + fps + " Difficulty Rating: " + Levels.difficultyRating + " Highest Level: " + Levels.highestLevel, 10,50, paint);
+            canvas.drawText("gamestate"+gameState+": " + scoreText + Levels.score + " Invaders: " + Levels.numInvaders + " Levels: " + Levels.currentLevel + " FPS: " + fps + " Difficulty Rating: " + Levels.difficultyRating + " Highest Level: " + Levels.highestLevel, 10,50, paint);
         }
 
         hudPaint.setTextAlign(Paint.Align.LEFT);
@@ -515,6 +517,10 @@ public class DownFallView extends SurfaceView implements Runnable{
                         downFallActivity.setToPlayingScreen();
                         gameState = PLAYINGSCREEN;
                     }
+                }
+                if (gameState == WINSCREEN) {
+                    downFallActivity.setToStartScreen();
+                    gameState = STARTSCREEN;
                 }
                 if (gameState == PLAYINGSCREEN && playerShip.getAlive()) {
                     v.vibrate(1);

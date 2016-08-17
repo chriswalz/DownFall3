@@ -29,11 +29,11 @@
         android:layout_height="match_parent"
         android:clickable="false"
         android:id="@+id/winLayer">
-        <android.support.v7.widget.AppCompatButton
-            android:layout_width="match_parent"
+        <android.support.v7.widget.AppCompatImageButton
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/next_level"
-            android:textSize="54sp"
+            android:src="@drawable/ic_fast_forward_black_24dp"
+            android:background="@null"
             android:layout_centerInParent="true"
             android:id="@+id/next_button"/>
         <android.support.v7.widget.AppCompatTextView
@@ -42,9 +42,9 @@
             android:text="@string/success_text"
             android:textSize="36sp"
             android:textAlignment="center"
-            android:textColor="#a2ff9f"
+            android:textColor="#4CAF50"
             android:id="@+id/success"
-            android:shadowColor="#455745"
+            android:shadowColor="#FFF"
             android:shadowDx="1"
             android:shadowDy="1"
             android:shadowRadius="2"
@@ -88,7 +88,7 @@
         android:text="@string/title_activity_down_fall"
         android:gravity="center"
         android:textSize="64sp"
-        android:textColor="@color/black"
+        android:textColor="@color/title"
         android:shadowColor="#455745"
         android:shadowDx="4"
         android:shadowDy="4"
@@ -101,7 +101,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:clickable="false"
-        android:src="@drawable/ic_play_circle_outline_black_24dp"
+        android:src="@drawable/ic_play"
         android:background="@null"
         android:id="@+id/play_button"/>
     <android.support.v7.widget.AppCompatTextView
@@ -110,8 +110,8 @@
         android:layout_above="@id/play_button"
         android:layout_centerHorizontal="true"
         android:textSize="24sp"
-        android:textColor="@color/black"
-        android:shadowColor="#FFF"
+        android:textColor="#212121"
+        android:shadowColor="#BDBDBD"
         android:shadowDx="1"
         android:shadowDy="1"
         android:shadowRadius="2"
@@ -131,13 +131,13 @@
         <android.support.v7.widget.AppCompatImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_grade_black_24dp"
+            android:src="@drawable/ic_rating"
             android:id="@+id/rating_button"
             android:background="@null"/>
         <android.support.v7.widget.AppCompatImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_share_black_24dp"
+            android:src="@drawable/ic_share"
             android:id="@+id/share_button"
             android:background="@null"/>
 
@@ -150,25 +150,31 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"></NumberPicker>
-    <android.support.v7.widget.LinearLayoutCompat
+    <android.support.v7.widget.AppCompatImageButton
+        android:layout_alignParentRight="true"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_add"
+        android:id="@+id/add_button"
+        android:background="@null"/>
+    <android.support.v7.widget.AppCompatImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_subtract"
+        android:id="@+id/subtract_button"
+        android:layout_alignParentLeft="true"
+        android:layout_centerInParent="true"
+        android:background="@null"/>
+
+    <!--<android.support.v7.widget.LinearLayoutCompat
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_centerInParent="true"
         android:layout_alignParentLeft="true">
-        <android.support.v7.widget.AppCompatImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_add_circle_outline_black_24dp"
-            android:id="@+id/add_button"
-            android:background="@null"/>
-        <android.support.v7.widget.AppCompatImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_remove_circle_outline_black_24dp"
-            android:id="@+id/subtract_button"
-            android:background="@null"/>
-    </android.support.v7.widget.LinearLayoutCompat>
+
+    </android.support.v7.widget.LinearLayoutCompat> -->
     <!-- <com.google.android.gms.ads.AdView
         android:id="@+id/interstitial_ad"
         android:layout_width="match_parent"

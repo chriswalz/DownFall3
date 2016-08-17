@@ -47,7 +47,7 @@ public class DownFallActivity extends AppCompatActivity {
     //RelativeLayout retryLayer;
 
     private RelativeLayout winLayer;
-    private AppCompatButton winButton;
+    private AppCompatImageButton winButton;
 
     private LinearLayoutCompat supportMenu;
     private AppCompatImageView playButton;
@@ -200,7 +200,7 @@ public class DownFallActivity extends AppCompatActivity {
 
 
         winLayer = (RelativeLayout) secondLayerView.findViewById(R.id.winLayer);
-        winButton = (AppCompatButton) secondLayerView.findViewById(R.id.next_button);
+        winButton = (AppCompatImageButton) secondLayerView.findViewById(R.id.next_button);
         winButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -363,7 +363,7 @@ public class DownFallActivity extends AppCompatActivity {
                 //android.content.res.Resources res = getResources();
                 //String.format(res.getString(R.string.level_textview), Levels.currentLevel+1, Levels.levels.length)
                 currentLevelTextView.setText((Levels.currentLevel+1) + "/" + Levels.levels.length); //"Level " + (Levels.currentLevel+1) + " of " + (Levels.levels.length));
-                if (Levels.currentLevel % 5 == 0 && Levels.currentLevel >= 5) {
+                if (Levels.currentLevel % 3 == 0 && Levels.currentLevel >= 10) {
                     supportMenu.animate().scaleY(1.2f).scaleX(1.2f).setDuration(1000); //.y(3*Levels.screenHeight/4); //.scaleX(1.0f).scaleY(1.0f);
                 }
             }

@@ -17,7 +17,7 @@ import com.walz.joltimate.downfall2.Invaders.RainSprite;
 public class Levels {
     // Current Level
     public static int score;
-    public static int currentLevel = 20;
+    public static int currentLevel = 2;
     public static int highestLevel=40;
     public static int numberAttempts;
     public static int difficultyRating;
@@ -31,7 +31,7 @@ public class Levels {
 
     public static int screenWidth, screenHeight;
 
-    public static boolean debug = true;
+    public static boolean debug = false;
 
     private static SharedPreferences mPrefs;
 
@@ -97,10 +97,10 @@ public class Levels {
                         difficultyRating = 2;
 
                         int diff = 4*screenHeight/9;
-                        invaders[0] = new Basic(context, 0, (-1*diff)+(diff/4), screenWidth, screenHeight / 10);
-                        invaders[1] = new BitmapSprite(context, R.drawable.ic_touch_app_black_24dp, screenWidth/2, -2*diff, Levels.screenWidth/7, Levels.screenWidth/7);
-                        invaders[2] = new Basic(context, 0, (-3*diff)+(diff/4), screenWidth, screenHeight / 10);
-                        invaders[3] = new BitmapSprite(context, R.drawable.ic_touch_app_black_24dp, screenWidth/2, -4*diff, Levels.screenWidth/7, Levels.screenWidth/7);
+                        invaders[0] = new Basic(context, 0, (-1*diff), screenWidth, screenHeight / 10);
+                        invaders[1] = new BitmapSprite(context, R.drawable.ic_hand_touch, screenWidth/2, (-2*diff)+(diff/4), Levels.screenWidth/7, Levels.screenWidth/7);
+                        invaders[2] = new Basic(context, 0, (-3*diff), screenWidth, screenHeight / 10);
+                        invaders[3] = new BitmapSprite(context, R.drawable.ic_hand_touch, screenWidth/2, (-4*diff)+(diff/4), Levels.screenWidth/7, Levels.screenWidth/7);
                     }
                 },
                 new Level() {
@@ -113,9 +113,9 @@ public class Levels {
 
                         int diff = 4*screenHeight/9;
                         invaders[0] = new Basic(context, 0, -1*diff, screenWidth, screenHeight / 10, true);
-                       // invaders[1] = new BitmapSprite(context, R.drawable.ic_touch_app_black_24dp, screenWidth/2, -2*diff, Levels.screenWidth/7, Levels.screenWidth/7);
+                       // invaders[1] = new BitmapSprite(context, R.drawable.ic_hand_touch, screenWidth/2, -2*diff, Levels.screenWidth/7, Levels.screenWidth/7);
                         invaders[1] = new Basic(context, 0, -3*diff, screenWidth, screenHeight / 10, true);
-                        //invaders[3] = new BitmapSprite(context, R.drawable.ic_touch_app_black_24dp, screenWidth/2, -4*diff, Levels.screenWidth/7, Levels.screenWidth/7);
+                        //invaders[3] = new BitmapSprite(context, R.drawable.ic_hand_touch, screenWidth/2, -4*diff, Levels.screenWidth/7, Levels.screenWidth/7);
                     }
                 },
                 new Level() {
@@ -126,17 +126,18 @@ public class Levels {
                         difficultyRating = 3;
                         startText = "Tap & Drag, Tap & Drag, Tap & Drag";
 
-                        invaders[0] = new Basic(context, 0, 0, screenWidth, screenHeight / 10);
-                        invaders[1] = new Basic(context, 0, -screenHeight/2, screenWidth, screenHeight / 10);
-                        invaders[2] = new Basic(context, (screenWidth / 2) - (screenWidth / 8), -3*screenHeight/4, screenWidth/4, screenHeight / 4);
-                        invaders[3] = new Basic(context, 0, -Levels.screenHeight, screenWidth, Basic.basicHeight);
+                        int diff = 3*screenHeight/9;
+                        invaders[0] = new Basic(context, 0, -1*diff, screenWidth, screenHeight / 10);
+                        invaders[1] = new Basic(context, 0, -3*diff, screenWidth, screenHeight / 10);
+                        invaders[2] = new Basic(context, (screenWidth / 2) - (screenWidth / 8), -6*screenHeight/4, screenWidth/4, screenHeight / 4);
+                        invaders[3] = new Basic(context, 0, -7*screenHeight/4, screenWidth, 3*Basic.basicHeight);
                     }
                 },
                 new Level() {
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         numInvaders = 7;
-                        levelTimeLimit = (int) (450 * timeOffSetMultiplier);
+                        levelTimeLimit = (int) (425 * timeOffSetMultiplier);
                         difficultyRating = 3;
                         startText = "Stay near the bottom or else";
 
@@ -156,6 +157,7 @@ public class Levels {
                         numInvaders = 5;
                         levelTimeLimit = (int) (450 * timeOffSetMultiplier);
                         difficultyRating = 5;
+                        startText = "Large";
 
                         int diff = 5 * screenHeight / 12;
                         for (int i = 0; i < numInvaders - 2 ; i++) {
@@ -535,8 +537,8 @@ public class Levels {
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         // Two clampers and bouncies :D
                         numInvaders = 6;
-                        levelTimeLimit = (int) (575 * timeOffSetMultiplier);
-                        startText = "-|-";
+                        levelTimeLimit = (int) (525 * timeOffSetMultiplier);
+                        startText = "-|-|-";
                         difficultyRating = 8;
 
                         int diff = 75*Levels.screenHeight/100;
@@ -554,8 +556,8 @@ public class Levels {
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         // Two clampers and bouncies :D
                         numInvaders = 8;
-                        levelTimeLimit = (int) (675 * timeOffSetMultiplier);
-                        startText = "-|-|-";
+                        levelTimeLimit = (int) (725 * timeOffSetMultiplier);
+                        startText = "-|-|-\n-|-|-";
                         difficultyRating = 8;
 
                         int diff = 75*Levels.screenHeight/100;
