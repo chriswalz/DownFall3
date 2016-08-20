@@ -17,7 +17,7 @@ import com.walz.joltimate.downfall2.Invaders.RainSprite;
 public class Levels {
     // Current Level
     public static int score;
-    public static int currentLevel = 2;
+    public static int currentLevel = 20;
     public static int highestLevel=40;
     public static int numberAttempts;
     public static int difficultyRating;
@@ -31,7 +31,7 @@ public class Levels {
 
     public static int screenWidth, screenHeight;
 
-    public static boolean debug = false;
+    public static boolean debug = true;
 
     private static SharedPreferences mPrefs;
 
@@ -46,12 +46,13 @@ public class Levels {
 
     private static int i;
 
-    public static void init(Context context, int screenX, int screenY) {
+    public static void init(Context context, final int screenX, int screenY) {
         InvaderAbstract.BASE_SPEED = 1 * screenY / 160;
         screenWidth = screenX;
         screenHeight = screenY;
-
         levelTimeLimit = 500; // arbitrary # to fix divide by 0 error
+
+        debug = BuildConfig.DEBUG;
 
         if (!debug) {
             packageNameStr = context.getString(R.string.package_name);
@@ -241,7 +242,7 @@ public class Levels {
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         numInvaders = 1;
                         levelTimeLimit = (int) (325 * timeOffSetMultiplier);
-                        startText = "Bouncy.";
+                        startText = "Chapter 3\nBouncy.";
                         difficultyRating = 2;
 
                         for (int i = 0; i < numInvaders; i++) {
@@ -319,7 +320,7 @@ public class Levels {
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         numInvaders = 2;
                         levelTimeLimit = (int) (325 * timeOffSetMultiplier);
-                        startText = "It explodes";
+                        startText = "Chapter 4\nIt explodes";
                         difficultyRating = 2;
 
                         for (int i = 0; i < numInvaders; i++) {
@@ -360,12 +361,12 @@ public class Levels {
                     // Four fireworks
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
-                        numInvaders = 8;
+                        numInvaders = 7;
                         levelTimeLimit = (int) (625 * timeOffSetMultiplier);
                         startText = "";
                         difficultyRating = 6;
 
-                        int diff = 4*Levels.screenHeight/9;
+                        int diff = 5*Levels.screenHeight/9;
 
                         for (int i = 0; i < numInvaders; i++) {
                             invaders[i] = new FireworkSprite(context, 20, (int)(3*Math.random()*Levels.screenWidth/4) + Levels.screenWidth/8, -i * diff);
@@ -378,25 +379,24 @@ public class Levels {
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         numInvaders = 1;
                         levelTimeLimit = (int) (625 * timeOffSetMultiplier);
-                        startText = "Let it rain!";
+                        startText = "Chapter 5\nLet it rain!";
                         difficultyRating = 3;
 
-                        for (int i = 0; i < numInvaders; i++) {
-                            invaders[i] = new RainSprite(context, 40);
-                        }
+                        invaders[i] = new RainSprite(context, 40);
                     }
                 },
                 new Level() {
                     // Double the rain
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
-                        numInvaders = 2;
+                        numInvaders = 3;
                         levelTimeLimit = (int) (750 * timeOffSetMultiplier);
                         startText = "More rain";
                         difficultyRating = 5;
 
-                        invaders[0] = new RainSprite(context, 24);
-                        invaders[1] = new RainSprite(context, 24);
+                        invaders[0] = new RainSprite(context, 0, 24, screenHeight);
+                        invaders[1] = new RainSprite(context, -screenHeight, 24, screenHeight);
+                        invaders[2] = new Basic(context, 0, -3*screenHeight, Levels.screenWidth);
                     }
                 },
                 new Level() {
@@ -404,15 +404,15 @@ public class Levels {
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         numInvaders = 5;
-                        levelTimeLimit = (int) (650 * timeOffSetMultiplier);
+                        levelTimeLimit = (int) (600 * timeOffSetMultiplier);
                         startText = "Rain and Blocks";
                         difficultyRating = 5;
 
-                        invaders[0] = new RainSprite(context, 24);
-                        invaders[1] = new RainSprite(context, 24);
+                        invaders[0] = new RainSprite(context, 0, 32, screenHeight);
+                        invaders[1] = new RainSprite(context, -screenHeight, 32, screenHeight);
                         invaders[2] = new Basic(context, 0, 0, Levels.screenWidth);
                         invaders[3] = new Basic(context, 0, -RainSprite.HEIGHT, Levels.screenWidth);
-                        invaders[4] = new Basic(context, 0, -2*RainSprite.HEIGHT, Levels.screenWidth, 2 * Basic.basicHeight);
+                        invaders[4] = new Basic(context, 0, -2*RainSprite.HEIGHT, Levels.screenWidth, 3 * Basic.basicHeight);
                     }
                 },
                 // Chapter 7, Accelerator
@@ -421,7 +421,7 @@ public class Levels {
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         numInvaders = 1;
                         levelTimeLimit = (int) (150 * timeOffSetMultiplier);
-                        startText = "It accelerates.";
+                        startText = "Chapter 6\nIt accelerates.";
                         difficultyRating = 2;
 
                         invaders[0] = new AcceleratorSprite(context, 0, 0, Levels.screenWidth, false);
@@ -447,17 +447,19 @@ public class Levels {
                     // Three bounce 1 accelerator
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
-                        numInvaders = 6;
-                        levelTimeLimit = (int) (300 * timeOffSetMultiplier);
+                        numInvaders = 7;
+                        levelTimeLimit = (int) (400 * timeOffSetMultiplier);
                         startText = "";
-                        difficultyRating = 5;
+                        difficultyRating = 6;
 
-                        int diff = 4 * screenHeight / 10;
-                        for (int i = 0; i < numInvaders - 2; i++) {
+                        int diff = 8 * screenHeight / 10;
+                        for (int i = 0; i < numInvaders - 3; i++) {
                             invaders[i] = new BouncySprite(context, 0, -(diff * i), screenWidth);
                         }
                         invaders[numInvaders - 1] = new AcceleratorSprite(context, 0, -Levels.screenHeight / 2, Levels.screenWidth, false);
-                        invaders[numInvaders - 2] = new RainSprite(context, 12, Levels.screenHeight/4);
+                        invaders[numInvaders - 2] = new AcceleratorSprite(context, 0, -3*Levels.screenHeight / 2, Levels.screenWidth, false);
+                        invaders[numInvaders - 3] = new AcceleratorSprite(context, 0, -4*Levels.screenHeight / 2, Levels.screenWidth, false);
+                        //invaders[numInvaders - 3] = new RainSprite(context, 12, Levels.screenHeight/4);
                     }
                 },
                 new Level() {
@@ -551,6 +553,23 @@ public class Levels {
                 },
 
                 // v hard levels
+                new Level() {
+                    // Three bounce 1 accelerator
+                    @Override
+                    public void prepare(InvaderAbstract[] invaders, Context context) {
+                        numInvaders = 6;
+                        levelTimeLimit = (int) (350 * timeOffSetMultiplier);
+                        startText = "";
+                        difficultyRating = 5;
+
+                        int diff = 4 * screenHeight / 10;
+                        for (int i = 0; i < numInvaders - 2; i++) {
+                            invaders[i] = new BouncySprite(context, 0, -(diff * i), screenWidth);
+                        }
+                        invaders[numInvaders - 1] = new AcceleratorSprite(context, 0, -Levels.screenHeight / 2, Levels.screenWidth, false);
+                        invaders[numInvaders - 2] = new RainSprite(context, 12, Levels.screenHeight/4);
+                    }
+                },
                 new Level() {
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {

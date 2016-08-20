@@ -261,7 +261,7 @@ public class DownFallActivity extends AppCompatActivity {
         sounds.play(soundIds[0], 0.3f, 0.3f, 0, 0, 1);
     }
     public void playWinSound() {
-        sounds.play(soundIds[3], 0.5f, 0.5f, 0, 0, 1);
+        sounds.play(soundIds[3], 0.25f, 0.25f, 0, 0, 1);
     }
     public void playTeleportSound() {
         sounds.play(soundIds[1], 0.15f, 0.15f, 0, 0, 1);
@@ -282,7 +282,7 @@ public class DownFallActivity extends AppCompatActivity {
     }
     public void showInterstitialIfReady() {
 
-        if (!Levels.debug && Levels.requestAdAmount % 15 == 0) {
+        if (!Levels.debug && Levels.requestAdAmount % 15 == 0 && Levels.requestAdAmount > 25) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -363,7 +363,7 @@ public class DownFallActivity extends AppCompatActivity {
                 //android.content.res.Resources res = getResources();
                 //String.format(res.getString(R.string.level_textview), Levels.currentLevel+1, Levels.levels.length)
                 currentLevelTextView.setText((Levels.currentLevel+1) + "/" + Levels.levels.length); //"Level " + (Levels.currentLevel+1) + " of " + (Levels.levels.length));
-                if (Levels.currentLevel % 3 == 0 && Levels.currentLevel >= 10) {
+                if (Levels.currentLevel >= 8) {
                     supportMenu.animate().scaleY(1.2f).scaleX(1.2f).setDuration(1000); //.y(3*Levels.screenHeight/4); //.scaleX(1.0f).scaleY(1.0f);
                 }
             }
@@ -386,6 +386,14 @@ public class DownFallActivity extends AppCompatActivity {
             //bundle.putLong(FirebaseAnalytics.Param.LEVEL, Levels.currentLevel);
             //bundle.putInt(FirebaseAnalytics.Param.VALUE, 1);
             mFirebaseAnalytics.logEvent("level_" + Levels.currentLevel+"_win", bundle);
+        }
+    }
+    public void firePauseEvent() {
+        if (!Levels.debug) {
+            bundle.clear();
+            bundle.putInt(numberAttempts, Levels.numberAttempts);
+            bundle.putLong(FirebaseAnalytics.Param.LEVEL, Levels.currentLevel);
+            mFirebaseAnalytics.logEvent("pause_game", bundle);
         }
     }
     private String numberAttempts = "number_attempts";
@@ -467,9 +475,8 @@ public class DownFallActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
 
-
+        firePauseEvent();
         mPlayer.pause();
-
         downFallView.pause();
         super.onPause();
     }

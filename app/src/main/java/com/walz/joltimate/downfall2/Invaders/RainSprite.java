@@ -17,26 +17,29 @@ public class RainSprite extends MultRectAbstract{
 
     private int height;
 
-    private int delay = 0;
+
 
     public static int HEIGHT = 2 * Levels.screenHeight;
 
     public RainSprite(Context context, int length) {
         super(length);
-        prepare(HEIGHT, length);
+        prepare(0, HEIGHT, length);
     }
     public RainSprite(Context context, int length, int height) {
         super(length);
-        prepare(height, length);
+        prepare(0, height, length);
     }
-    private void prepare(int height, int length) {
+    public RainSprite(Context context, int startY, int length, int height) {
+        super(length);
+        prepare(startY, height, length);
+    }
+    private void prepare(int startY, int height, int length) {
         this.height = height;
-        this.delay = delay;
 
         rWidth = Levels.screenWidth/20;
 
         this.x = 0;
-        this.y = -(height + rWidth);
+        this.y = -(height + rWidth - startY);
 
         xRand = new int[length];
         yRand = new int[length];
@@ -61,10 +64,6 @@ public class RainSprite extends MultRectAbstract{
 
     @Override
     public void update(int fps) {
-        if (delay > 0) {
-            delay--;
-            return;
-        }
 
         y += yVelocity/2;
 

@@ -84,6 +84,8 @@ import com.walz.joltimate.downfall2.Invaders.InvaderAbstract;
 // ASO
 // increase number of positive reviews
 
+// Beat level screen
+
 public class DownFallView extends SurfaceView implements Runnable{
 
     private Context context;
@@ -143,8 +145,6 @@ public class DownFallView extends SurfaceView implements Runnable{
 
     private float distanceFromEdge;
     private Vibrator v;
-
-    private boolean inDrawMode = false;
 
     private DownFallActivity downFallActivity;
 
@@ -226,17 +226,14 @@ public class DownFallView extends SurfaceView implements Runnable{
             // Capture the current time in milliseconds in startFrameTime
             long startFrameTime = System.currentTimeMillis();
 
-            inDrawMode = false;
             updateBackground();
             if(gameState == PLAYINGSCREEN){
                 updateForeground();
-                if (!triggerLoseAnimation) {
-                }
-                inDrawMode = true;
+            }
+            draw();
+            if (gameState == PLAYINGSCREEN) {
                 playerShip.update(); // for loseAnimation only
             }
-            inDrawMode = true;
-            draw();
 
             // Calculate the fps this frame
             // We can then use the result to
@@ -273,10 +270,10 @@ public class DownFallView extends SurfaceView implements Runnable{
         }
     }
     private void drawWinAnimation() {
-        if (winCircleRadius < 3*Levels.screenHeight/4) {
+        if (winCircleRadius < 4*Levels.screenHeight/4) {
 
             canvas.drawCircle((float) playerShip.getCenterX(), (float) playerShip.getCenterY(), winCircleRadius, winCirclePaint);
-            winCircleRadius += Levels.screenHeight/60;
+            winCircleRadius += Levels.screenHeight/40;
             numFrames--;
 
         } else {
@@ -496,9 +493,7 @@ public class DownFallView extends SurfaceView implements Runnable{
 
                 }
             } */
-            if (inDrawMode) {
-                playerShip.setLocation(pX, pY, gameState);
-            }
+            playerShip.setLocation(pX, pY, gameState);
         }
 
 

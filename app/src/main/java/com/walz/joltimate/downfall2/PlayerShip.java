@@ -29,9 +29,10 @@ public class PlayerShip {
 
     // X is the far left of the rectangle which forms our paddle
     public float x;
-
     // Y is the top coordinate
     public float y;
+    private float notLinearX;
+    private float notLinearY;
 
     public static Paint paint;
 
@@ -72,7 +73,9 @@ public class PlayerShip {
 
         // Start ship in roughly the screen centre
         x = (Levels.screenWidth / 2) - width/2;
+        notLinearX = (Levels.screenWidth / 2) - width/2;
         y = 6*Levels.screenHeight / 9 ;
+        notLinearY = 6*Levels.screenHeight / 9 ;
 
         hitbox.top = this.y + offset;
         hitbox.bottom = this.y + height - offset;
@@ -155,26 +158,29 @@ public class PlayerShip {
             return;
         }
 
-        this.x = x - width / 2;
-        this.y = y - height / 2;
-
-        hitbox.top = this.y + offset;
-        hitbox.bottom = this.y + height - offset;
-        hitbox.left = this.x + offset;
-        hitbox.right = this.x + width - offset;
-
-        rectDraw.top = this.y;
-        rectDraw.bottom = this.y + height;
-        rectDraw.left = this.x;
-        rectDraw.right = this.x + width;
-
-        deathAnimation.setOrigin(x, y);
+        this.notLinearX = x - width / 2;
+        this.notLinearY = y - height / 2;
     }
 
     // See setlocation as well
     public void update() {
         if (!alive) {
             deathAnimation.update(-1);
+        } else {
+            this.x = this.notLinearX;
+            this.y = this.notLinearY;
+
+            hitbox.top = this.y + offset;
+            hitbox.bottom = this.y + height - offset;
+            hitbox.left = this.x + offset;
+            hitbox.right = this.x + width - offset;
+
+            rectDraw.top = this.y;
+            rectDraw.bottom = this.y + height;
+            rectDraw.left = this.x;
+            rectDraw.right = this.x + width;
+
+            deathAnimation.setOrigin(x, y);
         }
     }
     public float getCenterX() {

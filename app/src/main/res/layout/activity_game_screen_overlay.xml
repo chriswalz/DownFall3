@@ -82,6 +82,7 @@
             android:background="@null"/> -->
 
     </RelativeLayout>
+
     <android.support.v7.widget.AppCompatTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -182,4 +183,23 @@
         android:layout_centerInParent="true"
         ads:adSize="FLUID"
         ads:adUnitId="@string/image_interstitial"></com.google.android.gms.ads.AdView> -->
+    <RelativeLayout
+        android:layout_centerInParent="true"
+        android:layout_margin="16dp"
+        android:padding="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/black">
+        <android.support.v7.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:id="@+id/warning_textview"
+            android:text="@string/warning"/>
+        <android.support.v7.widget.AppCompatButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/warning_textview"
+            android:text="OK"/>
+    </RelativeLayout>
 </RelativeLayout>
