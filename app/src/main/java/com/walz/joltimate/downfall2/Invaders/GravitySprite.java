@@ -18,10 +18,12 @@ public class GravitySprite extends OneRectAbstract{
 
     private PlayerShip ship;
 
+    public static int SIZE = Levels.screenWidth/12;
+
     public GravitySprite(Context context, PlayerShip ship, float xVal, float yVal) {
 
-        this.width = Levels.screenWidth/12;
-        this.height = Levels.screenWidth/12;
+        this.width = SIZE;
+        this.height = SIZE;
 
         this.ship = ship;
 

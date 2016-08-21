@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Вниз Падение</string>
-    <string name="next_level">Следующий уровень</string>
     <string name="success_text">успех</string>
     <string name="invitation_message">Попробуйте вниз падения</string>
+    <string name="acknowledgement">Хорошо</string>
+    <string name="warning">ПРЕДУПРЕЖДЕНИЕ: Падение вниз трудно. Если вы не любите жестких игр мы рекомендуем удалить прямо сейчас. Благодарим Вас за сотрудничество и удачи</string>
 </resources>

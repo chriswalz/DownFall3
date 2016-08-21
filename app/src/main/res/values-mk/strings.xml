@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">по падот</string>
-    <string name="next_level">Следно ниво</string>
     <string name="success_text">успех</string>
     <string name="invitation_message">Пробате по падот</string>
+    <string name="acknowledgement">добро</string>
+    <string name="warning">ПРЕДУПРЕДУВАЊЕ: По Падот е тешко. Ако не ви се допаѓа хард игри препорачуваме деинсталирането сега. Ви благодариме за соработката и со среќа</string>
 </resources>

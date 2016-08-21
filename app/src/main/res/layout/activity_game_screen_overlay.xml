@@ -189,6 +189,8 @@
         android:padding="16dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/warning_layout"
+        android:clickable="true"
         android:background="@color/black">
         <android.support.v7.widget.AppCompatTextView
             android:layout_width="wrap_content"
@@ -200,6 +202,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/warning_textview"
-            android:text="OK"/>
+            android:id="@+id/warning_button"
+            android:text="@string/acknowledgement"/>
     </RelativeLayout>
 </RelativeLayout>

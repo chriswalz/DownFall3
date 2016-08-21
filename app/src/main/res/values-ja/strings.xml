@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">落ちます</string>
-    <string name="next_level">次のレベル</string>
     <string name="success_text">成功</string>
     <string name="invitation_message">秋ダウン試してみてください</string>
+    <string name="warning">警告：ダウン秋は困難です。あなたは、ハードのゲームを嫌いなら、私たちは今、アンインストールをお勧めします。ご協力と幸運をお寄せいただきありがとうございます</string>
+    <string name="acknowledgement">はい</string>
 </resources>

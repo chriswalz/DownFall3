@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Abajo Otoño</string>
+    <string name="acknowledgement">Bien</string>
+    <string name="invitation_message">Pruebe abajo caída</string>
+    <string name="success_text">Éxito</string>
+    <string name="warning">ADVERTENCIA: Abajo Otoño es duro. Si no le gustan los juegos duros se recomienda desinstalar ahora. Gracias por su cooperación y buena suerte</string>
+</resources>

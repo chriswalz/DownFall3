@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Abaixo da Queda</string>
+    <string name="acknowledgement">OK</string>
+    <string name="invitation_message">Experimente para baixo queda</string>
+    <string name="success_text">Sucesso</string>
+    <string name="warning">AVISO: Abaixo da Queda é difícil. Se você não gosta de jogos duros recomendamos a desinstalação agora. Agradecemos a sua colaboração e boa sorte</string>
+</resources>

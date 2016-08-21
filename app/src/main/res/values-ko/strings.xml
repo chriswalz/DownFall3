@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">쓰러지 다</string>
-    <string name="next_level">다음 레벨</string>
     <string name="success_text">성공</string>
     <string name="invitation_message">가을 다운 해보세요</string>
+    <string name="acknowledgement">괜찮아</string>
+    <string name="warning">경고 : 아래 가을 어렵다. 열심히 게임을 싫어하는 경우 우리는 지금 제거하는 것이 좋습니다. 당신의 협력과 행운을 주셔서 감사합니다</string>
 </resources>

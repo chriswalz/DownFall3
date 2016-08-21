@@ -22,6 +22,7 @@ public class Levels {
     public static int numberAttempts;
     public static int difficultyRating;
     public static int requestAdAmount = 0;
+    public static boolean viewedWarning = false;
 
     public static String startText = "";
 
@@ -31,7 +32,7 @@ public class Levels {
 
     public static int screenWidth, screenHeight;
 
-    public static boolean debug = true;
+    public static boolean debug = false;
 
     private static SharedPreferences mPrefs;
 
@@ -43,6 +44,8 @@ public class Levels {
     private static String scoreStr;
     private static String numberAttemptsStr;
     private static String requestAdAmountStr;
+    private static String viewedWarningStr;
+
 
     private static int i;
 
@@ -61,6 +64,7 @@ public class Levels {
             scoreStr = context.getString(R.string.score);
             numberAttemptsStr = context.getString(R.string.number_attempts);
             requestAdAmountStr = context.getString(R.string.request_ad_amount);
+            viewedWarningStr = context.getString(R.string.viewed_warning);
 
             mPrefs = context.getSharedPreferences(packageNameStr, 0);
             currentLevel = mPrefs.getInt(currentLevelStr, 0);
@@ -68,6 +72,7 @@ public class Levels {
             numberAttempts = mPrefs.getInt(numberAttemptsStr, 0);
             requestAdAmount = mPrefs.getInt(requestAdAmountStr, 0);
             score = mPrefs.getInt(scoreStr, 0);
+            viewedWarning = mPrefs.getBoolean(viewedWarningStr, false);
         }
 
         levels = new Level[]{
@@ -109,7 +114,7 @@ public class Levels {
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         numInvaders = 2; // one is a overlay
                         levelTimeLimit = (int) (250 * timeOffSetMultiplier); // convert to number of frames
-                        startText = "Watch out below!";
+                        startText = "Chapter 1\nWatch out below!";
                         difficultyRating = 2;
 
                         int diff = 4*screenHeight/9;
@@ -390,7 +395,7 @@ public class Levels {
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         numInvaders = 3;
-                        levelTimeLimit = (int) (750 * timeOffSetMultiplier);
+                        levelTimeLimit = (int) (675 * timeOffSetMultiplier);
                         startText = "More rain";
                         difficultyRating = 5;
 
@@ -404,7 +409,7 @@ public class Levels {
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         numInvaders = 5;
-                        levelTimeLimit = (int) (600 * timeOffSetMultiplier);
+                        levelTimeLimit = (int) (625 * timeOffSetMultiplier);
                         startText = "Rain and Blocks";
                         difficultyRating = 5;
 
@@ -420,11 +425,11 @@ public class Levels {
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         numInvaders = 1;
-                        levelTimeLimit = (int) (150 * timeOffSetMultiplier);
+                        levelTimeLimit = (int) (75 * timeOffSetMultiplier);
                         startText = "Chapter 6\nIt accelerates.";
                         difficultyRating = 2;
 
-                        invaders[0] = new AcceleratorSprite(context, 0, 0, Levels.screenWidth, false);
+                        invaders[0] = new AcceleratorSprite(context, 0, -screenHeight/5, Levels.screenWidth, false);
                     }
                 },
                 new Level() {
@@ -432,7 +437,7 @@ public class Levels {
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         numInvaders = 5;
-                        levelTimeLimit = (int) (300 * timeOffSetMultiplier);
+                        levelTimeLimit = (int) (275 * timeOffSetMultiplier);
                         startText = "Slow & Fast";
                         difficultyRating = 5;
 
@@ -448,7 +453,7 @@ public class Levels {
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         numInvaders = 7;
-                        levelTimeLimit = (int) (400 * timeOffSetMultiplier);
+                        levelTimeLimit = (int) (450 * timeOffSetMultiplier);
                         startText = "";
                         difficultyRating = 6;
 
@@ -467,7 +472,7 @@ public class Levels {
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         numInvaders = 5;
-                        levelTimeLimit = (int) (575 * timeOffSetMultiplier);
+                        levelTimeLimit = (int) (525 * timeOffSetMultiplier);
                         startText = "";
                         difficultyRating = 5;
 
@@ -483,8 +488,8 @@ public class Levels {
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         numInvaders = 1;
-                        levelTimeLimit = (int) (450 * timeOffSetMultiplier);
-                        startText = "Gravity";
+                        levelTimeLimit = (int) (400 * timeOffSetMultiplier);
+                        startText = "Chapter 8\nVery Attractive";
                         difficultyRating = 2;
 
                         invaders[0] = new GravitySprite(context, DownFallView.playerShip, 0, 0);
@@ -496,7 +501,7 @@ public class Levels {
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         numInvaders = 3;
                         levelTimeLimit = (int) (450 * timeOffSetMultiplier);
-                        startText = "";
+                        startText = "Keep moving";
                         difficultyRating = 7;
 
                         invaders[0] = new GravitySprite(context, DownFallView.playerShip, (float) (Levels.screenWidth * Math.random()), 0);
@@ -507,14 +512,30 @@ public class Levels {
                 new Level() {
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
-                        numInvaders = 4;
+                        numInvaders = 5;
                         levelTimeLimit = (int) (500 * timeOffSetMultiplier);
-                        startText = "It gravitates.";
+                        startText = "You're surrounded";
+                        difficultyRating = 5;
 
-                        invaders[0] = new GravitySprite(context, DownFallView.playerShip, 1*Levels.screenWidth/5, 6*Levels.screenHeight/7);
-                        invaders[1] = new GravitySprite(context, DownFallView.playerShip, 2*Levels.screenWidth/4, Levels.screenHeight/6);
-                        invaders[2] = new GravitySprite(context, DownFallView.playerShip, 4*Levels.screenWidth/5, 6*Levels.screenHeight/7);
+                        invaders[0] = new GravitySprite(context, DownFallView.playerShip, -GravitySprite.SIZE, 7*Levels.screenHeight/7);
+                        invaders[1] = new GravitySprite(context, DownFallView.playerShip, 2*Levels.screenWidth/4, 0*Levels.screenHeight/6);
+                        invaders[2] = new GravitySprite(context, DownFallView.playerShip, 5*Levels.screenWidth/5, 7*Levels.screenHeight/7);
                         invaders[3] = new BouncySprite(context, 0, 0, Levels.screenWidth);
+                        invaders[4] = new BouncySprite(context, 0, -2*screenHeight, Levels.screenWidth);
+                    }
+                },
+                new Level() {
+                    @Override
+                    public void prepare(InvaderAbstract[] invaders, Context context) {
+                        numInvaders = 7;
+                        levelTimeLimit = (int) (375 * timeOffSetMultiplier);
+                        startText = numInvaders + " followers";
+                        difficultyRating = 5;
+
+                        int diff = -6*screenHeight/10;
+                        for (i = 0; i < numInvaders; i++) {
+                            invaders[i] = new GravitySprite(context, DownFallView.playerShip, 2*Levels.screenWidth/4-(GravitySprite.SIZE/2), i * diff);
+                        }
                     }
                 },
                 new Level() {
@@ -560,7 +581,7 @@ public class Levels {
                         numInvaders = 6;
                         levelTimeLimit = (int) (350 * timeOffSetMultiplier);
                         startText = "";
-                        difficultyRating = 5;
+                        difficultyRating = 6;
 
                         int diff = 4 * screenHeight / 10;
                         for (int i = 0; i < numInvaders - 2; i++) {
@@ -647,6 +668,13 @@ public class Levels {
         if (!debug) {
             mEditor = mPrefs.edit();
             mEditor.putInt(numberAttemptsStr, numberAttempts);
+            mEditor.commit();
+        }
+    }
+    public static void saveViewedWarning() {
+        if (!debug) {
+            mEditor = mPrefs.edit();
+            mEditor.putBoolean(viewedWarningStr, viewedWarning);
             mEditor.commit();
         }
     }

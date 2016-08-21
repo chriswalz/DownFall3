@@ -4,8 +4,11 @@
     <string name="title_activity_home_screen" translatable="false"></string>
 
     <string name="success_text">Success</string>
-    <string name="next_level">Next Level</string>
-    <string name="warning">WARNING: Down Fall is hard. If you can not handle hard games we strongly recommend uninstalling now. Thanks for your cooperation and good luck - The Joltimate Team</string>
+
+    <string name="warning">WARNING: Down Fall is hard. If you can not handle hard games\, we recommend uninstalling now. Thanks for your cooperation and good luck - The Joltimate Team</string>
+    <string name="acknowledgement">OK, I am ready to lose</string>
+    <string name="invitation_message">Try out #downfall!</string>
+
     <string name="package_name" translatable="false">com.google.downfall2</string>
     <string name="current_level" translatable="false">currentLevel</string>
     <string name="highest_level" translatable="false">highestLevel</string>
@@ -15,7 +18,8 @@
     <string name="image_interstitial" translatable="false">ca-app-pub-8477647394434056/8857578526</string>
     <string name="admob_app_id" translatable="false">ca-app-pub-8477647394434056~7520446123</string>
     <string name="invitation_title" translatable="false">@string/app_name</string>
-    <string name="invitation_message">Try out #downfall!</string>
+    <string name="viewed_warning" translatable="false">viewedWarning</string>
+
     <!-- <string name="invitation_cta">Play</string> -->
     <string name="invitation_deep_link" translatable="false">https://eu637.app.goo.gl/naxz</string>
 </resources>

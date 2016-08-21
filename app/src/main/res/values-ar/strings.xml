@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">تسقط</string>
+    <string name="acknowledgement">صحيح </string>
+    <string name="invitation_message">جرب أسفل الخريف</string>
+    <string name="success_text">نجاح</string>
+    <string name="warning">تحذير: أسفل الخريف هو الثابت. إذا كنت لا يروق المباريات الصعبة نوصي إلغاء تثبيت الآن. شكرا لتعاونكم ونتمنى لك التوفيق</string>
+</resources>

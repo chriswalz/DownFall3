@@ -78,6 +78,8 @@ public class DownFallActivity extends AppCompatActivity {
 
     private AppCompatTextView helpTextView;
 
+    private AppCompatButton dismissWarningButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -183,6 +185,7 @@ public class DownFallActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (Levels.highestLevel > Levels.currentLevel) {
                     levelManuallyChanged = true;
+                    helpTextView.setText("");
                     Levels.currentLevel++;
                 }
             }
@@ -193,6 +196,7 @@ public class DownFallActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (Levels.currentLevel > 0) {
                     levelManuallyChanged = true;
+                    helpTextView.setText("");
                     Levels.currentLevel--;
                 }
             }
@@ -208,6 +212,20 @@ public class DownFallActivity extends AppCompatActivity {
                 startScreen();
             }
         });
+
+        dismissWarningButton = (AppCompatButton) secondLayerView.findViewById(R.id.warning_button);
+        if (!Levels.viewedWarning) {
+            dismissWarningButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    secondLayerView.findViewById(R.id.warning_layout).setVisibility(View.GONE);
+                    Levels.viewedWarning = true;
+                    Levels.saveViewedWarning();
+                }
+            });
+        } else {
+            secondLayerView.findViewById(R.id.warning_layout).setVisibility(View.GONE);
+        }
 
         setToStartScreen();
 
@@ -282,7 +300,7 @@ public class DownFallActivity extends AppCompatActivity {
     }
     public void showInterstitialIfReady() {
 
-        if (!Levels.debug && Levels.requestAdAmount % 15 == 0 && Levels.requestAdAmount > 25) {
+        if (!Levels.debug && Levels.requestAdAmount % 12 == 0 && Levels.highestLevel >= 8) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -321,7 +339,9 @@ public class DownFallActivity extends AppCompatActivity {
         addButton.setVisibility(View.VISIBLE);
         subtractButton.setVisibility(View.VISIBLE);
         supportMenu.setVisibility(View.VISIBLE);
-        helpTextView.animate().alpha(1.0f).setDuration(1000);
+        supportMenu.animate().scaleX(1.0f);
+        supportMenu.animate().scaleY(1.0f);
+        helpTextView.animate().alpha(1.0f).setDuration(300);
 
         downFallView.prepareCurrentLevel();
     }
@@ -339,8 +359,6 @@ public class DownFallActivity extends AppCompatActivity {
                 addButton.setVisibility(View.GONE);
                 subtractButton.setVisibility(View.GONE);
                 supportMenu.setVisibility(View.GONE);
-                supportMenu.setScaleX(1.0f);
-                supportMenu.setScaleY(1.0f);
                 helpTextView.animate().alpha(0.0f).setDuration(900);
 
             }
@@ -364,7 +382,7 @@ public class DownFallActivity extends AppCompatActivity {
                 //String.format(res.getString(R.string.level_textview), Levels.currentLevel+1, Levels.levels.length)
                 currentLevelTextView.setText((Levels.currentLevel+1) + "/" + Levels.levels.length); //"Level " + (Levels.currentLevel+1) + " of " + (Levels.levels.length));
                 if (Levels.currentLevel >= 8) {
-                    supportMenu.animate().scaleY(1.2f).scaleX(1.2f).setDuration(1000); //.y(3*Levels.screenHeight/4); //.scaleX(1.0f).scaleY(1.0f);
+                    supportMenu.animate().scaleY(1.2f).scaleX(1.2f).setDuration(400); //.y(3*Levels.screenHeight/4); //.scaleX(1.0f).scaleY(1.0f);
                 }
             }
         });

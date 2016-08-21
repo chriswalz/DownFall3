@@ -10,7 +10,7 @@ android {
         }
     }
     compileSdkVersion 24
-    buildToolsVersion "23.0.1"
+    buildToolsVersion "24.0.1"
     defaultConfig {
         applicationId "com.walz.joltimate.downfall2"
         minSdkVersion 15

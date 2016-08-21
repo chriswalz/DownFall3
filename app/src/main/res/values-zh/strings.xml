@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">掉下来</string>
-    <string name="next_level">下一级</string>
     <string name="success_text">成功</string>
     <string name="invitation_message">试用往下掉</string>
+    <string name="acknowledgement">好的</string>
+    <string name="warning">警告：掉下来是很难的。如果你不喜欢硬游戏，我们建议现在就卸载。谢谢您的合作，祝你好运</string>
 </resources>
