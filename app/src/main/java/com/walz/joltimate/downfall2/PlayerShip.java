@@ -95,6 +95,8 @@ public class PlayerShip {
     }
     public void reset() {
         // Start ship in roughly the screen centre
+        notLinearX = (Levels.screenWidth / 2) - width/2;
+        notLinearY = 6*Levels.screenHeight / 9 ;
         x = (Levels.screenWidth / 2) - width/2;
         y = 6*Levels.screenHeight / 9 ;
 

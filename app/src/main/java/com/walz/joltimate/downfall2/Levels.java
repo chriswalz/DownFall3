@@ -17,7 +17,7 @@ import com.walz.joltimate.downfall2.Invaders.RainSprite;
 public class Levels {
     // Current Level
     public static int score;
-    public static int currentLevel = 20;
+    public static int currentLevel = 18;
     public static int highestLevel=40;
     public static int numberAttempts;
     public static int difficultyRating;
@@ -47,7 +47,7 @@ public class Levels {
     private static String viewedWarningStr;
 
 
-    private static int i;
+    //private static int i;
 
     public static void init(Context context, final int screenX, int screenY) {
         InvaderAbstract.BASE_SPEED = 1 * screenY / 160;
@@ -113,7 +113,7 @@ public class Levels {
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         numInvaders = 2; // one is a overlay
-                        levelTimeLimit = (int) (250 * timeOffSetMultiplier); // convert to number of frames
+                        levelTimeLimit = (int) (270 * timeOffSetMultiplier); // convert to number of frames
                         startText = "Chapter 1\nWatch out below!";
                         difficultyRating = 2;
 
@@ -128,7 +128,7 @@ public class Levels {
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         numInvaders = 4;
-                        levelTimeLimit = (int) (300 * timeOffSetMultiplier);
+                        levelTimeLimit = (int) (325 * timeOffSetMultiplier);
                         difficultyRating = 3;
                         startText = "Tap & Drag, Tap & Drag, Tap & Drag";
 
@@ -196,8 +196,8 @@ public class Levels {
                         startText = "The Crusher";
                         difficultyRating = 4;
 
-                        invaders[0] = new ClamperSprite(context, 0.6, 0, 0, 3 * Levels.screenHeight);
-                        invaders[1] = new ClamperSprite(context, 0.6, Levels.screenWidth-ClamperSprite.clamperWidth, 0, 3 * Levels.screenHeight);
+                        invaders[0] = new ClamperSprite(context, 0.4, 0, 0, 3 * Levels.screenHeight);
+                        invaders[1] = new ClamperSprite(context, 0.4, Levels.screenWidth-ClamperSprite.clamperWidth, 0, 3 * Levels.screenHeight);
                         invaders[2] = new Basic(context, 0, -3 * Levels.screenHeight, Levels.screenWidth, Basic.basicHeight);
                         invaders[3] = new Basic(context, 0, 0, Levels.screenWidth, Basic.basicHeight);
                     }
@@ -213,10 +213,10 @@ public class Levels {
                         int rectHeight = 3*Levels.screenHeight/4;
 
                         for (int i = 0; i < numInvaders/2; i+=2) {
-                            invaders[i] = new ClamperSprite(context, 1.4, 0, -i * rectHeight, rectHeight);
+                            invaders[i] = new ClamperSprite(context, 1.0, 0, -i * rectHeight, rectHeight);
                         }
                         for (int i = 1; i < numInvaders/2; i+=2) {
-                            invaders[i] = new ClamperSprite(context, 0.7, Levels.screenWidth-ClamperSprite.clamperWidth, -i * rectHeight, rectHeight);
+                            invaders[i] = new ClamperSprite(context, 0.5, Levels.screenWidth-ClamperSprite.clamperWidth, -i * rectHeight, rectHeight);
                         }
                         invaders[numInvaders-1] = new Basic(context, 0, -(numInvaders-1)*rectHeight/2, screenWidth, screenHeight/2);
                     }
@@ -231,10 +231,10 @@ public class Levels {
 
                         int rectHeight = 3*Levels.screenHeight/4;
                         for (int i = 0; i < numInvaders/2; i+=2) {
-                            invaders[i] = new ClamperSprite(context, 1.0, 0, -i * rectHeight, rectHeight);
+                            invaders[i] = new ClamperSprite(context, 0.8, 0, -i * rectHeight, rectHeight);
                         }
                         for (int i = 1; i < numInvaders/2; i+=2) {
-                            invaders[i] = new ClamperSprite(context, 1.0, Levels.screenWidth-ClamperSprite.clamperWidth, -i * rectHeight, rectHeight);
+                            invaders[i] = new ClamperSprite(context, 0.8, Levels.screenWidth-ClamperSprite.clamperWidth, -i * rectHeight, rectHeight);
                         }
                         for (int i = numInvaders/2; i < numInvaders; i++) {
                             invaders[i] = new Basic(context, 0, -(i-numInvaders/2) * rectHeight, Levels.screenWidth, Basic.basicHeight);
@@ -246,7 +246,7 @@ public class Levels {
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         numInvaders = 1;
-                        levelTimeLimit = (int) (325 * timeOffSetMultiplier);
+                        levelTimeLimit = (int) (275 * timeOffSetMultiplier);
                         startText = "Chapter 3\nBouncy.";
                         difficultyRating = 2;
 
@@ -264,7 +264,7 @@ public class Levels {
                         startText = "";
                         difficultyRating = 4;
 
-                        int diff = 2*Levels.screenHeight/3;
+                        int diff = 8*Levels.screenHeight/10;
                         for (int i = 0; i < numInvaders; i++) {
                             invaders[i] = new BouncySprite(context, 0, i * -diff, Levels.screenWidth);
                         }
@@ -279,7 +279,7 @@ public class Levels {
                         startText = "";
                         difficultyRating = 5;
 
-                        int diff = 65*Levels.screenHeight/100;
+                        int diff = 80*Levels.screenHeight/100;
                         for (int i = 0; i < numInvaders; i++) {
                             invaders[i] = new BouncySprite(context, 0, i * -diff, Levels.screenWidth);
                         }
@@ -387,7 +387,7 @@ public class Levels {
                         startText = "Chapter 5\nLet it rain!";
                         difficultyRating = 3;
 
-                        invaders[i] = new RainSprite(context, 40);
+                        invaders[0] = new RainSprite(context, 40);
                     }
                 },
                 new Level() {
@@ -533,7 +533,7 @@ public class Levels {
                         difficultyRating = 5;
 
                         int diff = -6*screenHeight/10;
-                        for (i = 0; i < numInvaders; i++) {
+                        for (int i = 0; i < numInvaders; i++) {
                             invaders[i] = new GravitySprite(context, DownFallView.playerShip, 2*Levels.screenWidth/4-(GravitySprite.SIZE/2), i * diff);
                         }
                     }
@@ -633,7 +633,7 @@ public class Levels {
         if (currentLevel >= levels.length) {
             currentLevel--;
         }
-        for (i = 0; i < invaderAbstracts.length; i++) {
+        for (int i = 0; i < invaderAbstracts.length; i++) {
             invaderAbstracts[i] = null;
         }
         levels[currentLevel].prepare(invaderAbstracts, context);

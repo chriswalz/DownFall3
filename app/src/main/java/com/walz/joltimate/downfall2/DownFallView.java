@@ -86,6 +86,9 @@ import com.walz.joltimate.downfall2.Invaders.InvaderAbstract;
 
 // Beat level screen
 
+// automatic death at start bug (if you died where a starting block is)
+// crash
+
 public class DownFallView extends SurfaceView implements Runnable{
 
     private Context context;
@@ -204,16 +207,16 @@ public class DownFallView extends SurfaceView implements Runnable{
 
     public void prepareCurrentLevel(){
         // reset game
+        downFallActivity.setHelpTextView(Levels.startText);
+        numFrames = 0;
+        gameState = STARTSCREEN;
+        Levels.prepareLevel(playerShip, invaders, context);
         if (playerShip == null) {
             playerShip = new PlayerShip(context);
             jumpDistance = (int) (1.5 * playerShip.width);
         } else {
             playerShip.reset();
         }
-        downFallActivity.setHelpTextView(Levels.startText);
-        numFrames = 0;
-        gameState = STARTSCREEN;
-        Levels.prepareLevel(playerShip, invaders, context);
 
     }
 
@@ -282,8 +285,8 @@ public class DownFallView extends SurfaceView implements Runnable{
             triggerWinAnimation = false;
             downFallActivity.fireWinEvent();
             Levels.updateCurrentLevel(); ;
-            prepareCurrentLevel();
             gameState = WINSCREEN; // paused = true;
+            prepareCurrentLevel();
             downFallActivity.setToWinScreen();
             downFallActivity.showInterstitialIfReady();
         }
