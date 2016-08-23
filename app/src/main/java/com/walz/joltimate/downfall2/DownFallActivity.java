@@ -2,6 +2,7 @@ package com.walz.joltimate.downfall2;
 
 import android.annotation.TargetApi;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Point;
@@ -12,6 +13,7 @@ import android.media.SoundPool;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatImageButton;
@@ -32,7 +34,6 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 public class DownFallActivity extends AppCompatActivity {
@@ -47,13 +48,14 @@ public class DownFallActivity extends AppCompatActivity {
     //RelativeLayout retryLayer;
 
     private RelativeLayout winLayer;
-    private AppCompatImageButton winButton;
+    private AppCompatImageView winButton;
 
     private LinearLayoutCompat supportMenu;
     private AppCompatImageView playButton;
     private AppCompatImageButton ratingButton;
     private AppCompatImageButton shareButton;
     private AppCompatTextView titleText;
+    private AppCompatTextView successText;
     private AppCompatImageButton addButton;
     private AppCompatImageButton subtractButton;
 
@@ -79,12 +81,15 @@ public class DownFallActivity extends AppCompatActivity {
     private AppCompatTextView helpTextView;
 
     private AppCompatButton dismissWarningButton;
+    private Vibrator vibrator;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         v = getWindow().getDecorView();
+        vibrator = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
         // Get a Display object to access screen details
         Display display = getWindowManager().getDefaultDisplay();
         // Load the resolution into a Point object
@@ -102,14 +107,13 @@ public class DownFallActivity extends AppCompatActivity {
         }
         bundle = new Bundle();
 
-        Levels.init(getApplicationContext(), size.x, size.y + navSize);
 
         playStoreUrl = "http://play.google.com/store/apps/details?id=" + getPackageName();
 
         soundIds = new int[6];
         // Initialize gameView and set it as the view
 
-        downFallView = new DownFallView(this);
+        downFallView = new DownFallView(this, size.x, size.y + navSize);
         setContentView(downFallView);
 
         // Use this to put a view over the surfaceview
@@ -129,7 +133,7 @@ public class DownFallActivity extends AppCompatActivity {
                 downFallView.prepareCurrentLevel();
             }
         }); */
-
+        successText = (AppCompatTextView) secondLayerView.findViewById(R.id.success);
 
         levelPicker = (NumberPicker) secondLayerView.findViewById(R.id.level_picker);
         levelPicker.setMinValue(0);
@@ -142,6 +146,8 @@ public class DownFallActivity extends AppCompatActivity {
         });
 
         playButton = (AppCompatImageView) secondLayerView.findViewById(R.id.play_button);
+        playButton.setEnabled(false);
+        playButton.setClickable(false);
 
         currentLevelTextView = (AppCompatTextView) secondLayerView.findViewById(R.id.current_level_textview);
 
@@ -204,14 +210,8 @@ public class DownFallActivity extends AppCompatActivity {
 
 
         winLayer = (RelativeLayout) secondLayerView.findViewById(R.id.winLayer);
-        winButton = (AppCompatImageButton) secondLayerView.findViewById(R.id.next_button);
-        winButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d("winButtonClicked!!","winButtonClicked!!");
-                startScreen();
-            }
-        });
+        winButton = (AppCompatImageView) secondLayerView.findViewById(R.id.next_button);
+
 
         dismissWarningButton = (AppCompatButton) secondLayerView.findViewById(R.id.warning_button);
         if (!Levels.viewedWarning) {
@@ -276,12 +276,14 @@ public class DownFallActivity extends AppCompatActivity {
 
     }
     public void playLoseSound() {
+        vibrator.vibrate(20);
         sounds.play(soundIds[0], 0.3f, 0.3f, 0, 0, 1);
     }
     public void playWinSound() {
         sounds.play(soundIds[3], 0.25f, 0.25f, 0, 0, 1);
     }
     public void playTeleportSound() {
+        vibrator.vibrate(1);
         sounds.play(soundIds[1], 0.15f, 0.15f, 0, 0, 1);
     }
     public void requestNewInterstitial() {
@@ -330,12 +332,11 @@ public class DownFallActivity extends AppCompatActivity {
         titleText.animate().alpha(1.0f).scaleX(1.0f).scaleY(1.0f).y(Levels.screenHeight/13);
         //playButton.setVisibility(View.VISIBLE);
         playButton.animate().alpha(1.0f).setDuration(175);
-        playButton.setEnabled(false);
-        playButton.setClickable(false);
+
         //winLayer.setVisibility(View.GONE);
         //winLayer.setY(-Levels.screenHeight/2);
         winLayer.animate().alpha(0.0f);
-        winButton.setClickable(false);
+
         addButton.setVisibility(View.VISIBLE);
         subtractButton.setVisibility(View.VISIBLE);
         supportMenu.setVisibility(View.VISIBLE);
@@ -343,7 +344,7 @@ public class DownFallActivity extends AppCompatActivity {
         supportMenu.animate().scaleY(1.0f);
         helpTextView.animate().alpha(1.0f).setDuration(300);
 
-        downFallView.prepareCurrentLevel();
+        downFallView.getDownFallGame().prepareCurrentLevel();
     }
     public void setToPlayingScreen() {
         runOnUiThread(new Runnable() {
@@ -355,7 +356,8 @@ public class DownFallActivity extends AppCompatActivity {
                 //playButton.setVisibility(View.GONE);
                 playButton.animate().alpha(0.0f);
                 //winLayer.setVisibility(View.GONE);
-                winLayer.animate().alpha(0.0f);
+                winLayer.animate().alpha(0.0f).setDuration(200);
+                successText.setY(-Levels.screenHeight/4);
                 addButton.setVisibility(View.GONE);
                 subtractButton.setVisibility(View.GONE);
                 supportMenu.setVisibility(View.GONE);
@@ -373,7 +375,8 @@ public class DownFallActivity extends AppCompatActivity {
                 //winLayer.setScaleX(0.5f);
                 //winLayer.setScaleY(0.5f);
                 winLayer.animate().alpha(1.0f); //.scaleX(1.0f).scaleY(1.0f); //.y(0);
-                winButton.setClickable(true);
+
+                successText.animate().y(Levels.screenHeight/5).setDuration(600);
 
                 addButton.setVisibility(View.GONE);
                 subtractButton.setVisibility(View.GONE);

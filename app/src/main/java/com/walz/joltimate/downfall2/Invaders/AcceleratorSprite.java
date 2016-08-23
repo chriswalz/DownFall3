@@ -5,9 +5,9 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.RectF;
 
-import com.walz.joltimate.downfall2.DownFallView;
 import com.walz.joltimate.downfall2.Levels;
 import com.walz.joltimate.downfall2.PlayerShip;
+import com.walz.joltimate.downfall2.game.DownFallGame;
 
 public class AcceleratorSprite extends OneRectAbstract {
     private boolean goDown = true;
@@ -30,7 +30,7 @@ public class AcceleratorSprite extends OneRectAbstract {
     public void update(int fps) {
         if (goDown){
             y += yVelocity;
-            if ( y > Levels.screenHeight/12 && DownFallView.numFrames % 2 == 0) {
+            if ( y > Levels.screenHeight/12 && DownFallGame.numFrames % 2 == 0) {
                 yVelocity += acceleration;
             }
             if(y > (Levels.screenHeight) ){

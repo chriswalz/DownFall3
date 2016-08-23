@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 
 import com.walz.joltimate.downfall2.Invaders.DeathAnimation;
+import com.walz.joltimate.downfall2.game.DownFallGame;
 
 /**
  * Created by chris on 7/2/16.
@@ -155,11 +156,10 @@ public class PlayerShip {
         }
 
     }
-    public void setLocation(float x, float y, int gameState) {
-        if (gameState != DownFallView.PLAYINGSCREEN || !alive) {
+    public void setLocation(float x, float y) {
+        if (!alive) {
             return;
         }
-
         this.notLinearX = x - width / 2;
         this.notLinearY = y - height / 2;
     }

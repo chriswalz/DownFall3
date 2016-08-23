@@ -29,7 +29,7 @@
         android:layout_height="match_parent"
         android:clickable="false"
         android:id="@+id/winLayer">
-        <android.support.v7.widget.AppCompatImageButton
+        <android.support.v7.widget.AppCompatImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_fast_forward_black_24dp"
@@ -40,12 +40,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/success_text"
-            android:textSize="48sp"
+            android:textSize="64sp"
             android:textStyle="bold"
             android:gravity="center"
-            android:textColor="#4CAF50"
+            android:textColor="#77A718"
             android:id="@+id/success"
-            android:shadowColor="#FFF"
+            android:shadowColor="#455745"
             android:shadowDx="1"
             android:shadowDy="1"
             android:shadowRadius="2"

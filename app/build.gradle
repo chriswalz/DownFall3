@@ -15,8 +15,8 @@ android {
         applicationId "com.walz.joltimate.downfall2"
         minSdkVersion 15
         targetSdkVersion 24
-        versionCode 53
-        versionName "2.0.8.7"
+        versionCode 54
+        versionName "2.0.9.0"
         signingConfig signingConfigs.DownFallKey2
     }
     buildTypes {
@@ -35,8 +35,8 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:24.1.1'
-    compile 'com.android.support:design:24.1.1'
+    compile 'com.android.support:appcompat-v7:24.2.0'
+    compile 'com.android.support:design:24.2.0'
     compile 'com.google.firebase:firebase-core:9.4.0'
     compile 'com.google.firebase:firebase-crash:9.4.0'
     compile 'com.google.firebase:firebase-ads:9.4.0'

@@ -17,7 +17,7 @@ import com.walz.joltimate.downfall2.Invaders.RainSprite;
 public class Levels {
     // Current Level
     public static int score;
-    public static int currentLevel = 18;
+    public static int currentLevel = 11;
     public static int highestLevel=40;
     public static int numberAttempts;
     public static int difficultyRating;
@@ -46,14 +46,17 @@ public class Levels {
     private static String requestAdAmountStr;
     private static String viewedWarningStr;
 
+    private static PlayerShip playerShip;
+
 
     //private static int i;
 
-    public static void init(Context context, final int screenX, int screenY) {
+    public static void init(Context context, final int screenX, int screenY, PlayerShip playerShipGame) {
         InvaderAbstract.BASE_SPEED = 1 * screenY / 160;
         screenWidth = screenX;
         screenHeight = screenY;
         levelTimeLimit = 500; // arbitrary # to fix divide by 0 error
+        playerShip = playerShipGame;
 
         debug = BuildConfig.DEBUG;
 
@@ -492,7 +495,7 @@ public class Levels {
                         startText = "Chapter 8\nVery Attractive";
                         difficultyRating = 2;
 
-                        invaders[0] = new GravitySprite(context, DownFallView.playerShip, 0, 0);
+                        invaders[0] = new GravitySprite(context, playerShip, 0, 0);
                     }
                 },
                 new Level() {
@@ -504,7 +507,7 @@ public class Levels {
                         startText = "Keep moving";
                         difficultyRating = 7;
 
-                        invaders[0] = new GravitySprite(context, DownFallView.playerShip, (float) (Levels.screenWidth * Math.random()), 0);
+                        invaders[0] = new GravitySprite(context, playerShip, (float) (Levels.screenWidth * Math.random()), 0);
                         invaders[1] = new BouncySprite(context, 0, 0, Levels.screenWidth);
                         invaders[2] = new BouncySprite(context, 0, -Levels.screenHeight/2, Levels.screenWidth);
                     }
@@ -517,9 +520,9 @@ public class Levels {
                         startText = "You're surrounded";
                         difficultyRating = 5;
 
-                        invaders[0] = new GravitySprite(context, DownFallView.playerShip, -GravitySprite.SIZE, 7*Levels.screenHeight/7);
-                        invaders[1] = new GravitySprite(context, DownFallView.playerShip, 2*Levels.screenWidth/4, 0*Levels.screenHeight/6);
-                        invaders[2] = new GravitySprite(context, DownFallView.playerShip, 5*Levels.screenWidth/5, 7*Levels.screenHeight/7);
+                        invaders[0] = new GravitySprite(context, playerShip, -GravitySprite.SIZE, 7*Levels.screenHeight/7);
+                        invaders[1] = new GravitySprite(context, playerShip, 2*Levels.screenWidth/4, 0*Levels.screenHeight/6);
+                        invaders[2] = new GravitySprite(context, playerShip, 5*Levels.screenWidth/5, 7*Levels.screenHeight/7);
                         invaders[3] = new BouncySprite(context, 0, 0, Levels.screenWidth);
                         invaders[4] = new BouncySprite(context, 0, -2*screenHeight, Levels.screenWidth);
                     }
@@ -534,7 +537,7 @@ public class Levels {
 
                         int diff = -6*screenHeight/10;
                         for (int i = 0; i < numInvaders; i++) {
-                            invaders[i] = new GravitySprite(context, DownFallView.playerShip, 2*Levels.screenWidth/4-(GravitySprite.SIZE/2), i * diff);
+                            invaders[i] = new GravitySprite(context, playerShip, 2*Levels.screenWidth/4-(GravitySprite.SIZE/2), i * diff);
                         }
                     }
                 },

@@ -1,19 +1,11 @@
 package com.walz.joltimate.downfall2;
 
 import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Typeface;
-import android.os.Vibrator;
-import android.support.v4.view.MotionEventCompat;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import com.walz.joltimate.downfall2.Invaders.BackgroundBlock;
-import com.walz.joltimate.downfall2.Invaders.InvaderAbstract;
+import com.walz.joltimate.downfall2.game.DownFallGame;
 
 // what customization options do i want for a level & invader
 // attach attributes to an invader
@@ -96,366 +88,42 @@ public class DownFallView extends SurfaceView implements Runnable{
     // This is our thread
     private Thread gameThread = null;
 
-    // Our SurfaceHolder to lock the surface before we draw our graphics
-    private SurfaceHolder ourHolder;
-
-    // A boolean which we will set and unset
-    // when the game is running- or not.
-    private volatile boolean playing;
-
-
-    // A Canvas and a Paint object
-    private Canvas canvas;
-    private Paint paint;
-
-    private Paint winCirclePaint;
-
-    private boolean triggerWinAnimation = false;
-    private boolean triggerLoseAnimation = false;
-    private int animationFrames = 0;
-
-    // This variable tracks the game frame rate
-    private int fps;
-
-    // This is used to help calculate the fps
-    private long timeThisFrame;
-    public static long numFrames;
-
-    // The players ship
-    public static PlayerShip playerShip; // Player
-
-    // Up to 60 invaders
-    private InvaderAbstract[] invaders = new InvaderAbstract[60];
-
-    // Background parellax
-    private BackgroundBlock[] backgroundBlocks = new BackgroundBlock[10];
-
-
-    private final String scoreText = "Score: ";
-
-
-    private int winCircleRadius = 0;
-
-    private Paint textPaint;
-    private Paint hudPaint;
-    private int alpha = 255;
-    private boolean increase = false;
-
-    private int gameState;
-    private final int STARTSCREEN = 0;
-    public static final int PLAYINGSCREEN = 1;
-    private final int WINSCREEN = 3;
-
-    private float distanceFromEdge;
-    private Vibrator v;
 
     private DownFallActivity downFallActivity;
+    private DownFallGame downFallGame;
 
-    // When the we initialize (call new()) on gameView
-    // This special constructor method runs
-    public DownFallView(Context context) {
-
-        // The next line of code asks the
-        // SurfaceView class to set up our object.
-        // How kind.
+    public DownFallView(Context context, int sizeX, int sizeY) {
         super(context);
-
-        // Make a globally available copy of the context so we can use it in another method
         this.context = context;
-
-        // Initialize ourHolder and paint objects
-        ourHolder = getHolder();
-        paint = new Paint();
-        v = (Vibrator) this.context.getSystemService(Context.VIBRATOR_SERVICE);
-        gameState = STARTSCREEN;
-
-        numFrames = 0;
-
-        textPaint = new Paint();
-        textPaint.setAntiAlias(true);
-        textPaint.setFakeBoldText(true);               // if you like bold
-        textPaint.setShadowLayer(5, 5, 5, Color.GRAY); // add shadow
-        textPaint.setTextAlign(Paint.Align.CENTER);
-
-        winCirclePaint = new Paint();
-        winCirclePaint.setColor(Color.argb(255, 162, 255, 159));
-
-        Typeface tf = Typeface.create("Roboto", Typeface.NORMAL);
-        hudPaint = new Paint();
-        hudPaint.setTypeface(tf);
-        hudPaint.setTextSize(60);
-        hudPaint.setColor(Color.argb(255, 40, 40, 60));
-
         downFallActivity = (DownFallActivity) context;
-
-        int size = Levels.screenHeight/15;
-        int distX = Levels.screenWidth - size;
-        int distY = Levels.screenHeight - size;
-        int sizeX;
-        int sizeY;
-        for(int i = 0; i < backgroundBlocks.length; i++){
-            sizeX = (int) (Math.random() * Levels.screenWidth/8 + size);
-            sizeY = (int) (Math.random() * Levels.screenWidth/8 + size);
-            backgroundBlocks[i] = new BackgroundBlock(context, (int)(Math.random()*Levels.screenWidth), (int)(Math.random()*Levels.screenHeight), sizeX, sizeY);
-        }
-
-        distanceFromEdge = 1;
-
-        prepareCurrentLevel();
+        downFallGame = new DownFallGame(context, downFallActivity, this, getHolder(), sizeX, sizeY);
+        downFallGame.prepareCurrentLevel();
 
     }
 
-    public void prepareCurrentLevel(){
-        // reset game
-        downFallActivity.setHelpTextView(Levels.startText);
-        numFrames = 0;
-        gameState = STARTSCREEN;
-        Levels.prepareLevel(playerShip, invaders, context);
-        if (playerShip == null) {
-            playerShip = new PlayerShip(context);
-            jumpDistance = (int) (1.5 * playerShip.width);
-        } else {
-            playerShip.reset();
-        }
 
-    }
 
     @Override
     public void run() {
-
-        while (playing) {
-
-
-            // Capture the current time in milliseconds in startFrameTime
-            long startFrameTime = System.currentTimeMillis();
-
-            updateBackground();
-            if(gameState == PLAYINGSCREEN){
-                updateForeground();
-            }
-            draw();
-            if (gameState == PLAYINGSCREEN) {
-                playerShip.update(); // for loseAnimation only
-            }
-
-            // Calculate the fps this frame
-            // We can then use the result to
-            // time animations and more.
-            timeThisFrame = System.currentTimeMillis() - startFrameTime;
-            if (timeThisFrame >= 1) {
-                fps = (int) (1000 / timeThisFrame);
-            }
-
-        }
-    }
-    private void draw() {
-        // Make sure our drawing surface is valid or we crash
-        if (ourHolder.getSurface().isValid()) {
-            // Lock the canvas ready to draw
-            canvas = ourHolder.lockCanvas();
-
-            //canvas.drawArc(20, 20, 100, 100, 90, 20, true, paint);
-            //canvas.
-
-
-            drawBackground();
-            if (triggerWinAnimation) {
-                drawWinAnimation();
-            }
-            drawForeground();
-            if (triggerLoseAnimation) {
-                drawLoseAnimation();
-            }
-            drawHUD();
-
-            // Draw everything to the screen
-            ourHolder.unlockCanvasAndPost(canvas);
-        }
-    }
-    private void drawWinAnimation() {
-        if (winCircleRadius < 4*Levels.screenHeight/4) {
-
-            canvas.drawCircle((float) playerShip.getCenterX(), (float) playerShip.getCenterY(), winCircleRadius, winCirclePaint);
-            winCircleRadius += Levels.screenHeight/40;
-            numFrames--;
-
-        } else {
-            downFallActivity.playWinSound();
-            winCircleRadius = 0;
-            triggerWinAnimation = false;
-            downFallActivity.fireWinEvent();
-            Levels.updateCurrentLevel(); ;
-            gameState = WINSCREEN; // paused = true;
-            prepareCurrentLevel();
-            downFallActivity.setToWinScreen();
-            downFallActivity.showInterstitialIfReady();
-        }
-    }
-    private void drawLoseAnimation() {
-        if (animationFrames < 40) {
-            playerShip.setAlive(false);
-            animationFrames++;
-        } else {
-            lose();
-        }
-
-    }
-    private void lose() {
-        Levels.saveNumberAttempts();
-        Levels.saveRequestAdAmount();
-        Levels.saveScore();
-        downFallActivity.fireLoseEvent(Math.round(numFrames*100/Levels.levelTimeLimit));
-        Levels.numberAttempts++;
-        triggerLoseAnimation = false;
-        animationFrames = 0;
-        gameState = STARTSCREEN; // paused = true;
-        downFallActivity.setToStartScreen();
-        downFallActivity.showInterstitialIfReady();
-    }
-    private void updateBackground() {
-        // Update all of the background
-        for(int i = 0; i < backgroundBlocks.length; i++){
-            backgroundBlocks[i].update(fps);
-        }
-
-    }
-    private void updateForeground() {
-
-        // Beat level
-        if (numFrames >= Levels.levelTimeLimit && !triggerLoseAnimation) {
-            // player won -> go to win screen
-            triggerWinAnimation = true;
-
-        }
-        numFrames++;
-
-        // Update all the invaders
-        for(int i = 0; i < Levels.numInvaders; i++){
-            // Move the next invader
-            if (invaders[i] == null) {
-                continue;
-            }
-            invaders[i].update(fps);
-
-        }
-
-
-        // Has an invader touched the player ship
-        for (int i = 0; i < Levels.numInvaders; i++) {
-            if (invaders[i] == null) {
-                continue;
-            }
-            // Lost level
-            if (invaders[i].isColliding(playerShip)) { //invaders[i].isVisible && RectF.intersects(invaders[i].hitbox, playerShip.hitbox
-                if (triggerWinAnimation) {
-                    break;
-                }
-                if (!triggerLoseAnimation) {
-                    downFallActivity.playLoseSound();
-                    v.vibrate(20);
-                }
-                triggerLoseAnimation = true;
-            }
-        }
-        if (numFrames % 50 == 0 && !triggerLoseAnimation) {
-            Levels.score += 1;
-        }
-
-
+        downFallGame.run();
     }
 
-    private void drawBackground() {
-        // Draw the background color
-        //canvas.drawColor(Color.argb(255, 26, 128, 182));
-        canvas.drawColor(Color.argb(255, 253, 234, 175));// rgb(253, 234, 175) Color.argb(255, 20, 20, 20));
-
-        // Draw the background blocks
-        for(int i = 0; i < backgroundBlocks.length; i++){
-            backgroundBlocks[i].draw(canvas);
-            if(backgroundBlocks[i].isVisible) {
-            }
-        }
-
-    }
-
-    private void drawForeground(){
-
-            // Choose the brush color for drawing
-            paint.setColor(Color.argb(255, 203, 232, 107));
-
-            // Now draw the player spaceship
-            //canvas.drawBitmap(playerShip.bitmap, playerShip.x, playerShip.y, paint);
-            playerShip.draw(canvas);
-
-
-            // Draw the invaders
-            for(int i = 0; i < Levels.numInvaders; i++){
-                if(invaders[i] != null && invaders[i].isVisible) {
-                    invaders[i].draw(canvas);
-                    //canvas.drawBitmap(invaders[i].getBitmap(), invaders[i].getX(), invaders[i].getY(), paint);
-                }
-            }
-
-    }
-    private void drawHUD() {
-        // Draw the score and remaining lives
-        // Change the brush color
-        paint.setColor(Color.argb(255,  249, 129, 0));
-        paint.setTextSize(20);
-        if (Levels.debug) {
-            canvas.drawText("gamestate"+gameState+": " + scoreText + Levels.score + " Invaders: " + Levels.numInvaders + " Levels: " + Levels.currentLevel + " FPS: " + fps + " Difficulty Rating: " + Levels.difficultyRating + " Highest Level: " + Levels.highestLevel, 10,50, paint);
-        }
-
-        hudPaint.setTextAlign(Paint.Align.LEFT);
-        if (gameState == PLAYINGSCREEN) {
-            canvas.drawText("" + (Math.round(numFrames*100/Levels.levelTimeLimit)) + "%" , 2 * Levels.screenWidth/100, 98 * Levels.screenHeight / 100, hudPaint);
-        } else {
-            canvas.drawText("Level: "+(Levels.currentLevel+1), 2 * Levels.screenWidth/100, 98 * Levels.screenHeight / 100, hudPaint);
-        }
-        hudPaint.setTextAlign(Paint.Align.RIGHT);
-        canvas.drawText(""+Levels.score, 98 * Levels.screenWidth/100, 98 * Levels.screenHeight / 100, hudPaint);
-
-        if (alpha >= 255) {
-            increase = false;
-        }
-        if (alpha < 150) {
-            increase = true;
-        }
-        if (increase) {
-            alpha += 2;
-        } else {
-            alpha -= 2;
-        }
-        if (gameState == STARTSCREEN) {
-            //textPaint.setColor(Color.argb(255, 255, 255, 255));
-            //textPaint.setTextSize(80);
-            //canvas.drawText(Levels.startText, Levels.screenWidth/2, 5*Levels.screenHeight/16, textPaint);
-            textPaint.setColor(Color.argb(alpha, 255, 255, 255));
-            textPaint.setTextSize(30);
-            //canvas.drawText("Tap to Start", Levels.screenWidth/2, 3*Levels.screenHeight/5, textPaint);
-        }
-
-    }
 
     // If DownFallActivity is paused/stopped
     // shutdown our thread.
     public void pause() {
-        playing = false;
-        if (gameState == PLAYINGSCREEN) {
-            lose();
-        }
+        downFallGame.pause();
         try {
             gameThread.join();
         } catch (InterruptedException e) {
             Log.e("Error:", "joining thread");
         }
-
     }
 
     // If DownFallActivity is started then
     // start our thread.
     public void resume() {
-        playing = true;
+        downFallGame.resume();
         gameThread = new Thread(this);
         gameThread.start();
     }
@@ -463,73 +131,14 @@ public class DownFallView extends SurfaceView implements Runnable{
     // The SurfaceView class implements onTouchListener
     // So we can override this method and detect screen touches.
 
-    private float pX;
-    private float pY;
 
-    private int jumpDistance;
-    private int index;
 
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent) {
-        index = motionEvent.getPointerCount() - 1; //MotionEventCompat.getActionIndex(motionEvent);
-
-        if (motionEvent.getPointerCount() > 1) {
-            // the responding View or Activity.
-            pX = (int)MotionEventCompat.getX(motionEvent, index);
-            pY = (int)MotionEventCompat.getY(motionEvent, index);
-
-        } else {
-
-            pX = (int)MotionEventCompat.getX(motionEvent, index);
-            pY = (int)MotionEventCompat.getY(motionEvent, index);
-        }
-
-
-       // pX = motionEvent.getX(motionEvent.getActionIndex());
-        //pY = motionEvent.getY(motionEvent.getActionIndex());
-
-        // only have error touching prevention for bottom 3 / 8;
-        if (pY > 3 * Levels.screenHeight && (pX < distanceFromEdge || pY < distanceFromEdge || pX > Levels.screenWidth - distanceFromEdge || pY > Levels.screenHeight - distanceFromEdge)) {
-        } else {
-            /*if (pX - playerShip.getCenterX() > jumpDistance || playerShip.getCenterX() - pX > jumpDistance || pY - playerShip.getCenterY() > jumpDistance || playerShip.getCenterY() - pY > jumpDistance) {
-                if (playerShip.getAlive()) {
-
-                }
-            } */
-            playerShip.setLocation(pX, pY, gameState);
-        }
-
-
-
-
-        switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
-
-            // Player has touched the screen
-
-            case MotionEvent.ACTION_DOWN:
-                if (gameState == STARTSCREEN) {
-                    if (pY > Levels.screenHeight/5 && pY < 4*Levels.screenHeight/5) {
-                        if (downFallActivity.shouldPrepareLevelAgain()) {
-                            prepareCurrentLevel();
-                        }
-                        downFallActivity.setToPlayingScreen();
-                        gameState = PLAYINGSCREEN;
-                    }
-                }
-                if (gameState == WINSCREEN) {
-                    downFallActivity.setToStartScreen();
-                    gameState = STARTSCREEN;
-                }
-                if (gameState == PLAYINGSCREEN && playerShip.getAlive()) {
-                    v.vibrate(1);
-                    downFallActivity.playTeleportSound();
-                }
-                // TODO research motionEvent.getPrecision
-
-                break;
-            default:
-                break;
-        }
+        downFallGame.touchEvent(motionEvent);
         return true;
+    }
+    public DownFallGame getDownFallGame() {
+        return downFallGame;
     }
 }
