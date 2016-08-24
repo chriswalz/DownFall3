@@ -1,12 +1,13 @@
-package com.walz.joltimate.downfall2.Invaders;
+package com.walz.joltimate.downfall2.animations;
 
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.RectF;
 
-import com.walz.joltimate.downfall2.PlayerShip;
+import com.walz.joltimate.downfall2.Invaders.MultRectAbstract;
+import com.walz.joltimate.downfall2.game.PlayerShip;
 
-public class DeathAnimation extends MultRectAbstract{
+public class DeathAnimation extends MultRectAbstract {
 
     private int length;
     private int lenSep;

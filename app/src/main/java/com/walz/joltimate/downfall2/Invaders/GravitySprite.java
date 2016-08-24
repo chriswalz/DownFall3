@@ -4,8 +4,8 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.RectF;
 
-import com.walz.joltimate.downfall2.Levels;
-import com.walz.joltimate.downfall2.PlayerShip;
+import com.walz.joltimate.downfall2.data.DownFallStorage;
+import com.walz.joltimate.downfall2.game.PlayerShip;
 
 public class GravitySprite extends OneRectAbstract{
     private int centerX;
@@ -18,7 +18,7 @@ public class GravitySprite extends OneRectAbstract{
 
     private PlayerShip ship;
 
-    public static int SIZE = Levels.screenWidth/12;
+    public static int SIZE = DownFallStorage.screenWidth/12;
 
     public GravitySprite(Context context, PlayerShip ship, float xVal, float yVal) {
 
@@ -30,7 +30,7 @@ public class GravitySprite extends OneRectAbstract{
         this.x = xVal;
         this.y = yVal - height;
 
-        maxSpeed = Levels.screenHeight/80;
+        maxSpeed = DownFallStorage.screenHeight/80;
 
         xVelocity = baseSpeed;
         rect.top = y;

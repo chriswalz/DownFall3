@@ -2,13 +2,12 @@ package com.walz.joltimate.downfall2.Invaders;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.RectF;
 
-import com.walz.joltimate.downfall2.Levels;
-import com.walz.joltimate.downfall2.PlayerShip;
+import com.walz.joltimate.downfall2.data.DownFallStorage;
+import com.walz.joltimate.downfall2.game.PlayerShip;
 
 public class BackgroundBlock extends OneRectAbstract{
-    int xSpeed;
+    private int xSpeed;
 
     public BackgroundBlock(Context context, float xVal, float yVal, int width, int height) {
 
@@ -26,17 +25,17 @@ public class BackgroundBlock extends OneRectAbstract{
     }
 
     public void update(int fps) {
-        if (y > Levels.screenHeight) {
+        if (y > DownFallStorage.screenHeight) {
             y = -height;
         }
         if (y < -height) {
-            y = Levels.screenHeight;
+            y = DownFallStorage.screenHeight;
         }
-        if (x > Levels.screenWidth) {
+        if (x > DownFallStorage.screenWidth) {
             x = -width;
         }
         if (x < -width) {
-            x = Levels.screenWidth;
+            x = DownFallStorage.screenWidth;
         }
         y += yVelocity;
         x += xSpeed;
@@ -48,7 +47,11 @@ public class BackgroundBlock extends OneRectAbstract{
         rect.right = x + width;
     }
     public void draw(Canvas c) {
-        c.drawRect(rect, backgroundBlockPaint);
+        if (rect.top > DownFallStorage.screenHeight || rect.bottom < 0 || rect.right > DownFallStorage.screenWidth || rect.left < 0) {
+
+        } else {
+            c.drawRect(rect, backgroundBlockPaint);
+        }
     }
 
     @Override

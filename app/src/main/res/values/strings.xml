@@ -20,6 +20,7 @@
     <string name="invitation_title" translatable="false">@string/app_name</string>
     <string name="viewed_warning" translatable="false">viewedWarning</string>
 
+
     <!-- <string name="invitation_cta">Play</string> -->
     <string name="invitation_deep_link" translatable="false">https://eu637.app.goo.gl/naxz</string>
 </resources>

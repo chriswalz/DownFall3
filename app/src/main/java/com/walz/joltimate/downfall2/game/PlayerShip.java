@@ -1,4 +1,4 @@
-package com.walz.joltimate.downfall2;
+package com.walz.joltimate.downfall2.game;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -6,8 +6,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 
-import com.walz.joltimate.downfall2.Invaders.DeathAnimation;
-import com.walz.joltimate.downfall2.game.DownFallGame;
+import com.walz.joltimate.downfall2.animations.DeathAnimation;
+import com.walz.joltimate.downfall2.data.DownFallStorage;
 
 /**
  * Created by chris on 7/2/16.
@@ -45,6 +45,8 @@ public class PlayerShip {
 
     private float offset;
 
+    private int numFrames = 0;
+
     static {
         paint = new Paint();
         paint.setColor(Color.argb(255,23, 144, 245 )); //rgb(23, 144, 244)
@@ -67,16 +69,16 @@ public class PlayerShip {
         rectDraw = new RectF();
         hitbox = new RectF();
 
-        width = Levels.screenWidth/5;
-        height = Levels.screenWidth/5;
+        width = DownFallStorage.screenWidth/5;
+        height = DownFallStorage.screenWidth/5;
 
         offset = width/60;
 
         // Start ship in roughly the screen centre
-        x = (Levels.screenWidth / 2) - width/2;
-        notLinearX = (Levels.screenWidth / 2) - width/2;
-        y = 6*Levels.screenHeight / 9 ;
-        notLinearY = 6*Levels.screenHeight / 9 ;
+        x = (DownFallStorage.screenWidth / 2) - width/2;
+        notLinearX = (DownFallStorage.screenWidth / 2) - width/2;
+        y = 6* DownFallStorage.screenHeight / 9 ;
+        notLinearY = 6* DownFallStorage.screenHeight / 9 ;
 
         hitbox.top = this.y + offset;
         hitbox.bottom = this.y + height - offset;
@@ -96,10 +98,10 @@ public class PlayerShip {
     }
     public void reset() {
         // Start ship in roughly the screen centre
-        notLinearX = (Levels.screenWidth / 2) - width/2;
-        notLinearY = 6*Levels.screenHeight / 9 ;
-        x = (Levels.screenWidth / 2) - width/2;
-        y = 6*Levels.screenHeight / 9 ;
+        notLinearX = (DownFallStorage.screenWidth / 2) - width/2;
+        notLinearY = 6* DownFallStorage.screenHeight / 9 ;
+        x = (DownFallStorage.screenWidth / 2) - width/2;
+        y = 6* DownFallStorage.screenHeight / 9 ;
 
         hitbox.top = this.y + offset;
         hitbox.bottom = this.y + height - offset;
@@ -112,6 +114,8 @@ public class PlayerShip {
         rectDraw.right = this.x + width;
 
         alive = true;
+
+        numFrames = 0;
 
         deathAnimation.reset();
 
@@ -138,9 +142,9 @@ public class PlayerShip {
             if (curve <= width/10 ) {
                 increase = true;
             }
-            if (increase) {
+            if (increase && numFrames % 3 == 0) {
                 curve += 1;
-            } else {
+            } else if (!increase && numFrames % 3 == 0) {
                 curve -= 1;
             }
             int ratio = 4;
@@ -183,6 +187,8 @@ public class PlayerShip {
             rectDraw.right = this.x + width;
 
             deathAnimation.setOrigin(x, y);
+
+            numFrames++;
         }
     }
     public float getCenterX() {

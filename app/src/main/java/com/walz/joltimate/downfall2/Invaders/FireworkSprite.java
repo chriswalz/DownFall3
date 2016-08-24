@@ -4,8 +4,8 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.RectF;
 
-import com.walz.joltimate.downfall2.Levels;
-import com.walz.joltimate.downfall2.PlayerShip;
+import com.walz.joltimate.downfall2.data.DownFallStorage;
+import com.walz.joltimate.downfall2.game.PlayerShip;
 
 public class FireworkSprite extends MultRectAbstract{
 
@@ -29,8 +29,8 @@ public class FireworkSprite extends MultRectAbstract{
 
         this.lenSep = length/4;
 
-        widthR = Levels.screenWidth / 40;
-        heightR = Levels.screenWidth / 40;
+        widthR = DownFallStorage.screenWidth / 40;
+        heightR = DownFallStorage.screenWidth / 40;
 
         this.x = x;
         this.y = -widthR;
@@ -41,7 +41,7 @@ public class FireworkSprite extends MultRectAbstract{
         xRandIncrement = new int[length];
         yRandIncrement = new int[length];
 
-        this.explosionHeight = (int) (Math.random() *(Levels.screenHeight/4 + (3 *Levels.screenHeight/ 4)) );
+        this.explosionHeight = (int) (Math.random() *(DownFallStorage.screenHeight/4 + (3 * DownFallStorage.screenHeight/ 4)) );
 
 
 

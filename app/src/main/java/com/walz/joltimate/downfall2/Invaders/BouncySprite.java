@@ -5,8 +5,8 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.RectF;
 
-import com.walz.joltimate.downfall2.Levels;
-import com.walz.joltimate.downfall2.PlayerShip;
+import com.walz.joltimate.downfall2.data.DownFallStorage;
+import com.walz.joltimate.downfall2.game.PlayerShip;
 
 public class BouncySprite extends OneRectAbstract {
     private boolean goDown = true;
@@ -17,7 +17,7 @@ public class BouncySprite extends OneRectAbstract {
     public BouncySprite(Context context, float xVal, float yVal, int width) {
 
         this.width = width;
-        this.height = Levels.screenHeight/20;
+        this.height = DownFallStorage.screenHeight/20;
 
         this.x = xVal;
         this.y = yVal - height;
@@ -39,16 +39,16 @@ public class BouncySprite extends OneRectAbstract {
         super.update(fps);
         if (goDown){
             y += yVelocity;
-            if(y >= (Levels.screenHeight-height) ){
+            if(y >= (DownFallStorage.screenHeight-height) ){
                 goDown = false;
             }
         } else {
             y -= yVelocity;
         }
-        if (width != Levels.screenWidth) {
+        if (width != DownFallStorage.screenWidth) {
             if (goRight){
                 x += xVelocity;
-                if(x >= Levels.screenWidth - width ){
+                if(x >= DownFallStorage.screenWidth - width ){
                     goRight = false;
                 }
             } else {
@@ -67,7 +67,11 @@ public class BouncySprite extends OneRectAbstract {
     }
     public void draw(Canvas c) {
         super.draw(c);
-        c.drawRect(rect, invaderPaint);
+        if (rect.top > DownFallStorage.screenHeight || rect.bottom < 0 || rect.right > DownFallStorage.screenWidth || rect.left < 0) {
+
+        } else {
+            c.drawRect(rect, invaderPaint);
+        }
     }
 
     @Override

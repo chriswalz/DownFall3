@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.support.v4.view.MotionEventCompat;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 
@@ -14,8 +13,9 @@ import com.walz.joltimate.downfall2.DownFallActivity;
 import com.walz.joltimate.downfall2.DownFallView;
 import com.walz.joltimate.downfall2.Invaders.BackgroundBlock;
 import com.walz.joltimate.downfall2.Invaders.InvaderAbstract;
-import com.walz.joltimate.downfall2.Levels;
-import com.walz.joltimate.downfall2.PlayerShip;
+import com.walz.joltimate.downfall2.animations.LoseAnimation;
+import com.walz.joltimate.downfall2.animations.WinAnimation;
+import com.walz.joltimate.downfall2.data.DownFallStorage;
 
 /**
  * Created by chris on 8/22/16.
@@ -25,14 +25,14 @@ public class DownFallGame {
     public static long numFrames;
 
     // The players ship
-    public static PlayerShip playerShip; // Player
+    public PlayerShip playerShip; // Player
 
 
     // Up to 60 invaders
     private InvaderAbstract[] invaders = new InvaderAbstract[60];
 
     // Background parellax
-    private BackgroundBlock[] backgroundBlocks = new BackgroundBlock[10];
+    private BackgroundBlock[] backgroundBlocks = new BackgroundBlock[5];
 
     private int gameState;
     private final int STARTSCREEN = 0;
@@ -41,45 +41,47 @@ public class DownFallGame {
 
     // A Canvas and a Paint object
     private Canvas canvas;
-    private DownFallActivity downFallActivity;
+    private final DownFallActivity downFallActivity;
     private DownFallView downFallView;
     private Context context;
     private SurfaceHolder ourHolder;
+    private Levels levels;
 
     // Move out of this object??, make levels non-static?
     private int fps;
     private long timeThisFrame;
-    private boolean triggerWinAnimation = false;
-    private boolean triggerLoseAnimation = false;
-    private int animationFrames = 0;
 
     private Paint paint;
-    private Paint winCirclePaint;
+
     private final String scoreText = "Score: ";
-    private int winCircleRadius = 0;
+
     private Paint textPaint;
     private Paint hudPaint;
-    private int alpha = 255;
-    private boolean increase = false;
+
+    private WinAnimation winAnimation;
+    private LoseAnimation loseAnimation;
 
 
-    public DownFallGame(Context context, DownFallActivity downFallActivity, DownFallView downFallView, SurfaceHolder ourHolder, int widthX, int widthY) {
+
+    public DownFallGame(Context context, final DownFallActivity downFallActivity, DownFallView downFallView, SurfaceHolder ourHolder, final int widthX, int widthY) {
         this.downFallActivity = downFallActivity;
         this.downFallView = downFallView;
         this.context = context;
 
-        Levels.init(context, widthX, widthY, playerShip);
+        DownFallStorage.init(context, widthX, widthY);
+        playerShip = new PlayerShip(context);
+        levels = new Levels(playerShip);
 
         gameState = STARTSCREEN;
         numFrames = 0;
 
-        int size = Levels.screenHeight/15;
+        int size = DownFallStorage.screenHeight/15;
         int sizeX;
         int sizeY;
         for(int i = 0; i < backgroundBlocks.length; i++){
-            sizeX = (int) (Math.random() * Levels.screenWidth/8 + size);
-            sizeY = (int) (Math.random() * Levels.screenWidth/8 + size);
-            backgroundBlocks[i] = new BackgroundBlock(context, (int)(Math.random()*Levels.screenWidth), (int)(Math.random()*Levels.screenHeight), sizeX, sizeY);
+            sizeX = (int) (Math.random() * DownFallStorage.screenWidth/12 + size);
+            sizeY = (int) (Math.random() * DownFallStorage.screenWidth/12 + size);
+            backgroundBlocks[i] = new BackgroundBlock(context, (int)(Math.random()* DownFallStorage.screenWidth), (int)(Math.random()* DownFallStorage.screenHeight), sizeX, sizeY);
         }
 
         this.ourHolder = ourHolder;
@@ -91,14 +93,40 @@ public class DownFallGame {
         textPaint.setShadowLayer(5, 5, 5, Color.GRAY); // add shadow
         textPaint.setTextAlign(Paint.Align.CENTER);
 
-        winCirclePaint = new Paint();
-        winCirclePaint.setColor(Color.argb(255, 162, 255, 159));
-
         Typeface tf = Typeface.create("Roboto", Typeface.NORMAL);
         hudPaint = new Paint();
         hudPaint.setTypeface(tf);
         hudPaint.setTextSize(60);
         hudPaint.setColor(Color.argb(255, 40, 40, 60));
+
+        winAnimation = new WinAnimation() {
+            @Override
+            public void onComplete() {
+                win();
+            }
+        };
+        loseAnimation = new LoseAnimation() {
+            @Override
+            public void onComplete() {
+                lose();
+            }
+        };
+    }
+    private void win() {
+        downFallActivity.playWinSound();
+        downFallActivity.fireWinEvent();
+        levels.updateCurrentLevel(); ;
+        prepareCurrentLevel();
+        gameState = WINSCREEN;
+        downFallActivity.setToWinScreen();
+        downFallActivity.showInterstitialIfReady();
+    }
+    private void lose() {
+        downFallActivity.fireLoseEvent(Math.round(numFrames*100/ levels.getCurrentLevel().levelTimeLimit));
+        DownFallStorage.numberAttempts++;
+        gameState = STARTSCREEN; // paused = true;
+        downFallActivity.setToStartScreen();
+        downFallActivity.showInterstitialIfReady();
     }
     public void run() {
         while (playing) {
@@ -127,16 +155,11 @@ public class DownFallGame {
         }
     }
     public void prepareCurrentLevel(){
-        // reset game
-        downFallActivity.setHelpTextView(Levels.startText);
         numFrames = 0;
         gameState = STARTSCREEN;
-        Levels.prepareLevel(playerShip, invaders, context);
-        if (playerShip == null) {
-            playerShip = new PlayerShip(context);
-        } else {
-            playerShip.reset();
-        }
+        levels.prepareLevel(invaders, context);
+        playerShip.reset();
+        downFallActivity.setHelpTextView(getCurrentLevel().startText);
     }
     private void draw() {
         // Make sure our drawing surface is valid or we crash
@@ -149,59 +172,18 @@ public class DownFallGame {
 
 
             drawBackground();
-            if (triggerWinAnimation) {
-                drawWinAnimation();
-            }
+            winAnimation.draw(canvas, playerShip);
             drawForeground();
-            if (triggerLoseAnimation) {
-                drawLoseAnimation();
-            }
+            loseAnimation.draw(playerShip);
             drawHUD();
 
             // Draw everything to the screen
             ourHolder.unlockCanvasAndPost(canvas);
         }
     }
-    private void drawWinAnimation() {
-        if (winCircleRadius < 4*Levels.screenHeight/4) {
 
-            canvas.drawCircle((float) playerShip.getCenterX(), (float) playerShip.getCenterY(), winCircleRadius, winCirclePaint);
-            winCircleRadius += Levels.screenHeight/40;
-            numFrames--;
 
-        } else {
-            downFallActivity.playWinSound();
-            winCircleRadius = 0;
-            triggerWinAnimation = false;
-            downFallActivity.fireWinEvent();
-            Levels.updateCurrentLevel(); ;
-            gameState = WINSCREEN; // paused = true;
-            prepareCurrentLevel();
-            downFallActivity.setToWinScreen();
-            downFallActivity.showInterstitialIfReady();
-        }
-    }
-    private void drawLoseAnimation() {
-        if (animationFrames < 40) {
-            playerShip.setAlive(false);
-            animationFrames++;
-        } else {
-            lose();
-        }
 
-    }
-    private void lose() {
-        Levels.saveNumberAttempts();
-        Levels.saveRequestAdAmount();
-        Levels.saveScore();
-        downFallActivity.fireLoseEvent(Math.round(numFrames*100/Levels.levelTimeLimit));
-        Levels.numberAttempts++;
-        triggerLoseAnimation = false;
-        animationFrames = 0;
-        gameState = STARTSCREEN; // paused = true;
-        downFallActivity.setToStartScreen();
-        downFallActivity.showInterstitialIfReady();
-    }
     private void updateBackground() {
         // Update all of the background
         for(int i = 0; i < backgroundBlocks.length; i++){
@@ -212,15 +194,18 @@ public class DownFallGame {
     private void updateForeground() {
 
         // Beat level
-        if (numFrames >= Levels.levelTimeLimit && !triggerLoseAnimation) {
+        if (numFrames >= levels.getCurrentLevel().levelTimeLimit && !loseAnimation.isAnimating()) {
             // player won -> go to win screen
-            triggerWinAnimation = true;
+            winAnimation.start();
+
 
         }
-        numFrames++;
+        if (!winAnimation.isAnimating()) {
+            numFrames++;
+        }
 
         // Update all the invaders
-        for(int i = 0; i < Levels.numInvaders; i++){
+        for(int i = 0; i < getCurrentLevel().numInvaders; i++){
             // Move the next invader
             if (invaders[i] == null) {
                 continue;
@@ -231,23 +216,23 @@ public class DownFallGame {
 
 
         // Has an invader touched the player ship
-        for (int i = 0; i < Levels.numInvaders; i++) {
+        for (int i = 0; i < getCurrentLevel().numInvaders; i++) {
             if (invaders[i] == null) {
                 continue;
             }
             // Lost level
             if (invaders[i].isColliding(playerShip)) { //invaders[i].isVisible && RectF.intersects(invaders[i].hitbox, playerShip.hitbox
-                if (triggerWinAnimation) {
+                if (winAnimation.isAnimating()) {
                     break;
                 }
-                if (!triggerLoseAnimation) {
+                if (!loseAnimation.isAnimating()) {
                     downFallActivity.playLoseSound();
                 }
-                triggerLoseAnimation = true;
+                loseAnimation.start();
             }
         }
-        if (numFrames % 50 == 0 && !triggerLoseAnimation) {
-            Levels.score += 1;
+        if (numFrames % 50 == 0 && !loseAnimation.isAnimating()) {
+            DownFallStorage.score += 1;
         }
 
 
@@ -278,7 +263,7 @@ public class DownFallGame {
 
 
         // Draw the invaders
-        for(int i = 0; i < Levels.numInvaders; i++){
+        for(int i = 0; i < getCurrentLevel().numInvaders; i++){
             if(invaders[i] != null && invaders[i].isVisible) {
                 invaders[i].draw(canvas);
                 //canvas.drawBitmap(invaders[i].getBitmap(), invaders[i].getX(), invaders[i].getY(), paint);
@@ -291,38 +276,18 @@ public class DownFallGame {
         // Change the brush color
         paint.setColor(Color.argb(255,  249, 129, 0));
         paint.setTextSize(20);
-        if (Levels.debug) {
-            canvas.drawText("gamestate"+gameState+": " + scoreText + Levels.score + " Invaders: " + Levels.numInvaders + " Levels: " + Levels.currentLevel + " FPS: " + fps + " Difficulty Rating: " + Levels.difficultyRating + " Highest Level: " + Levels.highestLevel, 10,50, paint);
+        if (DownFallStorage.debug) {
+            canvas.drawText(levels.getCurrentLevel().startText+"  levelTimeLimit: " + levels.getCurrentLevel().levelTimeLimit+ " gamestate"+gameState+": " + scoreText + DownFallStorage.score + " Invaders: " + getCurrentLevel().numInvaders + " Levels: " + DownFallStorage.currentLevel + " FPS: " + fps + " Difficulty Rating: " + getCurrentLevel().difficultyRating + " Highest Level: " + DownFallStorage.highestLevel, 10,50, paint);
         }
 
         hudPaint.setTextAlign(Paint.Align.LEFT);
         if (gameState == PLAYINGSCREEN) {
-            canvas.drawText("" + (Math.round(numFrames*100/Levels.levelTimeLimit)) + "%" , 2 * Levels.screenWidth/100, 98 * Levels.screenHeight / 100, hudPaint);
+            canvas.drawText("" + (Math.round(numFrames*100/ (levels.getCurrentLevel().levelTimeLimit))) + "%" , 2 * DownFallStorage.screenWidth/100, 98 * DownFallStorage.screenHeight / 100, hudPaint);
         } else {
-            canvas.drawText("Level: "+(Levels.currentLevel+1), 2 * Levels.screenWidth/100, 98 * Levels.screenHeight / 100, hudPaint);
+            canvas.drawText("Level: "+(DownFallStorage.currentLevel+1), 2 * DownFallStorage.screenWidth/100, 98 * DownFallStorage.screenHeight / 100, hudPaint);
         }
         hudPaint.setTextAlign(Paint.Align.RIGHT);
-        canvas.drawText(""+Levels.score, 98 * Levels.screenWidth/100, 98 * Levels.screenHeight / 100, hudPaint);
-
-        if (alpha >= 255) {
-            increase = false;
-        }
-        if (alpha < 150) {
-            increase = true;
-        }
-        if (increase) {
-            alpha += 2;
-        } else {
-            alpha -= 2;
-        }
-        if (gameState == STARTSCREEN) {
-            //textPaint.setColor(Color.argb(255, 255, 255, 255));
-            //textPaint.setTextSize(80);
-            //canvas.drawText(Levels.startText, Levels.screenWidth/2, 5*Levels.screenHeight/16, textPaint);
-            textPaint.setColor(Color.argb(alpha, 255, 255, 255));
-            textPaint.setTextSize(30);
-            //canvas.drawText("Tap to Start", Levels.screenWidth/2, 3*Levels.screenHeight/5, textPaint);
-        }
+        canvas.drawText(""+ DownFallStorage.score, 98 * DownFallStorage.screenWidth/100, 98 * DownFallStorage.screenHeight / 100, hudPaint);
 
     }
 
@@ -349,7 +314,7 @@ public class DownFallGame {
         //pY = motionEvent.getY(motionEvent.getActionIndex());
 
         // only have error touching prevention for bottom 3 / 8;
-        if (pY > (3*Levels.screenHeight/4) && (pX < distanceFromEdge || pY < distanceFromEdge || pX > Levels.screenWidth - distanceFromEdge || pY > Levels.screenHeight - distanceFromEdge)) {
+        if (pY > (3* DownFallStorage.screenHeight/4) && (pX < distanceFromEdge || pY < distanceFromEdge || pX > DownFallStorage.screenWidth - distanceFromEdge || pY > DownFallStorage.screenHeight - distanceFromEdge)) {
         } else {
             if (gameState == PLAYINGSCREEN) {
                 playerShip.setLocation(pX, pY);
@@ -363,7 +328,7 @@ public class DownFallGame {
             case MotionEvent.ACTION_DOWN:
                 //Log.d("touch", ""+pX + pY + " height: "+Levels.screenHeight);
                 if (gameState == STARTSCREEN) {
-                    if (pY > Levels.screenHeight/5 && pY < 4*Levels.screenHeight/5) {
+                    if (pY > DownFallStorage.screenHeight/5 && pY < 4* DownFallStorage.screenHeight/5) {
                         if (downFallActivity.shouldPrepareLevelAgain()) {
                             prepareCurrentLevel();
                         }
@@ -390,9 +355,13 @@ public class DownFallGame {
         if (gameState == PLAYINGSCREEN) {
             lose();
         }
+        DownFallStorage.saveEverything();
     }
     public void resume() {
         playing = true;
+    }
+    public Level getCurrentLevel() {
+        return levels.getCurrentLevel();
     }
 
 }

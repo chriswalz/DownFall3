@@ -3,9 +3,8 @@ package com.walz.joltimate.downfall2.Invaders;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.RectF;
 
-import com.walz.joltimate.downfall2.PlayerShip;
+import com.walz.joltimate.downfall2.game.PlayerShip;
 
 /**
  * Created by chris on 7/2/16.

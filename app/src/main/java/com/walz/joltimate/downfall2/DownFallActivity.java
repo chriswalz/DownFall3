@@ -20,8 +20,9 @@ import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutCompat;
-import android.util.Log;
 import android.view.Display;
+import android.view.KeyCharacterMap;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewConfiguration;
@@ -35,9 +36,12 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.walz.joltimate.downfall2.data.DownFallStorage;
+import com.walz.joltimate.downfall2.game.DownFallGame;
+import com.walz.joltimate.downfall2.game.Levels;
 
 public class DownFallActivity extends AppCompatActivity {
-    public final static int REQUEST_INVITE = 100;
+
     // downFallView will be the view of the game
     // It will also hold the logic of the game
     // and respond to screen touches as well
@@ -48,7 +52,6 @@ public class DownFallActivity extends AppCompatActivity {
     //RelativeLayout retryLayer;
 
     private RelativeLayout winLayer;
-    private AppCompatImageView winButton;
 
     private LinearLayoutCompat supportMenu;
     private AppCompatImageView playButton;
@@ -97,7 +100,7 @@ public class DownFallActivity extends AppCompatActivity {
         display.getSize(size);
         Resources resources = getResources();
         int navSize = 0;
-        if (!ViewConfiguration.get(getApplicationContext()).hasPermanentMenuKey()) {
+        if (!ViewConfiguration.get(getApplicationContext()).hasPermanentMenuKey() && !KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK)) {
             int resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
             if (resourceId > 0) {
                 navSize = resources.getDimensionPixelSize(resourceId);
@@ -137,7 +140,7 @@ public class DownFallActivity extends AppCompatActivity {
 
         levelPicker = (NumberPicker) secondLayerView.findViewById(R.id.level_picker);
         levelPicker.setMinValue(0);
-        levelPicker.setMaxValue(Levels.highestLevel);
+        levelPicker.setMaxValue(DownFallStorage.highestLevel);
         levelPicker.setOnScrollListener(new NumberPicker.OnScrollListener() {
             @Override
             public void onScrollStateChange(NumberPicker numberPicker, int i) {
@@ -189,10 +192,10 @@ public class DownFallActivity extends AppCompatActivity {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (Levels.highestLevel > Levels.currentLevel) {
+                if (DownFallStorage.highestLevel > DownFallStorage.currentLevel) {
                     levelManuallyChanged = true;
-                    helpTextView.setText("");
-                    Levels.currentLevel++;
+                    DownFallStorage.currentLevel++;
+                    setHelpTextView(downFallView.getDownFallGame().getCurrentLevel().startText);
                 }
             }
         });
@@ -200,27 +203,24 @@ public class DownFallActivity extends AppCompatActivity {
         subtractButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (Levels.currentLevel > 0) {
+                if (DownFallStorage.currentLevel > 0) {
                     levelManuallyChanged = true;
-                    helpTextView.setText("");
-                    Levels.currentLevel--;
+                    DownFallStorage.currentLevel--;
+                    setHelpTextView(downFallView.getDownFallGame().getCurrentLevel().startText);
                 }
             }
         });
 
 
         winLayer = (RelativeLayout) secondLayerView.findViewById(R.id.winLayer);
-        winButton = (AppCompatImageView) secondLayerView.findViewById(R.id.next_button);
-
 
         dismissWarningButton = (AppCompatButton) secondLayerView.findViewById(R.id.warning_button);
-        if (!Levels.viewedWarning) {
+        if (!DownFallStorage.viewedWarning) {
             dismissWarningButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     secondLayerView.findViewById(R.id.warning_layout).setVisibility(View.GONE);
-                    Levels.viewedWarning = true;
-                    Levels.saveViewedWarning();
+                    DownFallStorage.viewedWarning = true;
                 }
             });
         } else {
@@ -229,7 +229,7 @@ public class DownFallActivity extends AppCompatActivity {
 
         setToStartScreen();
 
-        if (!Levels.debug) {
+        if (!DownFallStorage.debug) {
             mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
             mFirebaseAnalytics.setAnalyticsCollectionEnabled(true);
             MobileAds.initialize(getApplicationContext(), getString(R.string.admob_app_id));
@@ -267,7 +267,7 @@ public class DownFallActivity extends AppCompatActivity {
         mPlayer.setLooping(true);
         mPlayer.setVolume(0.25f, 0.25f);
 
-        if (!Levels.debug) {
+        if (!DownFallStorage.debug) {
             FirebaseMessaging.getInstance().subscribeToTopic("downfall");
         } else {
             FirebaseMessaging.getInstance().subscribeToTopic("downfalldebug");
@@ -283,11 +283,10 @@ public class DownFallActivity extends AppCompatActivity {
         sounds.play(soundIds[3], 0.25f, 0.25f, 0, 0, 1);
     }
     public void playTeleportSound() {
-        vibrator.vibrate(1);
         sounds.play(soundIds[1], 0.15f, 0.15f, 0, 0, 1);
     }
     public void requestNewInterstitial() {
-        if (!Levels.debug) {
+        if (!DownFallStorage.debug) {
             adRequest = new AdRequest.Builder().build();
             mInterstitialAd.loadAd(adRequest);
         }
@@ -302,7 +301,7 @@ public class DownFallActivity extends AppCompatActivity {
     }
     public void showInterstitialIfReady() {
 
-        if (!Levels.debug && Levels.requestAdAmount % 12 == 0 && Levels.highestLevel >= 8) {
+        if (!DownFallStorage.debug && DownFallStorage.requestAdAmount % 12 == 0 && DownFallStorage.highestLevel >= 8) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -312,7 +311,7 @@ public class DownFallActivity extends AppCompatActivity {
                 }
             });
         }
-        Levels.requestAdAmount++;
+        DownFallStorage.requestAdAmount++;
     }
 
     public void setToStartScreen() {
@@ -326,10 +325,10 @@ public class DownFallActivity extends AppCompatActivity {
     }
     private void startScreen() {
         //retryLayer.setVisibility(View.VISIBLE);
-        levelPicker.setMaxValue(Levels.highestLevel);
-        levelPicker.setValue(Levels.currentLevel);
+        levelPicker.setMaxValue(DownFallStorage.highestLevel);
+        levelPicker.setValue(DownFallStorage.currentLevel);
         //titleText.setVisibility(View.VISIBLE);
-        titleText.animate().alpha(1.0f).scaleX(1.0f).scaleY(1.0f).y(Levels.screenHeight/13);
+        titleText.animate().alpha(1.0f).scaleX(1.0f).scaleY(1.0f).y(DownFallStorage.screenHeight/13);
         //playButton.setVisibility(View.VISIBLE);
         playButton.animate().alpha(1.0f).setDuration(175);
 
@@ -352,12 +351,12 @@ public class DownFallActivity extends AppCompatActivity {
             public void run() {
                 //retryLayer.setVisibility(View.VISIBLE);
                 //titleText.setVisibility(View.GONE);
-                titleText.animate().alpha(0.0f).scaleX(0.8f).scaleY(0.8f).y(Levels.screenHeight/8);
+                titleText.animate().alpha(0.0f).scaleX(0.8f).scaleY(0.8f).y(DownFallStorage.screenHeight/8);
                 //playButton.setVisibility(View.GONE);
                 playButton.animate().alpha(0.0f);
                 //winLayer.setVisibility(View.GONE);
                 winLayer.animate().alpha(0.0f).setDuration(200);
-                successText.setY(-Levels.screenHeight/4);
+                successText.setY(-DownFallStorage.screenHeight/4);
                 addButton.setVisibility(View.GONE);
                 subtractButton.setVisibility(View.GONE);
                 supportMenu.setVisibility(View.GONE);
@@ -376,15 +375,15 @@ public class DownFallActivity extends AppCompatActivity {
                 //winLayer.setScaleY(0.5f);
                 winLayer.animate().alpha(1.0f); //.scaleX(1.0f).scaleY(1.0f); //.y(0);
 
-                successText.animate().y(Levels.screenHeight/5).setDuration(600);
+                successText.animate().y(DownFallStorage.screenHeight/5).setDuration(600);
 
                 addButton.setVisibility(View.GONE);
                 subtractButton.setVisibility(View.GONE);
                 helpTextView.setAlpha(0);
                 //android.content.res.Resources res = getResources();
                 //String.format(res.getString(R.string.level_textview), Levels.currentLevel+1, Levels.levels.length)
-                currentLevelTextView.setText((Levels.currentLevel+1) + "/" + Levels.levels.length); //"Level " + (Levels.currentLevel+1) + " of " + (Levels.levels.length));
-                if (Levels.currentLevel >= 8) {
+                currentLevelTextView.setText((DownFallStorage.currentLevel+1) + "/" + DownFallStorage.numLevels); //"Level " + (Levels.currentLevel+1) + " of " + (Levels.levels.length));
+                if (DownFallStorage.currentLevel >= 8) {
                     supportMenu.animate().scaleY(1.2f).scaleX(1.2f).setDuration(400); //.y(3*Levels.screenHeight/4); //.scaleX(1.0f).scaleY(1.0f);
                 }
             }
@@ -392,53 +391,53 @@ public class DownFallActivity extends AppCompatActivity {
     }
 
     public void fireLoseEvent(int completionPercentage) {
-        if (!Levels.debug) {
+        if (!DownFallStorage.debug) {
             bundle.clear();
             //bundle.putLong(FirebaseAnalytics.Param.LEVEL, Levels.currentLevel);
             bundle.putInt("completion_percentage", completionPercentage);
             //bundle.putInt(FirebaseAnalytics.Param.VALUE, 1);
-            mFirebaseAnalytics.logEvent("level_" + Levels.currentLevel+"_lose", bundle);
+            mFirebaseAnalytics.logEvent("level_" + DownFallStorage.currentLevel+"_lose", bundle);
         }
     }
     public void fireWinEvent() {
-        if (!Levels.debug) {
+        if (!DownFallStorage.debug) {
             bundle.clear();
-            bundle.putInt(numberAttempts, Levels.numberAttempts);
+            bundle.putInt(numberAttempts, DownFallStorage.numberAttempts);
             //bundle.putLong(FirebaseAnalytics.Param.LEVEL, Levels.currentLevel);
             //bundle.putInt(FirebaseAnalytics.Param.VALUE, 1);
-            mFirebaseAnalytics.logEvent("level_" + Levels.currentLevel+"_win", bundle);
+            mFirebaseAnalytics.logEvent("level_" + DownFallStorage.currentLevel+"_win", bundle);
         }
     }
     public void firePauseEvent() {
-        if (!Levels.debug) {
+        if (!DownFallStorage.debug) {
             bundle.clear();
-            bundle.putInt(numberAttempts, Levels.numberAttempts);
-            bundle.putLong(FirebaseAnalytics.Param.LEVEL, Levels.currentLevel);
+            bundle.putInt(numberAttempts, DownFallStorage.numberAttempts);
+            bundle.putLong(FirebaseAnalytics.Param.LEVEL, DownFallStorage.currentLevel);
             mFirebaseAnalytics.logEvent("pause_game", bundle);
         }
     }
     private String numberAttempts = "number_attempts";
     public void fireShareClickedEvent() {
-        if (!Levels.debug) {
+        if (!DownFallStorage.debug) {
             bundle.clear();
-            bundle.putInt(FirebaseAnalytics.Param.LEVEL, Levels.currentLevel);
-            bundle.putInt(numberAttempts, Levels.numberAttempts);
+            bundle.putInt(FirebaseAnalytics.Param.LEVEL, DownFallStorage.currentLevel);
+            bundle.putInt(numberAttempts, DownFallStorage.numberAttempts);
             mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SHARE, bundle);
         }
     }
     private String ratingButtonClicked = "rating_button_clicked";
     public void fireRatingClickedEvent() {
-        if (!Levels.debug) {
+        if (!DownFallStorage.debug) {
             bundle.clear();
-            bundle.putInt(FirebaseAnalytics.Param.LEVEL, Levels.currentLevel);
+            bundle.putInt(FirebaseAnalytics.Param.LEVEL, DownFallStorage.currentLevel);
             mFirebaseAnalytics.logEvent(ratingButtonClicked, bundle);
         }
     }
     private String interstitialImpression = "interstitial_impression";
     public void fireAdImpression() {
-        if (!Levels.debug) {
+        if (!DownFallStorage.debug) {
             bundle.clear();
-            bundle.putInt(FirebaseAnalytics.Param.LEVEL, Levels.currentLevel);
+            bundle.putInt(FirebaseAnalytics.Param.LEVEL, DownFallStorage.currentLevel);
             mFirebaseAnalytics.logEvent(interstitialImpression, bundle);
         }
     }

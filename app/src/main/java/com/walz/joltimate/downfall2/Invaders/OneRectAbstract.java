@@ -5,7 +5,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 
-import com.walz.joltimate.downfall2.PlayerShip;
+import com.walz.joltimate.downfall2.data.DownFallStorage;
+import com.walz.joltimate.downfall2.game.PlayerShip;
 
 /**
  * Created by chris on 7/16/16.
@@ -38,7 +39,11 @@ public abstract class OneRectAbstract extends InvaderAbstract {
         backgroundRect.right = x + width;
     }
     public void draw(Canvas c) {
-        c.drawRect(backgroundRect, invaderPreviousPaint);
+        if (rect.top > DownFallStorage.screenHeight || rect.bottom < 0 || rect.right > DownFallStorage.screenWidth || rect.left < 0) {
+
+        } else {
+            c.drawRect(backgroundRect, invaderPreviousPaint);
+        }
     }
     public abstract boolean isColliding(PlayerShip playerShip);
 

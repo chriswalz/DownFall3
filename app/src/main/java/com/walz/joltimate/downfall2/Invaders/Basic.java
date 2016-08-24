@@ -4,14 +4,14 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.RectF;
 
-import com.walz.joltimate.downfall2.Levels;
-import com.walz.joltimate.downfall2.PlayerShip;
+import com.walz.joltimate.downfall2.data.DownFallStorage;
+import com.walz.joltimate.downfall2.game.PlayerShip;
 
 public class Basic extends OneRectAbstract{
 
     public static int basicHeight;
     static {
-        basicHeight = Levels.screenHeight / 10;
+        basicHeight = DownFallStorage.screenHeight / 10;
     }
     public Basic(Context context, float xVal, float yVal, int width) {
         super();
@@ -28,7 +28,7 @@ public class Basic extends OneRectAbstract{
     }
     public Basic(Context context, float xVal, float yVal, int width, int height, boolean reverse) {
         this(context, xVal, yVal, width, height);
-        this.y = (-yVal) + Levels.screenHeight;
+        this.y = (-yVal) + DownFallStorage.screenHeight;
         if (reverse) {
             yVelocity = -yVelocity;
         }
@@ -50,7 +50,7 @@ public class Basic extends OneRectAbstract{
     @Override
     public void draw(Canvas c) {
         super.draw(c);
-        if (rect.top > Levels.screenHeight || rect.bottom < 0 || rect.right > Levels.screenWidth || rect.left < 0) {
+        if (rect.top > DownFallStorage.screenHeight || rect.bottom < 0 || rect.right > DownFallStorage.screenWidth || rect.left < 0) {
 
         } else {
             c.drawRect(rect, invaderPaint);

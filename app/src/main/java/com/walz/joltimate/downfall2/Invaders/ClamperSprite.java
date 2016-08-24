@@ -4,8 +4,8 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.RectF;
 
-import com.walz.joltimate.downfall2.Levels;
-import com.walz.joltimate.downfall2.PlayerShip;
+import com.walz.joltimate.downfall2.data.DownFallStorage;
+import com.walz.joltimate.downfall2.game.PlayerShip;
 
 public class ClamperSprite extends OneRectAbstract{
 
@@ -15,7 +15,7 @@ public class ClamperSprite extends OneRectAbstract{
     public static int clamperWidth;
 
     static {
-        clamperWidth = Levels.screenHeight/20;
+        clamperWidth = DownFallStorage.screenHeight/20;
     }
 
     public ClamperSprite(Context context, double multiplier, float xVal, float yVal, int height) {
@@ -37,7 +37,7 @@ public class ClamperSprite extends OneRectAbstract{
         y += yVelocity;
         x += xVelocity;
 
-        if (x > Levels.screenWidth - width || x < 0) {
+        if (x > DownFallStorage.screenWidth - width || x < 0) {
             xVelocity = -xVelocity;
         }
 
@@ -52,7 +52,11 @@ public class ClamperSprite extends OneRectAbstract{
     @Override
     public void draw(Canvas c) {
         super.draw(c);
-        c.drawRect(rect, invaderPaint);
+        if (rect.top > DownFallStorage.screenHeight || rect.bottom < 0 || rect.right > DownFallStorage.screenWidth || rect.left < 0) {
+
+        } else {
+            c.drawRect(rect, invaderPaint);
+        }
     }
     @Override
     public boolean isColliding(PlayerShip playerShip) {

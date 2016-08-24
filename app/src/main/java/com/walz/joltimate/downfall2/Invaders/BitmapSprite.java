@@ -2,16 +2,14 @@ package com.walz.joltimate.downfall2.Invaders;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.DrawableRes;
 import android.support.v7.widget.AppCompatDrawableManager;
 
-import com.walz.joltimate.downfall2.Levels;
-import com.walz.joltimate.downfall2.PlayerShip;
-import com.walz.joltimate.downfall2.R;
+import com.walz.joltimate.downfall2.data.DownFallStorage;
+import com.walz.joltimate.downfall2.game.PlayerShip;
 
 /**
  * Created by chris on 7/30/16.
@@ -37,7 +35,7 @@ public class BitmapSprite extends InvaderAbstract {
         int ratio = 8;
         y += baseSpeed;
         frames++;
-        if (y >= Levels.screenHeight && !isRecycled) {
+        if (y >= DownFallStorage.screenHeight && !isRecycled) {
             recycle();
         } else {
             if ( frames % mod < end) {
@@ -51,7 +49,7 @@ public class BitmapSprite extends InvaderAbstract {
     @Override
     public void draw(Canvas c) {
 
-        if (y <= Levels.screenHeight && !isRecycled) {
+        if (y <= DownFallStorage.screenHeight && !isRecycled) {
             c.drawBitmap(bitmap, x, y, invaderPaint);
         }
 

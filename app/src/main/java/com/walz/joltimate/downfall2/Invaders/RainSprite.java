@@ -4,9 +4,8 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.RectF;
 
-import com.walz.joltimate.downfall2.Level;
-import com.walz.joltimate.downfall2.Levels;
-import com.walz.joltimate.downfall2.PlayerShip;
+import com.walz.joltimate.downfall2.data.DownFallStorage;
+import com.walz.joltimate.downfall2.game.PlayerShip;
 
 public class RainSprite extends MultRectAbstract{
     private int[] xRand;
@@ -19,7 +18,7 @@ public class RainSprite extends MultRectAbstract{
 
 
 
-    public static int HEIGHT = 2 * Levels.screenHeight;
+    public static int HEIGHT = 2 * DownFallStorage.screenHeight;
 
     public RainSprite(Context context, int length) {
         super(length);
@@ -36,7 +35,7 @@ public class RainSprite extends MultRectAbstract{
     private void prepare(int startY, int height, int length) {
         this.height = height;
 
-        rWidth = Levels.screenWidth/20;
+        rWidth = DownFallStorage.screenWidth/20;
 
         this.x = 0;
         this.y = -(height + rWidth - startY);
@@ -49,7 +48,7 @@ public class RainSprite extends MultRectAbstract{
         float rX;
         float rY;
         for (int i = 0; i < rects.length; i++){
-            xRand[i] = (int)((5*Math.random()*Levels.screenWidth/4)-Levels.screenWidth/8);
+            xRand[i] = (int)((5*Math.random()* DownFallStorage.screenWidth/4)- DownFallStorage.screenWidth/8);
             yRand[i] = (int)(Math.random()*height);
             rX = this.x+ xRand[i];
             rY = this.y + yRand[i];
