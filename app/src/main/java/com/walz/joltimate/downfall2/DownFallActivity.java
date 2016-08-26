@@ -20,6 +20,8 @@ import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutCompat;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Display;
 import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
@@ -39,6 +41,8 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.walz.joltimate.downfall2.data.DownFallStorage;
 import com.walz.joltimate.downfall2.game.DownFallGame;
 import com.walz.joltimate.downfall2.game.Levels;
+
+import java.lang.reflect.Method;
 
 public class DownFallActivity extends AppCompatActivity {
 
@@ -66,7 +70,6 @@ public class DownFallActivity extends AppCompatActivity {
 
     private AppCompatTextView currentLevelTextView;
 
-    private View v;
     private NumberPicker levelPicker;
 
     private FirebaseAnalytics mFirebaseAnalytics;
@@ -86,37 +89,55 @@ public class DownFallActivity extends AppCompatActivity {
     private AppCompatButton dismissWarningButton;
     private Vibrator vibrator;
 
+    private View window;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        v = getWindow().getDecorView();
         vibrator = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
-        // Get a Display object to access screen details
-        Display display = getWindowManager().getDefaultDisplay();
-        // Load the resolution into a Point object
-        Point size = new Point();
-        display.getSize(size);
-        Resources resources = getResources();
-        int navSize = 0;
-        if (!ViewConfiguration.get(getApplicationContext()).hasPermanentMenuKey() && !KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK)) {
-            int resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
-            if (resourceId > 0) {
-                navSize = resources.getDimensionPixelSize(resourceId);
-            } else {
-                navSize = 0;
-            }
-        }
+
         bundle = new Bundle();
 
 
         playStoreUrl = "http://play.google.com/store/apps/details?id=" + getPackageName();
 
         soundIds = new int[6];
-        // Initialize gameView and set it as the view
 
-        downFallView = new DownFallView(this, size.x, size.y + navSize);
+        window = getWindow().getDecorView();
+        // Initialize gameView and set it as the view
+        Display display = getWindowManager().getDefaultDisplay();
+        int realWidth;
+        int realHeight;
+
+        if (Build.VERSION.SDK_INT >= 17){
+            //new pleasant way to get real metrics
+            DisplayMetrics realMetrics = new DisplayMetrics();
+            display.getRealMetrics(realMetrics);
+            realWidth = realMetrics.widthPixels;
+            realHeight = realMetrics.heightPixels;
+
+        } else if (Build.VERSION.SDK_INT >= 14) {
+            //reflection for this weird in-between time
+            try {
+                Method mGetRawH = Display.class.getMethod("getRawHeight");
+                Method mGetRawW = Display.class.getMethod("getRawWidth");
+                realWidth = (Integer) mGetRawW.invoke(display);
+                realHeight = (Integer) mGetRawH.invoke(display);
+            } catch (Exception e) {
+                //this may not be 100% accurate, but it's all we've got
+                realWidth = display.getWidth();
+                realHeight = display.getHeight();
+                Log.e("Display Info", "Couldn't use reflection to get the real display metrics.");
+            }
+
+        } else {
+            //This should be close, as lower API devices should not have window navigation bars
+            realWidth = display.getWidth();
+            realHeight = display.getHeight();
+        }
+        downFallView = new DownFallView(this, realWidth, realHeight);
         setContentView(downFallView);
 
         // Use this to put a view over the surfaceview
@@ -192,11 +213,9 @@ public class DownFallActivity extends AppCompatActivity {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (DownFallStorage.highestLevel > DownFallStorage.currentLevel) {
-                    levelManuallyChanged = true;
-                    DownFallStorage.currentLevel++;
-                    setHelpTextView(downFallView.getDownFallGame().getCurrentLevel().startText);
-                }
+                downFallView.getDownFallGame().levels.incrementCurrentLevel();
+                setHelpTextView(downFallView.getDownFallGame().getCurrentLevel().startText);
+                levelManuallyChanged = true;
             }
         });
         subtractButton = (AppCompatImageButton) secondLayerView.findViewById(R.id.subtract_button);
@@ -413,7 +432,7 @@ public class DownFallActivity extends AppCompatActivity {
             bundle.clear();
             bundle.putInt(numberAttempts, DownFallStorage.numberAttempts);
             bundle.putLong(FirebaseAnalytics.Param.LEVEL, DownFallStorage.currentLevel);
-            mFirebaseAnalytics.logEvent("pause_game", bundle);
+            mFirebaseAnalytics.logEvent("pause_game_level_"+ DownFallStorage.currentLevel, bundle);
         }
     }
     private String numberAttempts = "number_attempts";
@@ -464,7 +483,7 @@ public class DownFallActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        v.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+        window.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION

@@ -45,7 +45,7 @@ public class DownFallGame {
     private DownFallView downFallView;
     private Context context;
     private SurfaceHolder ourHolder;
-    private Levels levels;
+    public Levels levels;
 
     // Move out of this object??, make levels non-static?
     private int fps;

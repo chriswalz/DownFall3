@@ -112,8 +112,8 @@ public class Levels {
                 new Level(4, 450, "The Crusher", 4) {
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
-                        invaders[0] = new ClamperSprite(context, 0.4, 0, 0, 3 * DownFallStorage.screenHeight);
-                        invaders[1] = new ClamperSprite(context, 0.4, DownFallStorage.screenWidth-ClamperSprite.clamperWidth, 0, 3 * DownFallStorage.screenHeight);
+                        invaders[0] = new ClamperSprite(context, 0.3, 0, 0, 3 * DownFallStorage.screenHeight);
+                        invaders[1] = new ClamperSprite(context, 0.3, DownFallStorage.screenWidth-ClamperSprite.clamperWidth, 0, 3 * DownFallStorage.screenHeight);
                         invaders[2] = new Basic(context, 0, -3 * DownFallStorage.screenHeight, DownFallStorage.screenWidth, Basic.basicHeight);
                         invaders[3] = new Basic(context, 0, 0, DownFallStorage.screenWidth, Basic.basicHeight);
                     }
@@ -177,19 +177,38 @@ public class Levels {
                 new Level(5, 500, "-|-", 8) {
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
-                        int diff = 65* DownFallStorage.screenHeight/100;
+                        int diff = 80* DownFallStorage.screenHeight/100;
                         for (int i = 0; i < numInvaders-1; i++) {
                             invaders[i] = new BouncySprite(context, 0, i * -diff, DownFallStorage.screenWidth);
                         }
                         invaders[numInvaders-1] = new ClamperSprite(context, 0.2, 0, 0, 2 *screenHeight);
                     }
                 },
-                new Level(48, 525, "Snake", 5) {
+                new Level(24, 375, "Snake", 5) {
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         int ratio = 2;
+                        int xCoordinate;
                         for (int i = 0; i < numInvaders; i++) {
-                            invaders[i] = new BouncySprite(context, (i * DownFallStorage.screenWidth/(numInvaders/ratio)) % screenWidth, -i * DownFallStorage.screenHeight/(numInvaders/ratio), 1* DownFallStorage.screenWidth/4, DownFallStorage.screenHeight/(numInvaders/ratio));
+                            xCoordinate = (i * DownFallStorage.screenWidth/(numInvaders/ratio)) % (2*screenWidth);
+                            if (xCoordinate >= screenWidth) {
+                                xCoordinate = screenWidth - (xCoordinate-screenWidth);
+                            }
+                            invaders[i] = new BouncySprite(context, xCoordinate, -i * DownFallStorage.screenHeight/(numInvaders/ratio), 1* DownFallStorage.screenWidth/4, DownFallStorage.screenHeight/(numInvaders/ratio));
+                        }
+                    }
+                },
+                new Level(36, 525, "Longer Snake", 5) {
+                    @Override
+                    public void prepare(InvaderAbstract[] invaders, Context context) {
+                        int ratio = 3;
+                        int xCoordinate;
+                        for (int i = 0; i < numInvaders; i++) {
+                            xCoordinate = (i * DownFallStorage.screenWidth/(numInvaders/ratio)) % (2*screenWidth);
+                            if (xCoordinate >= screenWidth) {
+                                xCoordinate = screenWidth - (xCoordinate-screenWidth);
+                            }
+                            invaders[i] = new BouncySprite(context, xCoordinate, -i * DownFallStorage.screenHeight/(numInvaders/ratio), 1* DownFallStorage.screenWidth/4, DownFallStorage.screenHeight/(numInvaders/ratio));
                         }
                     }
                 },
@@ -213,7 +232,7 @@ public class Levels {
                         invaders[numInvaders-1] = new BouncySprite(context, 0, 0, DownFallStorage.screenWidth);
                     }
                 },
-                new Level(4, 375, "4th of July", 6) {
+                new Level(4, 350, "4th of July", 6) {
                     // Four fireworks
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
@@ -292,7 +311,7 @@ public class Levels {
                         //invaders[numInvaders - 3] = new RainSprite(context, 12, Levels.screenHeight/4);
                     }
                 },
-                new Level(5, 525, "Variety is Good\n For the Soul", 5) {
+                new Level(5, 450, "Variety is Good\n For the Soul", 5) {
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         invaders[0] = new Basic(context, 0, -DownFallStorage.screenHeight, DownFallStorage.screenWidth);
@@ -337,7 +356,38 @@ public class Levels {
                         }
                     }
                 },
-                new Level(5, 550, "-|-", 8) {
+                new Level(27, 550, "Narrow Paths" ,5) {
+                    @Override
+                    public void prepare(InvaderAbstract[] invaders, Context context) {
+
+                        int diff = 4 * screenHeight / 9 ;
+                        int r;
+                        for (int i = 0; i < numInvaders; i+=3) {
+                            r = (i / 3) % 3;
+                            invaders[i] = new Basic(context, 0*screenWidth/3, -i/3 * diff, screenWidth/3, diff);
+                            invaders[i+1] = new Basic(context, 1*screenWidth/3, -i/3 * diff, screenWidth/3, diff);
+                            invaders[i+2] = new Basic(context, 2*screenWidth/3, -i/3 * diff, screenWidth/3, diff);
+
+                            invaders[i+r].x = -1000;
+                            invaders[i+r].y = -1000;
+                        }
+                    }
+                },
+                new Level(10, 625, "Checkerboard", 5) {
+                    @Override
+                    public void prepare(InvaderAbstract[] invaders, Context context) {
+                        double ratio = 2.2;
+
+                        int diff = (int) (screenHeight / ratio) * 2;
+                        for (int i = 0; i < numInvaders / 2; i++) {
+                            invaders[i] = new Basic(context, 0, (int) -(diff * i), (int) (screenWidth / 2), (int) (screenHeight / ratio));
+                        }
+                        for (int i = numInvaders / 2; i < numInvaders; i++) {
+                            invaders[i] = new Basic(context, screenWidth / 2, (int) (-(diff * (i - numInvaders / 2)) - diff / 2), (int) (screenWidth / 2), (int) (screenHeight / ratio));
+                        }
+                    }
+                },
+                new Level(5, 550, "EXTREME:\n-|-", 8) {
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         int diff = 65* DownFallStorage.screenHeight/100;
@@ -348,7 +398,7 @@ public class Levels {
                     }
                 },
                 // v hard levels
-                new Level(6, 525, "-|-|", 8) {
+                new Level(6, 525, "EXTREME\n-|-|-", 8) {
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         int diff = 75* DownFallStorage.screenHeight/100;
@@ -361,7 +411,7 @@ public class Levels {
                 },
 
                 // v hard levels
-                new Level(6, 350, "HARD - More variety", 6) {
+                new Level(6, 350, "EXTREME - More variety", 6) {
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         int diff = 4 * screenHeight / 10;
@@ -372,7 +422,7 @@ public class Levels {
                         invaders[numInvaders - 2] = new RainSprite(context, 12, DownFallStorage.screenHeight/4);
                     }
                 },
-                new Level(8, 725, "HARD:\n-|-|-\n-|-|-", 8) {
+                new Level(8, 725, "EXTREME:\n-|-|-\n-|-|-", 8) {
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         int diff = 75* DownFallStorage.screenHeight/100;
@@ -383,7 +433,7 @@ public class Levels {
                         invaders[7] = new ClamperSprite(context, 0.3, DownFallStorage.screenWidth-ClamperSprite.clamperWidth, 0, diff*numInvaders);
                     }
                 },
-                new Level(9, 450, "The Crusher 2.0", 4) {
+                new Level(9, 450, "EXTREME: The Crusher 2.0", 4) {
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         invaders[0] = new ClamperSprite(context, 0.6, 0, 0, 3 * DownFallStorage.screenHeight);
@@ -393,6 +443,46 @@ public class Levels {
                         for (int i = 2; i < numInvaders; i++) {
                             invaders[i] = new Basic(context, 0, -(i-2) * diff, DownFallStorage.screenWidth, Basic.basicHeight);
                         }
+                    }
+                },
+                new Level(20, 500, "EXTREME:\nEndurance Test", 6) {
+                    @Override
+                    public void prepare(InvaderAbstract[] invaders, Context context) {
+                        for (int i = 0; i < numInvaders; i++) {
+                            invaders[i] = new AcceleratorSprite(context, 0, -i*DownFallStorage.screenHeight / 5, DownFallStorage.screenWidth, false);
+                        }
+                    }
+                },
+                new Level(12, 525, "EXTREME:\nThey Bounce Too", 6) {
+                    @Override
+                    public void prepare(InvaderAbstract[] invaders, Context context) {
+                        for (int i = 0; i < numInvaders; i++) {
+                            invaders[i] = new AcceleratorSprite(context, 0, -i*DownFallStorage.screenHeight / 3, DownFallStorage.screenWidth, true);
+                        }
+                    }
+                },
+                new Level(12, 375, "EXTREME:\nDon't throw your phone", 8) {
+                    @Override
+                    public void prepare(InvaderAbstract[] invaders, Context context) {
+                        double ratio = 4.8;
+                        int diff = (int) (screenHeight / ratio) * 2;
+                        for (int i = 0; i < numInvaders / 2; i++) {
+                            invaders[i] = new Basic(context, 0, -(diff * i), (int) (screenWidth / 2), (int) (screenHeight / ratio));
+                        }
+                        for (int i = numInvaders / 2; i < numInvaders; i++) {
+                            invaders[i] = new Basic(context, screenWidth / 2, (int) (-(diff * (i - numInvaders / 2)) - diff / 2), (int) (screenWidth / 2), (int) (screenHeight / ratio));
+                        }
+                    }
+                },
+                new Level(6, 525, "EXTREME\nThe Crusher 3.0", 9) {
+                    @Override
+                    public void prepare(InvaderAbstract[] invaders, Context context) {
+                        int diff = 75* DownFallStorage.screenHeight/100;
+                        for (int i = 0; i < numInvaders; i++) {
+                            invaders[i] = new BouncySprite(context, 0, i * -diff, DownFallStorage.screenWidth);
+                        }
+                        invaders[4] = new ClamperSprite(context, 1.5, 0, 0, 7* DownFallStorage.screenHeight/3);
+                        invaders[5] = new ClamperSprite(context, 1.5, DownFallStorage.screenWidth-ClamperSprite.clamperWidth, 0, 7* DownFallStorage.screenHeight/3);
                     }
                 },
         };
@@ -418,6 +508,11 @@ public class Levels {
     }
     public Level getCurrentLevel() {
         return levels[DownFallStorage.currentLevel];
+    }
+    public void incrementCurrentLevel() {
+        if (DownFallStorage.highestLevel > DownFallStorage.currentLevel &&  levels.length-1 > DownFallStorage.currentLevel) {
+            DownFallStorage.currentLevel++;
+        }
     }
 
 }

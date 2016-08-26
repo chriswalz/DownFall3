@@ -79,7 +79,11 @@ public class GravitySprite extends OneRectAbstract{
     @Override
     public void draw(Canvas c) {
         super.draw(c);
-        c.drawRect(rect, invaderPaint);
+        if (rect.top > DownFallStorage.screenHeight || rect.bottom < 0 || rect.right < 0 || rect.left > DownFallStorage.screenWidth) {
+
+        } else {
+            c.drawRect(rect, invaderPaint);
+        }
     }
 
     @Override

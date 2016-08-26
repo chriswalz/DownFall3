@@ -47,7 +47,7 @@ public class BackgroundBlock extends OneRectAbstract{
         rect.right = x + width;
     }
     public void draw(Canvas c) {
-        if (rect.top > DownFallStorage.screenHeight || rect.bottom < 0 || rect.right > DownFallStorage.screenWidth || rect.left < 0) {
+        if (rect.top > DownFallStorage.screenHeight || rect.bottom < 0 || rect.right < 0 || rect.left > DownFallStorage.screenWidth) {
 
         } else {
             c.drawRect(rect, backgroundBlockPaint);

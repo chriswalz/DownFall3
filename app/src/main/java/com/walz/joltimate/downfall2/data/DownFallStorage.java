@@ -21,8 +21,8 @@ public class DownFallStorage {
 
     private static SharedPreferences mPrefs;
 
-    public static int currentLevel = 11;
-    public static int highestLevel = 40;
+    public static int currentLevel = 36;
+    public static int highestLevel = 50;
     public static int numberAttempts = 0;
 
     public static int numLevels;
@@ -135,65 +135,7 @@ public class DownFallStorage {
 
 
     // potentially remove
-    /*public static void narrowPaths(InvaderAbstract[] invaders, Context context) {
-        // Build an army of invaders
-        numInvaders = 21;
-        levelTimeLimit = 450 + timeOffSetMultiplier;
-        difficultyRating = 5;
 
-        int diff = 4 * Levels.screenHeight / 9 ;
-        int r;
-        for (int i = 0; i < numInvaders; i+=3) {
-            r = (i / 3) % 3;
-            invaders[i] = new Basic(context, 0*screenWidth/3, -i/3 * diff, screenWidth/3, diff);
-            invaders[i+1] = new Basic(context, 1*screenWidth/3, -i/3 * diff, screenWidth/3, diff);
-            invaders[i+2] = new Basic(context, 2*screenWidth/3, -i/3 * diff, screenWidth/3, diff);
-
-            invaders[i+r] = new Basic(context, -100, -100, 0 ,0);
-        }
-    } */
-    /*public static void threeInvadersClosest(InvaderAbstract[] invaders, Context context) {
-        // Build an army of invaders
-        numInvaders = 3;
-        levelTimeLimit = 450;
-        int diff = 2 * screenHeight / 3;
-        for (int i = 0; i < numInvaders; i++) {
-            invaders[i] = new Basic(context, 0, -(diff * i), screenWidth, screenHeight / 10);
-        }
-    }
-
-    public static void squareSquadBig(InvaderAbstract[] invaders, Context context) {
-        // Build an army of invaders
-        numInvaders = 10;
-        levelTimeLimit = 1150;
-        startText = "Checkerboard";
-
-        double ratio = 1.1;
-
-        int diff = (int) (screenHeight / ratio) * 2;
-        for (int i = 0; i < numInvaders / 2; i++) {
-            invaders[i] = new Basic(context, 0, (int) -(diff * i), (int) (screenWidth / 2), (int) (screenHeight / ratio));
-        }
-        for (int i = numInvaders / 2; i < numInvaders; i++) {
-            invaders[i] = new Basic(context, screenWidth / 2, (int) (-(diff * (i - numInvaders / 2)) - diff / 2), (int) (screenWidth / 2), (int) (screenHeight / ratio));
-        }
-    } */
-
-    /* public static void squareSquadMedium(InvaderAbstract[] invaders, Context context) {
-        // Build an army of invaders
-        numInvaders = 8;
-        levelTimeLimit = 750 + timeOffSetMultiplier;
-        startText = "Tap & Drag!";
-        double ratio = 1.5;
-
-        int diff = (int) (screenHeight / ratio) * 2;
-        for (int i = 0; i < numInvaders / 2; i++) {
-            invaders[i] = new Basic(context, 0, -(diff * i), (int) (screenWidth / 2), (int) (screenHeight / ratio));
-        }
-        for (int i = numInvaders / 2; i < numInvaders; i++) {
-            invaders[i] = new Basic(context, screenWidth / 2, (int) (-(diff * (i - numInvaders / 2)) - diff / 2), (int) (screenWidth / 2), (int) (screenHeight / ratio));
-        }
-    } */
 
 
 
