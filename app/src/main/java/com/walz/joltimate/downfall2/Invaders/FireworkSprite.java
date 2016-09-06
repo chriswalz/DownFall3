@@ -4,20 +4,23 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.RectF;
 
+import com.walz.joltimate.downfall2.DownFallActivity;
 import com.walz.joltimate.downfall2.data.DownFallStorage;
 import com.walz.joltimate.downfall2.game.PlayerShip;
 
 public class FireworkSprite extends MultRectAbstract{
 
+    private DownFallActivity downFallActivity;
 
     private int lenSep;
 
-    private int[] xRand;
-    private int[] yRand;
+    private float[] xRand;
+    private float[] yRand;
 
-    private int[] xRandIncrement;
-    private int[] yRandIncrement;
+    private float[] xRandIncrement;
+    private float[] yRandIncrement;
 
+    private boolean playSound = true;
 
     private int widthR;
     private int heightR;
@@ -27,6 +30,8 @@ public class FireworkSprite extends MultRectAbstract{
     public FireworkSprite(Context context, int length, float x) {
         super(length);
 
+        this.downFallActivity = (DownFallActivity) context;
+
         this.lenSep = length/4;
 
         widthR = DownFallStorage.screenWidth / 40;
@@ -35,28 +40,28 @@ public class FireworkSprite extends MultRectAbstract{
         this.x = x;
         this.y = -widthR;
 
-        xRand = new int[length];
-        yRand = new int[length];
+        xRand = new float[length];
+        yRand = new float[length];
 
-        xRandIncrement = new int[length];
-        yRandIncrement = new int[length];
+        xRandIncrement = new float[length];
+        yRandIncrement = new float[length];
 
         this.explosionHeight = (int) (Math.random() *(DownFallStorage.screenHeight/4 + (3 * DownFallStorage.screenHeight/ 4)) );
 
-
+        float fireworkSpeedMultiplier = DownFallStorage.baseAcceleration;
 
         for (i = 0; i < length/4; i++){
-            xRandIncrement[i] = i;
-            yRandIncrement[i] = length/4 - i;
+            xRandIncrement[i] = i * fireworkSpeedMultiplier;
+            yRandIncrement[i] = (length/4 - i) * fireworkSpeedMultiplier;
 
-            xRandIncrement[i+lenSep] = -i;
-            yRandIncrement[i+lenSep] = length/4 - i;
+            xRandIncrement[i+lenSep] = -i * fireworkSpeedMultiplier;
+            yRandIncrement[i+lenSep] = (length/4 - i) * fireworkSpeedMultiplier;
 
-            xRandIncrement[i+(2*lenSep)] = i;
-            yRandIncrement[i+(2*lenSep)] = -(length/4 - i);
+            xRandIncrement[i+(2*lenSep)] = i * fireworkSpeedMultiplier;
+            yRandIncrement[i+(2*lenSep)] = -(length/4 - i) * fireworkSpeedMultiplier;
 
-            xRandIncrement[i+(3*lenSep)] = -i;
-            yRandIncrement[i+(3*lenSep)] = -(length/4 - i);
+            xRandIncrement[i+(3*lenSep)] = -i * fireworkSpeedMultiplier;
+            yRandIncrement[i+(3*lenSep)] = -(length/4 - i) * fireworkSpeedMultiplier;
 
         }
 
@@ -64,10 +69,8 @@ public class FireworkSprite extends MultRectAbstract{
         for (i = 0; i < rects.length; i++) {
             xRand[i] = (int) (0 - widthR / 2);
             yRand[i] = 0;
-            int xI = (int) this.x + xRand[i];
-            int yI = (int) this.y + yRand[i];
 
-            updateRectF(rects[i], xI, yI, widthR, heightR);
+            updateRectF(rects[i], this.x + xRand[i], this.y + yRand[i], widthR, heightR);
         }
     }
     public FireworkSprite(Context context, int length, float x, float y) {
@@ -80,12 +83,14 @@ public class FireworkSprite extends MultRectAbstract{
         y += yVelocity;
 
         for (i = 0; i < rects.length; i++){
-            int xI = (int) x + xRand[i];
-            int yI = (int) y + yRand[i];
-            updateRectF(rects[i], xI, yI, widthR, heightR);
+            updateRectF(rects[i], x + xRand[i], y + yRand[i], widthR, heightR);
         }
 
         if ( y > explosionHeight){
+            if (playSound) {
+                downFallActivity.playExplosionSound();
+                playSound = false;
+            }
             // possibly add color
 
             for (i = 0; i < rects.length; i++){

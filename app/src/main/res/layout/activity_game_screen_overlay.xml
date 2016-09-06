@@ -157,13 +157,13 @@
         android:layout_centerInParent="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_add"
+        android:src="@drawable/add_button_states"
         android:id="@+id/add_button"
         android:background="@null"/>
     <android.support.v7.widget.AppCompatImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_subtract"
+        android:src="@drawable/subtract_button_states"
         android:id="@+id/subtract_button"
         android:layout_alignParentLeft="true"
         android:layout_centerInParent="true"

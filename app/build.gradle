@@ -15,8 +15,8 @@ android {
         applicationId "com.walz.joltimate.downfall2"
         minSdkVersion 15
         targetSdkVersion 24
-        versionCode 57
-        versionName "2.0.9.3"
+        versionCode 58
+        versionName "2.0.9.4"
         signingConfig signingConfigs.DownFallKey2
     }
     buildTypes {
@@ -24,8 +24,10 @@ android {
             debuggable true
         }
         release {
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            debuggable false
+            shrinkResources true
+            minifyEnabled true // 'proguard-android.txt'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
     productFlavors {

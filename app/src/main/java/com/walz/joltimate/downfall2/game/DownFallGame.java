@@ -163,9 +163,11 @@ public class DownFallGame {
     }
     private void draw() {
         // Make sure our drawing surface is valid or we crash
+
         if (ourHolder.getSurface().isValid()) {
             // Lock the canvas ready to draw
             canvas = ourHolder.lockCanvas();
+
 
             //canvas.drawArc(20, 20, 100, 100, 90, 20, true, paint);
             //canvas.
@@ -257,11 +259,6 @@ public class DownFallGame {
         // Choose the brush color for drawing
         paint.setColor(Color.argb(255, 203, 232, 107));
 
-        // Now draw the player spaceship
-        //canvas.drawBitmap(playerShip.bitmap, playerShip.x, playerShip.y, paint);
-        playerShip.draw(canvas);
-
-
         // Draw the invaders
         for(int i = 0; i < getCurrentLevel().numInvaders; i++){
             if(invaders[i] != null && invaders[i].isVisible) {
@@ -269,6 +266,9 @@ public class DownFallGame {
                 //canvas.drawBitmap(invaders[i].getBitmap(), invaders[i].getX(), invaders[i].getY(), paint);
             }
         }
+        // Now draw the player spaceship
+        //canvas.drawBitmap(playerShip.bitmap, playerShip.x, playerShip.y, paint);
+        playerShip.draw(canvas);
 
     }
     private void drawHUD() {
@@ -277,7 +277,7 @@ public class DownFallGame {
         paint.setColor(Color.argb(255,  249, 129, 0));
         paint.setTextSize(20);
         if (DownFallStorage.debug) {
-            canvas.drawText(levels.getCurrentLevel().startText+"  levelTimeLimit: " + levels.getCurrentLevel().levelTimeLimit+ " gamestate"+gameState+": " + scoreText + DownFallStorage.score + " Invaders: " + getCurrentLevel().numInvaders + " Levels: " + DownFallStorage.currentLevel + " FPS: " + fps + " Difficulty Rating: " + getCurrentLevel().difficultyRating + " Highest Level: " + DownFallStorage.highestLevel, 10,50, paint);
+            canvas.drawText("Accel:"+ DownFallStorage.baseAcceleration+"  " +levels.getCurrentLevel().startText+"  levelTimeLimit: " + levels.getCurrentLevel().levelTimeLimit+ " gamestate"+gameState+": " + scoreText + DownFallStorage.score + " Invaders: " + getCurrentLevel().numInvaders + " Levels: " + DownFallStorage.currentLevel + " FPS: " + fps + " Difficulty Rating: " + getCurrentLevel().difficultyRating + " Highest Level: " + DownFallStorage.highestLevel, 10,50, paint);
         }
 
         hudPaint.setTextAlign(Paint.Align.LEFT);

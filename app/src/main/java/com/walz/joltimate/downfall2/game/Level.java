@@ -8,7 +8,7 @@ import com.walz.joltimate.downfall2.Invaders.InvaderAbstract;
  * Created by chris on 7/31/16.
  */
 public abstract class Level {
-    private static double timeOffSetMultiplier = 1.55;
+    private static double timeOffSetMultiplier = 1.50;
 
     public int numInvaders;
     public int levelTimeLimit;

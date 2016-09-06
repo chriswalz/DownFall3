@@ -11,6 +11,7 @@ import com.walz.joltimate.downfall2.R;
 public class DownFallStorage {
     // Current Level
     public static int score;
+    public static float baseAcceleration;
 
     public static int requestAdAmount = 0;
     public static boolean viewedWarning = false;
@@ -21,7 +22,7 @@ public class DownFallStorage {
 
     private static SharedPreferences mPrefs;
 
-    public static int currentLevel = 36;
+    public static int currentLevel = 18;
     public static int highestLevel = 50;
     public static int numberAttempts = 0;
 
@@ -43,9 +44,11 @@ public class DownFallStorage {
     //private static int i;
 
     public static void init(Context context, final int screenX, int screenY) {
-        InvaderAbstract.BASE_SPEED = 1 * screenY / 160;
+        InvaderAbstract.BASE_SPEED = screenY / 150;
         screenWidth = screenX;
         screenHeight = screenY;
+
+        baseAcceleration = (DownFallStorage.screenHeight + DownFallStorage.screenWidth)/1400.0f;
 
         debug = BuildConfig.DEBUG;
 

@@ -11,7 +11,7 @@ import com.walz.joltimate.downfall2.game.DownFallGame;
 
 public class AcceleratorSprite extends OneRectAbstract {
     private boolean goDown = true;
-    private int acceleration;
+    private float acceleration;
     private boolean bounce;
 
     public AcceleratorSprite(Context context, float xVal, float yVal, int width, boolean bounce) {
@@ -19,7 +19,7 @@ public class AcceleratorSprite extends OneRectAbstract {
         this.width = width;
         this.height = DownFallStorage.screenHeight/40;
 
-        this.acceleration = 1;
+        this.acceleration = DownFallStorage.baseAcceleration;
 
         this.x = xVal;
         this.y = yVal - height;
@@ -30,7 +30,7 @@ public class AcceleratorSprite extends OneRectAbstract {
     public void update(int fps) {
         if (goDown){
             y += yVelocity;
-            if ( y > DownFallStorage.screenHeight/12 && DownFallGame.numFrames % 2 == 0) {
+            if ( y > DownFallStorage.screenHeight/12) {
                 yVelocity += acceleration;
             }
             if(y > (DownFallStorage.screenHeight) ){

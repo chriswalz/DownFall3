@@ -103,7 +103,7 @@ public class DownFallActivity extends AppCompatActivity {
 
         playStoreUrl = "http://play.google.com/store/apps/details?id=" + getPackageName();
 
-        soundIds = new int[6];
+        soundIds = new int[7];
 
         window = getWindow().getDecorView();
         // Initialize gameView and set it as the view
@@ -276,6 +276,8 @@ public class DownFallActivity extends AppCompatActivity {
         soundIds[1] = sounds.load(getApplicationContext(), R.raw.object_pass_sound, 1);
         soundIds[2] = sounds.load(getApplicationContext(), R.raw.touch_release, 1);
         soundIds[3] = sounds.load(getApplicationContext(), R.raw.win_jingle, 1);
+        soundIds[4] = sounds.load(getApplicationContext(), R.raw.cabled_mess, 1);
+        soundIds[5] = sounds.load(getApplicationContext(), R.raw.pop, 1);
         /*sounds.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
             @Override
             public void onLoadComplete(SoundPool soundPool, int i, int i1) {
@@ -294,9 +296,17 @@ public class DownFallActivity extends AppCompatActivity {
 
 
     }
+    public void playExplosionSound() {
+        vibrator.vibrate(20);
+        sounds.play(soundIds[0], 1.5f, 1.5f, 0, 0, 1);
+    }
+    public void playBounceSound() {
+        //vibrator.vibrate(20);
+        sounds.play(soundIds[4], 0.5f, 0.5f, 0, 0, 1);
+    }
     public void playLoseSound() {
         vibrator.vibrate(20);
-        sounds.play(soundIds[0], 0.3f, 0.3f, 0, 0, 1);
+        sounds.play(soundIds[0], 0.35f, 0.35f, 0, 0, 1);
     }
     public void playWinSound() {
         sounds.play(soundIds[3], 0.25f, 0.25f, 0, 0, 1);

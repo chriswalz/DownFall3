@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.RectF;
 
+import com.walz.joltimate.downfall2.DownFallActivity;
 import com.walz.joltimate.downfall2.data.DownFallStorage;
 import com.walz.joltimate.downfall2.game.PlayerShip;
 
@@ -12,9 +13,13 @@ public class BouncySprite extends OneRectAbstract {
     private boolean goDown = true;
     private boolean goRight = true;
 
+
+    private DownFallActivity downFallActivity;
+
     private int xVelocity;
 
     public BouncySprite(Context context, float xVal, float yVal, int width) {
+        this.downFallActivity = (DownFallActivity) context;
 
         this.width = width;
         this.height = DownFallStorage.screenHeight/20;
@@ -25,6 +30,7 @@ public class BouncySprite extends OneRectAbstract {
         xVelocity = baseSpeed/2;
     }
     public BouncySprite(Context context, float xVal, float yVal, int width, int height) {
+        this.downFallActivity = (DownFallActivity) context;
 
         this.width = width; //Levels.screenHeight/10;
         this.height = height; //Levels.screenHeight/10;
@@ -40,6 +46,9 @@ public class BouncySprite extends OneRectAbstract {
         if (goDown){
             y += yVelocity;
             if(y >= (DownFallStorage.screenHeight-height) ){
+                if (goDown == true) {
+                    playBouncySound();
+                }
                 goDown = false;
             }
         } else {
@@ -49,11 +58,17 @@ public class BouncySprite extends OneRectAbstract {
             if (goRight){
                 x += xVelocity;
                 if(x >= DownFallStorage.screenWidth - width ){
+                    if (goRight == true) {
+                        playBouncySound();
+                    }
                     goRight = false;
                 }
             } else {
                 x -= xVelocity;
                 if(x < 0 ){
+                    if (goRight == false) {
+                        playBouncySound();
+                    }
                     goRight = true;
                 }
             }
@@ -71,6 +86,14 @@ public class BouncySprite extends OneRectAbstract {
 
         } else {
             c.drawRect(rect, invaderPaint);
+        }
+    }
+
+    private void playBouncySound() {
+        if (rect.top > DownFallStorage.screenHeight || rect.bottom < 0 || rect.right < 0 || rect.left > DownFallStorage.screenWidth) {
+
+        } else {
+            downFallActivity.playBounceSound();
         }
     }
 

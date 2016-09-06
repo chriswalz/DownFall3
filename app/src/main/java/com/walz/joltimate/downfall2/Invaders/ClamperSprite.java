@@ -4,12 +4,13 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.RectF;
 
+import com.walz.joltimate.downfall2.DownFallActivity;
 import com.walz.joltimate.downfall2.data.DownFallStorage;
 import com.walz.joltimate.downfall2.game.PlayerShip;
 
 public class ClamperSprite extends OneRectAbstract{
 
-
+    private DownFallActivity downFallActivity;
     private int xVelocity;
 
     public static int clamperWidth;
@@ -21,7 +22,7 @@ public class ClamperSprite extends OneRectAbstract{
     public ClamperSprite(Context context, double multiplier, float xVal, float yVal, int height) {
 
         //this.rect2 = new RectF();
-
+        this.downFallActivity = (DownFallActivity) context;
         this.height = height;
         this.width = clamperWidth;
 
@@ -39,6 +40,7 @@ public class ClamperSprite extends OneRectAbstract{
 
         if (x > DownFallStorage.screenWidth - width || x < 0) {
             xVelocity = -xVelocity;
+            downFallActivity.playBounceSound();
         }
 
         // Update hitbox which is used to detect hits

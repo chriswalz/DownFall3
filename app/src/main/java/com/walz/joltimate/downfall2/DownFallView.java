@@ -77,6 +77,7 @@ import com.walz.joltimate.downfall2.game.DownFallGame;
 // increase number of positive reviews
 
 // Beat level screen
+// need many more sounds effects
 
 // automatic death at start bug (if you died where a starting block is)
 // crash
@@ -98,6 +99,7 @@ public class DownFallView extends SurfaceView implements Runnable{
         downFallActivity = (DownFallActivity) context;
         downFallGame = new DownFallGame(context, downFallActivity, this, getHolder(), sizeX, sizeY);
         downFallGame.prepareCurrentLevel();
+
 
     }
 

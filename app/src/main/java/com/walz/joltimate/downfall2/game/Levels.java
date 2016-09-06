@@ -64,7 +64,7 @@ public class Levels {
                         //invaders[3] = new BitmapSprite(context, R.drawable.ic_hand_touch, screenWidth/2, -4*diff, Levels.screenWidth/7, Levels.screenWidth/7);
                     }
                 },
-                new Level(4, 325, "Tap & Drag, Tap & Drag, Tap & Drag", 3) {
+                new Level(4, 325, "Things get a little harder", 3) {
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
 
@@ -78,7 +78,7 @@ public class Levels {
                 new Level(7, 425, "Stay near the bottom or else", 3) {
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
-                        int diff = 3 * screenHeight / 6;
+                        int diff = 4 * screenHeight / 6;
                         for (int i = 0; i < numInvaders; i++) {
                             invaders[i] = new Basic(context, 0, -(diff * i ), screenWidth, screenHeight / 10);
                         }
@@ -109,11 +109,11 @@ public class Levels {
                         invaders[numInvaders-1] = new Basic(context, 0, -9 * DownFallStorage.screenHeight/4, DownFallStorage.screenWidth, Basic.basicHeight);
                     }
                 },
-                new Level(4, 450, "The Crusher", 4) {
+                new Level(4, 450, "The Crusher\n(77% win rate", 4) {
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
-                        invaders[0] = new ClamperSprite(context, 0.3, 0, 0, 3 * DownFallStorage.screenHeight);
-                        invaders[1] = new ClamperSprite(context, 0.3, DownFallStorage.screenWidth-ClamperSprite.clamperWidth, 0, 3 * DownFallStorage.screenHeight);
+                        invaders[0] = new ClamperSprite(context, 0.5, 0, 0, 3 * DownFallStorage.screenHeight);
+                        invaders[1] = new ClamperSprite(context, 0.5, DownFallStorage.screenWidth-ClamperSprite.clamperWidth, 0, 3 * DownFallStorage.screenHeight);
                         invaders[2] = new Basic(context, 0, -3 * DownFallStorage.screenHeight, DownFallStorage.screenWidth, Basic.basicHeight);
                         invaders[3] = new Basic(context, 0, 0, DownFallStorage.screenWidth, Basic.basicHeight);
                     }
@@ -165,10 +165,10 @@ public class Levels {
                         }
                     }
                 },
-                new Level(4, 525, "Make it Quadruple", 5) {
+                new Level(4, 525, "Make it Quadruple\n", 5) {
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
-                        int diff = 80* DownFallStorage.screenHeight/100;
+                        int diff = 77* DownFallStorage.screenHeight/100;
                         for (int i = 0; i < numInvaders; i++) {
                             invaders[i] = new BouncySprite(context, 0, i * -diff, DownFallStorage.screenWidth);
                         }
@@ -177,14 +177,14 @@ public class Levels {
                 new Level(5, 500, "-|-", 8) {
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
-                        int diff = 80* DownFallStorage.screenHeight/100;
+                        int diff = 77* DownFallStorage.screenHeight/100;
                         for (int i = 0; i < numInvaders-1; i++) {
                             invaders[i] = new BouncySprite(context, 0, i * -diff, DownFallStorage.screenWidth);
                         }
                         invaders[numInvaders-1] = new ClamperSprite(context, 0.2, 0, 0, 2 *screenHeight);
                     }
                 },
-                new Level(24, 375, "Snake", 5) {
+                new Level(20, 375, "Snake", 5) {
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         int ratio = 2;
@@ -213,7 +213,7 @@ public class Levels {
                     }
                 },
                 // Chapter 4, Fireworks! -------------------------
-                new Level(2, 325, "Chapter 4\nIt explodes", 2) {
+                new Level(2, 140, "Chapter 4\nIt explodes", 2) {
                     // Firework status
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
@@ -222,7 +222,7 @@ public class Levels {
                         }
                     }
                 },
-                new Level(4, 350, "Fireworks!", 4) {
+                new Level(4, 200, "Fireworks!", 4) {
                     // Three fireworks
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
@@ -232,7 +232,7 @@ public class Levels {
                         invaders[numInvaders-1] = new BouncySprite(context, 0, 0, DownFallStorage.screenWidth);
                     }
                 },
-                new Level(4, 350, "4th of July", 6) {
+                new Level(4, 150, "4th of July", 6) {
                     // Four fireworks
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
@@ -241,7 +241,7 @@ public class Levels {
                         }
                     }
                 },
-                new Level(7, 625, "One at a time", 6) {
+                new Level(7, 525, "One at a time", 6) {
                     // Four fireworks
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
@@ -297,7 +297,7 @@ public class Levels {
                         invaders[4] = new AcceleratorSprite(context, 0, -5* DownFallStorage.screenHeight/4, DownFallStorage.screenWidth, false);
                     }
                 },
-                new Level(7, 450, "Slow & More Fast", 6) {
+                new Level(6, 450, "Slow & More Fast", 6) {
 
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
@@ -307,11 +307,10 @@ public class Levels {
                         }
                         invaders[numInvaders - 1] = new AcceleratorSprite(context, 0, -DownFallStorage.screenHeight / 2, DownFallStorage.screenWidth, false);
                         invaders[numInvaders - 2] = new AcceleratorSprite(context, 0, -3* DownFallStorage.screenHeight / 2, DownFallStorage.screenWidth, false);
-                        invaders[numInvaders - 3] = new AcceleratorSprite(context, 0, -4* DownFallStorage.screenHeight / 2, DownFallStorage.screenWidth, false);
-                        //invaders[numInvaders - 3] = new RainSprite(context, 12, Levels.screenHeight/4);
                     }
                 },
-                new Level(5, 450, "Variety is Good\n For the Soul", 5) {
+
+                new Level(5, 425, "Variety is Good\n For the Soul", 5) {
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         invaders[0] = new Basic(context, 0, -DownFallStorage.screenHeight, DownFallStorage.screenWidth);
@@ -433,6 +432,21 @@ public class Levels {
                         invaders[7] = new ClamperSprite(context, 0.3, DownFallStorage.screenWidth-ClamperSprite.clamperWidth, 0, diff*numInvaders);
                     }
                 },
+                new Level(8, 450, "Slow & More Fast", 6) {
+
+                    @Override
+                    public void prepare(InvaderAbstract[] invaders, Context context) {
+                        int diff = 8 * screenHeight / 10;
+                        for (int i = 0; i < numInvaders - 3; i++) {
+                            invaders[i] = new BouncySprite(context, 0, -(diff * i), screenWidth);
+                        }
+                        invaders[numInvaders - 1] = new AcceleratorSprite(context, 0, -DownFallStorage.screenHeight / 2, DownFallStorage.screenWidth, false);
+                        invaders[numInvaders - 2] = new AcceleratorSprite(context, 0, -3* DownFallStorage.screenHeight / 2, DownFallStorage.screenWidth, false);
+                        invaders[numInvaders - 3] = new AcceleratorSprite(context, 0, -4* DownFallStorage.screenHeight / 2, DownFallStorage.screenWidth, false);
+                        invaders[numInvaders - 3] = new AcceleratorSprite(context, 0, -5* DownFallStorage.screenHeight / 2, DownFallStorage.screenWidth, false);
+                        //invaders[numInvaders - 3] = new RainSprite(context, 12, Levels.screenHeight/4);
+                    }
+                },
                 new Level(9, 450, "EXTREME: The Crusher 2.0", 4) {
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
@@ -481,8 +495,8 @@ public class Levels {
                         for (int i = 0; i < numInvaders; i++) {
                             invaders[i] = new BouncySprite(context, 0, i * -diff, DownFallStorage.screenWidth);
                         }
-                        invaders[4] = new ClamperSprite(context, 1.5, 0, 0, 7* DownFallStorage.screenHeight/3);
-                        invaders[5] = new ClamperSprite(context, 1.5, DownFallStorage.screenWidth-ClamperSprite.clamperWidth, 0, 7* DownFallStorage.screenHeight/3);
+                        invaders[4] = new ClamperSprite(context, 1.39, 0, 0, 7* DownFallStorage.screenHeight/3);
+                        invaders[5] = new ClamperSprite(context, 1.39, DownFallStorage.screenWidth-ClamperSprite.clamperWidth, 0, 7* DownFallStorage.screenHeight/3);
                     }
                 },
         };

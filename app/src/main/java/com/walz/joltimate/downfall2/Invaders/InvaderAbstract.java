@@ -22,7 +22,7 @@ public abstract class InvaderAbstract {
     // This will hold the pixels per second speedthat the paddle will move
     public int baseSpeed;
 
-    protected int yVelocity;
+    protected float yVelocity;
 
     public boolean isVisible;
 

@@ -12,9 +12,9 @@ public class GravitySprite extends OneRectAbstract{
     private int centerY;
 
     private int maxSpeed;
-    private int acceleration = 1;
+    private double acceleration;
 
-    private int xVelocity;
+    private double xVelocity;
 
     private PlayerShip ship;
 
@@ -31,6 +31,8 @@ public class GravitySprite extends OneRectAbstract{
         this.y = yVal - height;
 
         maxSpeed = DownFallStorage.screenHeight/80;
+
+        acceleration = DownFallStorage.baseAcceleration;
 
         xVelocity = baseSpeed;
         rect.top = y;
