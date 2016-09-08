@@ -140,9 +140,6 @@ public class DownFallGame {
                 updateForeground();
             }
             draw();
-            if (gameState == PLAYINGSCREEN) {
-                playerShip.update(); // for loseAnimation only
-            }
 
             // Calculate the fps this frame
             // We can then use the result to
@@ -217,6 +214,8 @@ public class DownFallGame {
         }
 
 
+
+        playerShip.update(); // for loseAnimation only
         // Has an invader touched the player ship
         for (int i = 0; i < getCurrentLevel().numInvaders; i++) {
             if (invaders[i] == null) {

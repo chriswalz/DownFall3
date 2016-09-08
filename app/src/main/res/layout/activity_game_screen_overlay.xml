@@ -133,6 +133,12 @@
         <android.support.v7.widget.AppCompatImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:src="@drawable/ic_sound_on"
+            android:id="@+id/sound_button"
+            android:background="@null"/>
+        <android.support.v7.widget.AppCompatImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:src="@drawable/ic_rating"
             android:id="@+id/rating_button"
             android:background="@null"/>

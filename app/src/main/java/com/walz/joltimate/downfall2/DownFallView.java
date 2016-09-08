@@ -81,6 +81,11 @@ import com.walz.joltimate.downfall2.game.DownFallGame;
 
 // automatic death at start bug (if you died where a starting block is)
 // crash
+// player animation
+// star tokens
+// 30 lives to beat game
+// buy lives with tokens or "recharge" or share to get tokens
+// different music for "BOSS" levels
 
 public class DownFallView extends SurfaceView implements Runnable{
 

@@ -20,7 +20,7 @@ public class GravitySprite extends OneRectAbstract{
 
     public static int SIZE = DownFallStorage.screenWidth/12;
 
-    public GravitySprite(Context context, PlayerShip ship, float xVal, float yVal) {
+    public GravitySprite(Context context, PlayerShip ship, float speedMultiplier, float xVal, float yVal) {
 
         this.width = SIZE;
         this.height = SIZE;
@@ -32,7 +32,7 @@ public class GravitySprite extends OneRectAbstract{
 
         maxSpeed = DownFallStorage.screenHeight/80;
 
-        acceleration = DownFallStorage.baseAcceleration;
+        acceleration = speedMultiplier * DownFallStorage.baseAcceleration;
 
         xVelocity = baseSpeed;
         rect.top = y;

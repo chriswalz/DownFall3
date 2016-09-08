@@ -30,7 +30,7 @@ public class AcceleratorSprite extends OneRectAbstract {
     public void update(int fps) {
         if (goDown){
             y += yVelocity;
-            if ( y > DownFallStorage.screenHeight/12) {
+            if ( y > DownFallStorage.screenHeight/10) {
                 yVelocity += acceleration;
             }
             if(y > (DownFallStorage.screenHeight) ){

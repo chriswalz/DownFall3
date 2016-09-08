@@ -8,9 +8,9 @@ import com.walz.joltimate.downfall2.data.DownFallStorage;
 import com.walz.joltimate.downfall2.game.PlayerShip;
 
 public class RainSprite extends MultRectAbstract{
-    private int[] xRand;
-    private int[] yRand;
-    private int[] ySpeedIncrement;
+    private float[] xRand;
+    private float[] yRand;
+    private float[] ySpeedIncrement;
 
     private int rWidth;
 
@@ -40,16 +40,16 @@ public class RainSprite extends MultRectAbstract{
         this.x = 0;
         this.y = -(height + rWidth - startY);
 
-        xRand = new int[length];
-        yRand = new int[length];
-        ySpeedIncrement = new int[length];
+        xRand = new float[length];
+        yRand = new float[length];
+        ySpeedIncrement = new float[length];
 
 
         float rX;
         float rY;
         for (int i = 0; i < rects.length; i++){
-            xRand[i] = (int)((5*Math.random()* DownFallStorage.screenWidth/4)- DownFallStorage.screenWidth/8);
-            yRand[i] = (int)(Math.random()*height);
+            xRand[i] = (float)((5*Math.random()* DownFallStorage.screenWidth/4)- DownFallStorage.screenWidth/8);
+            yRand[i] = (float) (Math.random()*height);
             rX = this.x+ xRand[i];
             rY = this.y + yRand[i];
 
@@ -57,7 +57,7 @@ public class RainSprite extends MultRectAbstract{
         }
 
         for(int i = 0; i < rects.length; i++){
-            ySpeedIncrement[i] =  (int) (Math.random()*8); // determines speed of each rain box
+            ySpeedIncrement[i] =  (float) (Math.random()*DownFallStorage.screenHeight/240); // determines speed of each rain box
         }
     }
 

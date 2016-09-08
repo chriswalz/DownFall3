@@ -15,8 +15,8 @@ android {
         applicationId "com.walz.joltimate.downfall2"
         minSdkVersion 15
         targetSdkVersion 24
-        versionCode 58
-        versionName "2.0.9.4"
+        versionCode 59
+        versionName "2.0.9.5"
         signingConfig signingConfigs.DownFallKey2
     }
     buildTypes {

@@ -19,10 +19,10 @@ public class DownFallStorage {
     public static int screenWidth, screenHeight;
 
     public static boolean debug = false;
-
+    public static boolean isSoundOn = false;
     private static SharedPreferences mPrefs;
 
-    public static int currentLevel = 18;
+    public static int currentLevel = 15;
     public static int highestLevel = 50;
     public static int numberAttempts = 0;
 
@@ -37,7 +37,6 @@ public class DownFallStorage {
     private static String numberAttemptsStr;
     private static String requestAdAmountStr;
     private static String viewedWarningStr;
-
 
 
 
@@ -69,6 +68,7 @@ public class DownFallStorage {
             numberAttempts = mPrefs.getInt(numberAttemptsStr, 0);
             score = mPrefs.getInt(scoreStr, 0);
             viewedWarning = mPrefs.getBoolean(viewedWarningStr, false);
+            isSoundOn = mPrefs.getBoolean("sound_on", true);
         }
 
     }
@@ -88,7 +88,7 @@ public class DownFallStorage {
             mEditor.putInt(numberAttemptsStr, numberAttempts);
             mEditor.putInt(requestAdAmountStr, requestAdAmount);
             mEditor.putBoolean(viewedWarningStr, viewedWarning);
-
+            mEditor.putBoolean("sound_on", isSoundOn);
             mEditor.apply();
         }
     }

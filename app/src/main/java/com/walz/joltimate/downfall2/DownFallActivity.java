@@ -65,6 +65,7 @@ public class DownFallActivity extends AppCompatActivity {
     private AppCompatTextView successText;
     private AppCompatImageButton addButton;
     private AppCompatImageButton subtractButton;
+    private AppCompatImageButton soundButton;
 
     private boolean levelManuallyChanged = false;
 
@@ -264,6 +265,7 @@ public class DownFallActivity extends AppCompatActivity {
             });
             requestNewInterstitial();
         } else {
+            secondLayerView.findViewById(R.id.warning_layout).setVisibility(View.GONE);
             FirebaseAnalytics.getInstance(this).setAnalyticsCollectionEnabled(false);
 
         }
@@ -272,21 +274,21 @@ public class DownFallActivity extends AppCompatActivity {
         } else {
             createOldSoundPool();
         }
-        soundIds[0] = sounds.load(getApplicationContext(), R.raw.body_punch, 1);
+        soundIds[0] = sounds.load(getApplicationContext(), R.raw.kick_marker, 1);
         soundIds[1] = sounds.load(getApplicationContext(), R.raw.object_pass_sound, 1);
         soundIds[2] = sounds.load(getApplicationContext(), R.raw.touch_release, 1);
-        soundIds[3] = sounds.load(getApplicationContext(), R.raw.win_jingle, 1);
+        soundIds[3] = sounds.load(getApplicationContext(), R.raw.win_ping, 1);
         soundIds[4] = sounds.load(getApplicationContext(), R.raw.cabled_mess, 1);
-        soundIds[5] = sounds.load(getApplicationContext(), R.raw.pop, 1);
+        soundIds[5] = sounds.load(getApplicationContext(), R.raw.mouth_pop, 1);
         /*sounds.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
             @Override
             public void onLoadComplete(SoundPool soundPool, int i, int i1) {
                 soundPool.play(i, 1, 1, 0, 0, 1);
             }
         }); */
-        mPlayer = MediaPlayer.create(getApplicationContext(), R.raw.the_sea_beneath); // in 2nd param u have to pass your desire ringtone
+        mPlayer = MediaPlayer.create(getApplicationContext(), R.raw.faster_music_two); // in 2nd param u have to pass your desire ringtone
         mPlayer.setLooping(true);
-        mPlayer.setVolume(0.25f, 0.25f);
+        mPlayer.setVolume(0.40f, 0.40f);
 
         if (!DownFallStorage.debug) {
             FirebaseMessaging.getInstance().subscribeToTopic("downfall");
@@ -294,11 +296,32 @@ public class DownFallActivity extends AppCompatActivity {
             FirebaseMessaging.getInstance().subscribeToTopic("downfalldebug");
         }
 
-
+        soundButton = (AppCompatImageButton) secondLayerView.findViewById(R.id.sound_button);
+        setSoundSetting();
+        soundButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DownFallStorage.isSoundOn = !DownFallStorage.isSoundOn;
+                setSoundSetting();
+            }
+        });
+    }
+    private void setSoundSetting() {
+        if (DownFallStorage.isSoundOn) {
+            if (!mPlayer.isPlaying()) {
+                mPlayer.start();
+            }
+            soundButton.setImageResource(R.drawable.ic_sound_on);
+        } else {
+            if (mPlayer.isPlaying()) {
+                mPlayer.pause();
+            }
+            soundButton.setImageResource(R.drawable.ic_sound_off);
+        }
     }
     public void playExplosionSound() {
-        vibrator.vibrate(20);
-        sounds.play(soundIds[0], 1.5f, 1.5f, 0, 0, 1);
+        vibrator.vibrate(1);
+        sounds.play(soundIds[5], 0.9f, 0.9f, 0, 0, 1);
     }
     public void playBounceSound() {
         //vibrator.vibrate(20);
@@ -306,13 +329,13 @@ public class DownFallActivity extends AppCompatActivity {
     }
     public void playLoseSound() {
         vibrator.vibrate(20);
-        sounds.play(soundIds[0], 0.35f, 0.35f, 0, 0, 1);
+        sounds.play(soundIds[0], 1.0f, 1.0f, 0, 0, 1);
     }
     public void playWinSound() {
-        sounds.play(soundIds[3], 0.25f, 0.25f, 0, 0, 1);
+        sounds.play(soundIds[3], 0.60f, 0.60f, 0, 0, 1);
     }
     public void playTeleportSound() {
-        sounds.play(soundIds[1], 0.15f, 0.15f, 0, 0, 1);
+        sounds.play(soundIds[1], 0.10f, 0.10f, 0, 0, 1);
     }
     public void requestNewInterstitial() {
         if (!DownFallStorage.debug) {
@@ -499,8 +522,9 @@ public class DownFallActivity extends AppCompatActivity {
                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
-
-        mPlayer.start();
+        if (DownFallStorage.isSoundOn) {
+            mPlayer.start();
+        }
         downFallView.resume();
 
     }
@@ -525,7 +549,9 @@ public class DownFallActivity extends AppCompatActivity {
     protected void onPause() {
 
         firePauseEvent();
-        mPlayer.pause();
+        if (DownFallStorage.isSoundOn) {
+            mPlayer.pause();
+        }
         downFallView.pause();
         super.onPause();
     }

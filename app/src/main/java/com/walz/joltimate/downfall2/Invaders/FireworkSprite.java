@@ -46,7 +46,7 @@ public class FireworkSprite extends MultRectAbstract{
         xRandIncrement = new float[length];
         yRandIncrement = new float[length];
 
-        this.explosionHeight = (int) (Math.random() *(DownFallStorage.screenHeight/4 + (3 * DownFallStorage.screenHeight/ 4)) );
+        this.explosionHeight = (int) (Math.random() * 3 * DownFallStorage.screenHeight/4) + DownFallStorage.screenHeight/8;
 
         float fireworkSpeedMultiplier = DownFallStorage.baseAcceleration;
 

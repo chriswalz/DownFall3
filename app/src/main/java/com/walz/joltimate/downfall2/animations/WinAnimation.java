@@ -28,9 +28,9 @@ public abstract class WinAnimation {
 
     public void draw(Canvas canvas, PlayerShip playerShip) {
         if (triggerAnimation) {
-            if (winCircleRadius < DownFallStorage.screenHeight) {
+            if (winCircleRadius < 3* DownFallStorage.screenHeight/2) {
                 canvas.drawCircle(playerShip.getCenterX(), playerShip.getCenterY(), winCircleRadius, winCirclePaint);
-                winCircleRadius += DownFallStorage.screenHeight/40;
+                winCircleRadius += DownFallStorage.screenHeight/25;
 
             } else {
                 onComplete();
