@@ -191,7 +191,7 @@ public class Levels {
                         invaders[numInvaders-1] = new ClamperSprite(context, 0.25, 0, 0, diff * (numInvaders-2));
                     }
                 },
-                new Level(20, 375, "Snake", 5) {
+                new Level(20, 410, "Snake", 5) {
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         int ratio = 2;
@@ -205,7 +205,7 @@ public class Levels {
                         }
                     }
                 },
-                new Level(36, 525, "Longer Snake", 5) {
+                new Level(36, 550, "Longer Snake", 5) {
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         int ratio = 3;
@@ -320,7 +320,7 @@ public class Levels {
                     }
                 },
 
-                new Level(5, 425, "Variety is Good\n For the Soul", 5) {
+                new Level(5, 380, "Variety is Good\n For the Soul", 5) {
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         invaders[0] = new Basic(context, 0, -DownFallStorage.screenHeight, DownFallStorage.screenWidth);
@@ -432,7 +432,7 @@ public class Levels {
                 },
 
                 // v hard levels
-                new Level(6, 350, "EXTREME - More variety", 6) {
+                new Level(6, 350, "EXTREME:\nMore variety", 6) {
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {
                         int diff = 4 * screenHeight / 10;
@@ -454,7 +454,7 @@ public class Levels {
                         invaders[7] = new ClamperSprite(context, 0.3, DownFallStorage.screenWidth-ClamperSprite.clamperWidth, 0, diff*numInvaders);
                     }
                 },
-                new Level(8, 450, "Slow & More Fast", 6) {
+                new Level(8, 450, "Extreme:\nSlow & More Fast 2.0", 6) {
 
                     @Override
                     public void prepare(InvaderAbstract[] invaders, Context context) {

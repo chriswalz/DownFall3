@@ -86,6 +86,31 @@ import com.walz.joltimate.downfall2.game.DownFallGame;
 // 30 lives to beat game
 // buy lives with tokens or "recharge" or share to get tokens
 // different music for "BOSS" levels
+// play shitty games on the play store find out what's wrong
+// go through list of items
+
+/*
+Marketing:
+Optimize screenshots, description
+contact marketing club
+contact DBK.
+Check evernote section
+Share facebook page with everyone
+iOS version
+contact youtube & or twitch players
+News article
+Adwords
+Use Rory's marketing tactics - one of them is have friends post about game
+Get featured by producthunt, techcrunch, maybe game sites would be better, medium article,
+PewDiePie views this website apparently - http://gamejolt.com/
+
+Post Campaign
+News article again
+Post analytics on FB
+Find people talking about Down Fall
+
+
+ */
 
 public class DownFallView extends SurfaceView implements Runnable{
 
